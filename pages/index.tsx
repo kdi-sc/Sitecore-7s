@@ -101,7 +101,7 @@ const Home: NextPage = () => {
         >
           Powered by{' '}
           <span className={styles.logo}>
-            <Image src="/Sitecore logo.svg" alt="Sitecore Logo" width={72} height={16} />
+            <Image src="/logo.svg" alt="Sitecore Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
