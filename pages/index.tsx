@@ -20,7 +20,7 @@ const Home: NextPage = () => {
       
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to Sitecore 7s!
+          Welcome to Sitecore Sevens!
         </h1>
         <p className={styles.description}>
         A place to find relevant Sitecore content in 7 minute chunks.
