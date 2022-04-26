@@ -1,4 +1,3 @@
-console.log("hello from loadCdp");
 // Define the Boxever queue
 var _boxeverq = _boxeverq || [];
 // Define the Boxever settings
@@ -11,12 +10,14 @@ var _boxever_settings = {
 };
 // Import the Boxever library asynchronously
 (function () {
+    if (process.window) {
   var s = document.createElement("script");
   s.type = "text/javascript";
   s.async = true;
   s.src = "https://d1mj578wat5n4o.cloudfront.net/boxever-1.4.8.min.js";
   var x = document.getElementsByTagName("script")[0];
   x.parentNode.insertBefore(s, x);
+    }
 })();
 // Place an anonymous function in the Boxever queue
 _boxeverq.push(function () {
@@ -32,5 +33,4 @@ _boxeverq.push(function () {
   // Invoke event create
   // (<event msg>, <callback function>, <format>)
   Boxever.eventCreate(viewEvent, function (data) {}, "json");
-
 });

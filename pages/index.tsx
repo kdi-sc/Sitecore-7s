@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
-import Script from 'next/script'
+import  '../utility/cdp.js'
 import Head from 'next/head'
+import Script from 'next/script'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import Card from '@mui/material/Card';
@@ -10,18 +11,16 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
+<Script src="./utility/cdp.js" strategy='beforeInteractive' />
+
 const Home: NextPage = () => {
-  <Script src="../utility/loadCdp" strategy="beforeInteractive" />
-
   return (
-
     <div className={styles.container}>
       <Head>
         <title>Sitecore 7&apos;s</title>
         <meta name="description" content="A place to find relevant Sitecore content in 7 minute chunks." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      
       <main className={styles.main}>
         <h1 className={styles.title}>
           Welcome to Sitecore 7&apos;s!
