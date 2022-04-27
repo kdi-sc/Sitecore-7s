@@ -1,5 +1,4 @@
-// Loads the Sitecore CDP library and creates useEffect to track all page views
-
+// Loads the Sitecore CDP library and creates useEffect to track page views
 import Script from 'next/script';
 import { useEffect } from 'react';
 
