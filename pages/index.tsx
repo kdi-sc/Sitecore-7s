@@ -11,16 +11,19 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-<Script src="./utility/cdp.js" strategy='beforeInteractive' />
+<Script src='../utility/cdp.js'  strategy='beforeInteractive' />
 
 const Home: NextPage = () => {
+
   return (
     <div className={styles.container}>
+      
       <Head>
         <title>Sitecore 7&apos;s</title>
         <meta name="description" content="A place to find relevant Sitecore content in 7 minute chunks." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      
       <main className={styles.main}>
         <h1 className={styles.title}>
           Welcome to Sitecore 7&apos;s!
