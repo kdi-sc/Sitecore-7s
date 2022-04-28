@@ -23,7 +23,7 @@ const Home: NextPage = () => {
 
 
       <main className={styles.main}>
-      <CdpIntegrationScript route="/home" />
+      <CdpIntegrationScript />
         <h1 className={styles.title}>
           Welcome to Sitecore 7&apos;s!
         </h1>

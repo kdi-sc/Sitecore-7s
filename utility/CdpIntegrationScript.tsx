@@ -1,39 +1,51 @@
-// Loads the Sitecore CDP library and creates useEffect to track page views
 import Script from 'next/script';
 import { useEffect } from 'react';
 
-declare const _boxeverq: any;
-declare const Boxever: any;
+declare const _boxeverq: { (): void }[];
+declare const Boxever: Boxever;
+
+interface Boxever {
+  getID(): string;
+  eventCreate(data: BoxeverViewEventArgs, callback: () => void, format: string): void;
+}
+
+interface BoxeverViewEventArgs {
+  browser_id: string;
+  channel: string;
+  type: string;
+  language: string;
+  page: string;
+  pos: string;
+}
 
 function createPageView(routeName: string) {
-  const pointOfSale = process.env.NEXT_PUBLIC_POINT_OF_SALE;
+  // POS must be valid in order to save events (domain name might be taken but it must be defined in CDP settings)
+  const pointOfSale = process.env.NEXT_PUBLIC_POINT_OF_SALE || window.location.host.replace(/^www\./, '');
 
   _boxeverq.push(function () {
-    const pageViewEvent = {
+    const pageViewEvent: BoxeverViewEventArgs = {
       browser_id: Boxever.getID(),
-      browserId: Boxever.getID(),
       channel: 'WEB',
       type: 'VIEW',
-      language: 'EN',
+      language: "EN",
       page: routeName,
       pos: pointOfSale,
     };
 
-    Boxever.eventCreate(pageViewEvent, function() {}, 'json');
+    Boxever.eventCreate(
+      pageViewEvent,
+      function () {
+        /*empty callback*/
+      },
+      'json'
+    );
   });
 }
 
-interface CdpIntegrationProps {
-  route: string;
-}
-
-const CdpIntegrationScript = (props: CdpIntegrationProps): JSX.Element => {
-  const clientKey = process.env.NEXT_PUBLIC_CDP_CLIENT_KEY;
-  const pointOfSale = process.env.NEXT_PUBLIC_POINT_OF_SALE;
-
+const CdpIntegrationScript = (): JSX.Element => {
 
   useEffect(() => {
-    createPageView(props.route);
+    createPageView("home");
   });
 
   return (
@@ -43,16 +55,18 @@ const CdpIntegrationScript = (props: CdpIntegrationProps): JSX.Element => {
         type="text/javascript"
         dangerouslySetInnerHTML={{
           __html: `
-          var _boxeverq = _boxeverq || []; var _boxever_settings = {}; 
-          
-          _boxever_settings.client_key="${clientKey}"; 
-          _boxever_settings.target="https://api.boxever.com/v1.2"; 
-          _boxever_settings.cookie_domain="";
-          _boxever_settings.pointOfSale="${pointOfSale}";
+              var _boxeverq = _boxeverq || [];
+              var _boxever_settings = {
+                  client_key: '${process.env.NEXT_PUBLIC_CDP_CLIENT_KEY}',
+                  target: '${process.env.NEXT_PUBLIC_CDP_TARGET_URL}',
+                  cookie_domain: '',
+                  web_flow_target: "https://d35vb5cccm4xzp.cloudfront.net",
+                  pointOfSale: '${process.env.NEXT_PUBLIC_POINT_OF_SALE}'
+              };
             `,
         }}
       />
-      <Script src="https://d1mj578wat5n4o.cloudfront.net/boxever-1.4.8.min.js" />
+      <Script src={process.env.NEXT_PUBLIC_CDP_SCRIPT_URL} />
     </>
   );
 };
