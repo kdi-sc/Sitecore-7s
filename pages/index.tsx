@@ -12,7 +12,7 @@ import { identifyVisitor } from '../utility/CdpService';
 
 
 const Home: NextPage = () => {
-  identifyVisitor("mfronczak1@gmail.com", "Mark", "Fronczak", "647-555-8585");
+
 
   return (
     <div className={styles.container}>
