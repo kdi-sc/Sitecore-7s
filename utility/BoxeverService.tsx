@@ -167,7 +167,7 @@ function createEventPayload(eventConfig: Record<string, unknown>) {
       channel: BoxeverServiceConfig.channel,
       language: window.navigator.language ? window.navigator.language : 'en',
       currency: 'USD',
-      pos: 'cozyhotels',
+      pos: 'carb-overlayteam',
       websiteBaseUrl: BoxeverServiceConfig.websiteBaseUrl,
     },
     eventConfig
