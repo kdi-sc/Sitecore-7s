@@ -8,9 +8,11 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import CdpIntegrationScript from '../utility/CdpIntegrationScript'
+import { identifyVisitor } from '../utility/CdpService';
+
 
 const Home: NextPage = () => {
+  identifyVisitor("mfronczak1@gmail.com", "Mark", "Fronczak", "647-555-8585");
 
   return (
     <div className={styles.container}>
@@ -21,9 +23,11 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      
+
 
       <main className={styles.main}>
-      <CdpIntegrationScript />
+
         <h1 className={styles.title}>
           Welcome to Sitecore 7&apos;s!
         </h1>

@@ -9,6 +9,8 @@ import '@fontsource/roboto/700.css';
 import createEmotionCache from '../utility/createEmotionCache';
 import lightThemeOptions from '../styles/theme/lightThemeOptions';
 import '../styles/globals.css';
+import { CdpScripts, logViewEvent } from '../utility/CdpService';
+
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
@@ -27,6 +29,7 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
         <CssBaseline />
         <Component {...pageProps} />
       </ThemeProvider>
+      {CdpScripts}
     </CacheProvider>
   );
 };

@@ -1,3 +1,4 @@
+
 import Script from 'next/script';
 import { useEffect } from 'react';
 
@@ -20,7 +21,8 @@ interface BoxeverViewEventArgs {
 
 function createPageView(routeName: string) {
   // POS must be valid in order to save events (domain name might be taken but it must be defined in CDP settings)
-  const pointOfSale = process.env.NEXT_PUBLIC_POINT_OF_SALE || window.location.host.replace(/^www\./, '');
+ // const pointOfSale = process.env.NEXT_PUBLIC_POINT_OF_SALE || window.location.host.replace(/^www\./, '');
+  const pointOfSale = process.env.NEXT_PUBLIC_POINT_OF_SALE;
 
   _boxeverq.push(function () {
     const pageViewEvent: BoxeverViewEventArgs = {
@@ -29,7 +31,7 @@ function createPageView(routeName: string) {
       type: 'VIEW',
       language: "EN",
       page: routeName,
-      pos: pointOfSale,
+      pos: "carb-overlayteam",
     };
 
     Boxever.eventCreate(
@@ -45,6 +47,7 @@ function createPageView(routeName: string) {
 const CdpIntegrationScript = (): JSX.Element => {
 
   useEffect(() => {
+    console.log("home");
     createPageView("home");
   });
 
@@ -59,9 +62,7 @@ const CdpIntegrationScript = (): JSX.Element => {
               var _boxever_settings = {
                   client_key: '${process.env.NEXT_PUBLIC_CDP_CLIENT_KEY}',
                   target: '${process.env.NEXT_PUBLIC_CDP_TARGET_URL}',
-                  cookie_domain: '',
-                  web_flow_target: "https://d35vb5cccm4xzp.cloudfront.net",
-                  pointOfSale: '${process.env.NEXT_PUBLIC_POINT_OF_SALE}'
+                  cookie_domain: ''
               };
             `,
         }}
