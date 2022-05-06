@@ -10,7 +10,6 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { identifyVisitor,logViewEvent} from '../utility/CdpService';
 
-
 const Home: NextPage = () => {
 
   logViewEvent();

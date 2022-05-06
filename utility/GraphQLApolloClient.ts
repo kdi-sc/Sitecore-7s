@@ -69,7 +69,7 @@ class GraphQLApolloClient {
 
 const previewGraphQLClient = new GraphQLApolloClient(
     process.env.GRAPHQL_ENDPOINT_PREVIEW,
-    process.env.GRAPHQL_SECRET_PREVIEW
+    process.env.GRAPHQL_SECRET_PREVIEW,
 );
 
 const graphQLClient = new GraphQLApolloClient(
