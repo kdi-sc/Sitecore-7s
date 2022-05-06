@@ -10,6 +10,8 @@ import createEmotionCache from '../utility/createEmotionCache';
 import lightThemeOptions from '../styles/theme/lightThemeOptions';
 import '../styles/globals.css';
 import { CdpScripts, logViewEvent } from '../utility/CdpService';
+import { ApolloProvider } from "@apollo/client";
+import useGraphQLApolloClient from "../utility/GraphQLApolloBrowserClient";
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;

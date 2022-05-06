@@ -8,12 +8,12 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { identifyVisitor } from '../utility/CdpService';
+import { identifyVisitor,logViewEvent} from '../utility/CdpService';
 
 
 const Home: NextPage = () => {
 
-
+  logViewEvent();
   return (
     <div className={styles.container}>
 
@@ -24,7 +24,6 @@ const Home: NextPage = () => {
       </Head>
 
       
-
 
       <main className={styles.main}>
 
@@ -117,5 +116,6 @@ const Home: NextPage = () => {
     </div>
   )
 }
+logViewEvent();
 
 export default Home
