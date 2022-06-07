@@ -30,7 +30,7 @@ const Home: NextPage = () => {
           Welcome to Sitecore 7&apos;s!
         </h1>
         <p className={styles.description}>
-        A place to find relevant Sitecore content in 7 minute chunks.
+        A place to find relevant Sitecore content in 7 minute chunks
         </p>
         <div className={styles.grid}>
       <Card className={styles.card}>
