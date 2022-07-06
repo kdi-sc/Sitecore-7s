@@ -1,4 +1,5 @@
-import type { NextPage } from 'next'
+import { GetStaticProps, GetServerSideProps, NextPage } from "next";
+import React, { ReactElement, useEffect, useState } from "react";
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
@@ -8,12 +9,46 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { PreviewContext, PreviewProps } from "../components/previewContext";
+
 import { identifyVisitor,logViewEvent} from '../utility/CdpService';
+import { createApolloClient } from "../utility/GraphQLApolloClient";
+import { gql } from '@apollo/client';
 
-const Home: NextPage = () => {
+export interface SevensItem {
+  sitecoreSeven_Title: string;
+  sitecoreSeven_Summary: string;
+  assetFileName: string;
+  assetId: string;
+}
 
+export interface SevensProps extends PreviewProps{
+  sevensList: Array<SevensItem>;
+}
+//Get Homepage Content From Sevens - Everything without Null Title
+const GET_HP_CONTENT = gql`{
+  allM_Content_SitecoreSeven(where: { sitecoreSeven_Title_neq: null }) {
+    results {
+      sitecoreSeven_Title
+      sitecoreSeven_Summary
+      cmpContentToLinkedAsset(first: 1) {
+        results {
+          fileName
+          id
+        }
+      }
+    }
+  }
+}
+`;
+
+
+const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
+  const { sevensList } = props;
   logViewEvent();
   return (
+    <PreviewContext.Provider value={props}>
+      
     <div className={styles.container}>
 
       <Head>
@@ -21,13 +56,11 @@ const Home: NextPage = () => {
         <meta name="description" content="A place to find relevant Sitecore content in 7 minute chunks." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       
-
       <main className={styles.main}>
 
         <h1 className={styles.title}>
-          Welcome to Sitecore 7&apos;s!
+            
         </h1>
         <p className={styles.description}>
         A place to find relevant Sitecore content in 7 minute chunks.
@@ -42,10 +75,10 @@ const Home: NextPage = () => {
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          Test 1
+        {sevensList[0].sitecoreSeven_Title}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          This is a test of a Sitecore 7
+        {sevensList[0].sitecoreSeven_Summary}
         </Typography>
       </CardContent>
       <CardActions>
@@ -65,10 +98,10 @@ const Home: NextPage = () => {
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          Test 2
+        {sevensList[1].sitecoreSeven_Title}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          This is a test of a Sitecore 7
+        {sevensList[1].sitecoreSeven_Summary}
         </Typography>
       </CardContent>
       <CardActions>
@@ -86,10 +119,10 @@ const Home: NextPage = () => {
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          Test 3
+        {sevensList[2].sitecoreSeven_Title}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          This is a test of a Sitecore 7
+        {sevensList[2].sitecoreSeven_Summary}
         </Typography>
       </CardContent>
       <CardActions>
@@ -113,8 +146,59 @@ const Home: NextPage = () => {
         </a>
       </footer>
     </div>
+    </PreviewContext.Provider>
   )
 }
 logViewEvent();
+
+// ****** 
+export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
+
+  const myclient = await createApolloClient(false).getClient();
+
+  const { data } = await myclient.query({ query: GET_HP_CONTENT });
+  try {
+
+      const theSevens = data?.allM_Content_SitecoreSeven.results
+
+      const theSevensProps = theSevens.map((SevensItem) => {
+
+
+              return {
+                sitecoreSeven_Title: SevensItem.sitecoreSeven_Title,
+                sitecoreSeven_Summary: SevensItem.sitecoreSeven_Summary
+              };
+
+
+
+      });
+
+
+      console.log(theSevens[0].sitecoreSeven_Title);
+      console.log(theSevens[0].sitecoreSeven_Summary);
+
+
+      
+      console.log("" + theSevens.length);
+      return {
+          props: {
+            sevensList: [...theSevensProps],
+              preview: context.preview ?? false,
+          }
+
+      };
+  } catch (error) {
+      console.log(error);
+      return {
+          props: {
+            sevensList: [],
+              preview: context.preview ?? false,
+          },
+      };
+  }
+};
+
+//******
+
 
 export default Home

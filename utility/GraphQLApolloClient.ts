@@ -1,5 +1,9 @@
 import { ApolloClient, InMemoryCache, createHttpLink, ApolloLink, from } from '@apollo/client'
 
+const GRAPHQL_ENDPOINT_PREVIEW = process.env.GRAPHQL_ENDPOINT_PREVIEW || '';
+const GRAPHQL_SECRET_PREVIEW = process.env.GRAPHQL_SECRET_PREVIEW || '';
+const GRAPHQL_ENDPOINT = process.env.GRAPHQL_ENDPOINT || '';
+const GRAPHQL_SECRET = process.env.GRAPHQL_SECRET || '';
 
 class GraphQLApolloClient {
 
@@ -11,9 +15,6 @@ class GraphQLApolloClient {
     //private isBrowser(): boolean {
     //    return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
     //}
-
-
-
 
     public getClient<ApolloClient>() {
         //console.log("GetClient: START");
@@ -63,18 +64,17 @@ class GraphQLApolloClient {
         return client;
     }
 
-
-
 }
 
+
 const previewGraphQLClient = new GraphQLApolloClient(
-    process.env.GRAPHQL_ENDPOINT_PREVIEW,
-    process.env.GRAPHQL_SECRET_PREVIEW,
+    GRAPHQL_ENDPOINT_PREVIEW,
+    GRAPHQL_SECRET_PREVIEW
 );
 
 const graphQLClient = new GraphQLApolloClient(
-    process.env.GRAPHQL_ENDPOINT,
-    process.env.GRAPHQL_SECRET
+    GRAPHQL_ENDPOINT,
+    GRAPHQL_SECRET
 );
 
 export const createApolloClient = (preview: boolean) => (preview ? previewGraphQLClient : graphQLClient);
