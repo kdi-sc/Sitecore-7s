@@ -17,6 +17,7 @@ import { createApolloClient } from "../utility/GraphQLApolloClient";
 import { gql } from '@apollo/client';
 
 export interface SevensItem {
+  sitecoreSeven_Id: string;
   sitecoreSeven_Title: string;
   sitecoreSeven_Summary: string;
   assetFileName: string;
@@ -30,6 +31,7 @@ export interface SevensProps extends PreviewProps{
 const GET_HP_CONTENT = gql`{
   allM_Content_SitecoreSeven(where: { sitecoreSeven_Title_neq: null }) {
     results {
+      id
       sitecoreSeven_Title
       sitecoreSeven_Summary
       cmpContentToLinkedAsset(first: 1) {
@@ -67,7 +69,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         A place to find relevant Sitecore content in 7 minute chunks
         </p>
         <div className={styles.grid}>
-        <Link href="/content/test">
+        <Link href={{
+          pathname:"/content/" + sevensList[0].sitecoreSeven_Id
+        }}>
       <Card className={styles.card}>
       <CardMedia
         component="img"
@@ -76,22 +80,28 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         alt=""
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="h6" component="div">
         {sevensList[0].sitecoreSeven_Title}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-        {sevensList[0].sitecoreSeven_Summary}
+        {sevensList[0].sitecoreSeven_Summary.replace(/^(.{80}[^\s]*).*/, "$1")}...
         </Typography>
       </CardContent>
-      <CardActions>
+      <CardActions>    
+        <Link href={{
+          pathname:"/content/" + sevensList[0].sitecoreSeven_Id
+        }}>
       <Button size="small">Learn More</Button>
+      </Link>
       <Button size="small">Share</Button>
       </CardActions>
     </Card>
     </Link>
 
 
-
+    <Link href={{
+          pathname:"/content/" + sevensList[1].sitecoreSeven_Id
+        }}>
     <Card className={styles.card}>
       <CardMedia
         component="img"
@@ -100,19 +110,29 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         alt=""
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="h6" component="div">
         {sevensList[1].sitecoreSeven_Title}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-        {sevensList[1].sitecoreSeven_Summary}
+        {sevensList[1].sitecoreSeven_Summary.replace(/^(.{80}[^\s]*).*/, "$1")}...
         </Typography>
       </CardContent>
       <CardActions>
+      <Link href={{
+          pathname:"/content/" + sevensList[1].sitecoreSeven_Id
+        }}>
         <Button size="small">Learn More</Button>
+      </Link>
         <Button size="small">Share</Button>
       </CardActions>
     </Card>
+    </Link>
 
+
+
+    <Link href={{
+          pathname:"/content/" + sevensList[2].sitecoreSeven_Id
+        }}>
     <Card className={styles.card}>
       <CardMedia
         component="img"
@@ -121,18 +141,23 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         alt=""
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="h6" component="div">
         {sevensList[2].sitecoreSeven_Title}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-        {sevensList[2].sitecoreSeven_Summary}
+        {sevensList[2].sitecoreSeven_Summary.replace(/^(.{80}[^\s]*).*/, "$1")}...
         </Typography>
       </CardContent>
       <CardActions>
+      <Link href={{
+          pathname:"/content/" + sevensList[2].sitecoreSeven_Id
+        }}>
       <Button size="small">Learn More</Button>
+      </Link>
       <Button size="small">Share</Button>
       </CardActions>
     </Card>
+    </Link>
         </div>
       </main>
 
@@ -169,20 +194,14 @@ export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
 
               return {
                 sitecoreSeven_Title: SevensItem.sitecoreSeven_Title,
-                sitecoreSeven_Summary: SevensItem.sitecoreSeven_Summary
+                sitecoreSeven_Summary: SevensItem.sitecoreSeven_Summary,
+                sitecoreSeven_Id: SevensItem.id
               };
 
 
 
       });
 
-
-      console.log(theSevens[0].sitecoreSeven_Title);
-      console.log(theSevens[0].sitecoreSeven_Summary);
-
-
-      
-      console.log("" + theSevens.length);
       return {
           props: {
             sevensList: [...theSevensProps],
