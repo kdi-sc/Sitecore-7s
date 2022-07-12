@@ -69,8 +69,10 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         A place to find relevant Sitecore content in 7 minute chunks
         </p>
         <div className={styles.grid}>
+
+        {sevensList.map((sevensItem) => (
         <Link href={{
-          pathname:"/content/" + sevensList[0].sitecoreSeven_Id
+          pathname:"/content/" + sevensItem.sitecoreSeven_Id
         }}>
       <Card className={styles.card}>
       <CardMedia
@@ -81,15 +83,15 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       />
       <CardContent>
         <Typography gutterBottom variant="h6" component="div">
-        {sevensList[0].sitecoreSeven_Title}
+        {sevensItem.sitecoreSeven_Title}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-        {sevensList[0].sitecoreSeven_Summary.replace(/^(.{80}[^\s]*).*/, "$1")}...
+        {sevensItem.sitecoreSeven_Summary.replace(/^(.{80}[^\s]*).*/, "$1")}...
         </Typography>
       </CardContent>
       <CardActions>    
         <Link href={{
-          pathname:"/content/" + sevensList[0].sitecoreSeven_Id
+          pathname:"/content/" + sevensItem.sitecoreSeven_Id
         }}>
       <Button size="small">Learn More</Button>
       </Link>
@@ -97,67 +99,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       </CardActions>
     </Card>
     </Link>
-
-
-    <Link href={{
-          pathname:"/content/" + sevensList[1].sitecoreSeven_Id
-        }}>
-    <Card className={styles.card}>
-      <CardMedia
-        component="img"
-        height="140"
-        image="/testimg2.png"
-        alt=""
-      />
-      <CardContent>
-        <Typography gutterBottom variant="h6" component="div">
-        {sevensList[1].sitecoreSeven_Title}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-        {sevensList[1].sitecoreSeven_Summary.replace(/^(.{80}[^\s]*).*/, "$1")}...
-        </Typography>
-      </CardContent>
-      <CardActions>
-      <Link href={{
-          pathname:"/content/" + sevensList[1].sitecoreSeven_Id
-        }}>
-        <Button size="small">Learn More</Button>
-      </Link>
-        <Button size="small">Share</Button>
-      </CardActions>
-    </Card>
-    </Link>
-
-
-
-    <Link href={{
-          pathname:"/content/" + sevensList[2].sitecoreSeven_Id
-        }}>
-    <Card className={styles.card}>
-      <CardMedia
-        component="img"
-        height="140"
-        image="/testimg3.png"
-        alt=""
-      />
-      <CardContent>
-        <Typography gutterBottom variant="h6" component="div">
-        {sevensList[2].sitecoreSeven_Title}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-        {sevensList[2].sitecoreSeven_Summary.replace(/^(.{80}[^\s]*).*/, "$1")}...
-        </Typography>
-      </CardContent>
-      <CardActions>
-      <Link href={{
-          pathname:"/content/" + sevensList[2].sitecoreSeven_Id
-        }}>
-      <Button size="small">Learn More</Button>
-      </Link>
-      <Button size="small">Share</Button>
-      </CardActions>
-    </Card>
-    </Link>
+        ))}
         </div>
       </main>
 
@@ -197,8 +139,6 @@ export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
                 sitecoreSeven_Summary: SevensItem.sitecoreSeven_Summary,
                 sitecoreSeven_Id: SevensItem.id
               };
-
-
 
       });
 
