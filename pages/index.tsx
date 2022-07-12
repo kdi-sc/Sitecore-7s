@@ -30,14 +30,24 @@ export interface SevensProps extends PreviewProps{
 //Get Homepage Content From Sevens - Everything without Null Title
 const GET_HP_CONTENT = gql`{
   allM_Content_SitecoreSeven(where: { sitecoreSeven_Title_neq: null }) {
+    total
     results {
-      id
       sitecoreSeven_Title
       sitecoreSeven_Summary
-      cmpContentToLinkedAsset(first: 1) {
+      cmpContentToLinkedAsset {
+        total
         results {
-          fileName
           id
+          fileName
+          assetToPublicLink {
+            results {
+              resourceType
+              fileKey
+              relativeUrl
+              versionHash
+              resource
+            }
+          }
         }
       }
     }
