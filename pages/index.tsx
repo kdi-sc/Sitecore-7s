@@ -9,6 +9,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import Link from 'next/link'
 import { PreviewContext, PreviewProps } from "../components/previewContext";
 
 import { identifyVisitor,logViewEvent} from '../utility/CdpService';
@@ -60,12 +61,13 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       <main className={styles.main}>
 
         <h1 className={styles.title}>
-            
+        Sitecore 7&apos;s
         </h1>
         <p className={styles.description}>
         A place to find relevant Sitecore content in 7 minute chunks
         </p>
         <div className={styles.grid}>
+        <Link href="/content/test">
       <Card className={styles.card}>
       <CardMedia
         component="img"
@@ -86,6 +88,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       <Button size="small">Share</Button>
       </CardActions>
     </Card>
+    </Link>
 
 
 
