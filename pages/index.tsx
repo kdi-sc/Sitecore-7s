@@ -32,6 +32,7 @@ const GET_HP_CONTENT = gql`{
   allM_Content_SitecoreSeven(where: { sitecoreSeven_Title_neq: null }) {
     total
     results {
+      id
       sitecoreSeven_Title
       sitecoreSeven_Summary
       cmpContentToLinkedAsset {

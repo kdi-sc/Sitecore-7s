@@ -6,7 +6,7 @@ import { gql } from '@apollo/client';
 import { GetStaticProps, NextPage } from 'next';
 import { createApolloClient } from '../../utility/GraphQLApolloClient';
 import { ReactElement } from 'react';
-export interface SevensItem {
+export interface SevensItem extends PreviewProps{
     sitecoreSeven_Id: string;
     sitecoreSeven_Title: string;
     sitecoreSeven_Summary: string;
@@ -15,7 +15,7 @@ export interface SevensItem {
   }
   
   export interface SevensProps extends PreviewProps{
-    sevensItem: Array<SevensItem>;
+    sevensList: Array<SevensItem>;
   }
 
 //Get Homepage Content From Sevens - Everything without Null Title
@@ -54,23 +54,28 @@ const GET_ALL_CONTENT = gql`{
   `;
     
 const Content : NextPage<SevensProps> = (props): ReactElement<any> => {
+    const { sevensList } = props;
     const router = useRouter()
     if (router.isFallback) {
         return <div>loading...</div>
      }
     const { id } = router.query
   return (
+ <PreviewContext.Provider value={props}>
   <div className={styles.container}>
 
       <Head>
-        <title></title>
+        <title>{sevensList[0].sitecoreSeven_Title}</title>
         <meta name="description" content="A place to find relevant Sitecore content in 7 minute chunks." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      {sevensList[0].sitecoreSeven_Title}
   <p>Content: {id}</p>
 
   </div>
+  </PreviewContext.Provider>
+
   )
 }
 
@@ -101,7 +106,7 @@ export async function getStaticPaths() {
         console.log(sitecore_seven_item)
         return {
             props: {
-              sevensItem: sitecore_seven_item,
+              sevensList: sitecore_seven_item,
                 preview: context.preview ?? false,
             }
   
@@ -110,7 +115,7 @@ export async function getStaticPaths() {
         console.log(error);
         return {
             props: {
-              sevensItem: {},
+                sevensList: {},
                 preview: context.preview ?? false,
             },
         };
