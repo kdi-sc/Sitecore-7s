@@ -16,12 +16,16 @@ import { identifyVisitor,logViewEvent} from '../utility/CdpService';
 import { createApolloClient } from "../utility/GraphQLApolloClient";
 import { gql } from '@apollo/client';
 
+const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || '';
+
 export interface SevensItem {
   sitecoreSeven_Id: string;
   sitecoreSeven_Title: string;
   sitecoreSeven_Summary: string;
   assetFileName: string;
   assetId: string;
+  relativeUrl: string;
+  versionHash: string;
 }
 
 export interface SevensProps extends PreviewProps{
@@ -106,7 +110,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         }}>
       <Button size="small">Learn More</Button>
       </Link>
-      <Button size="small">Share</Button>
+      <Link href={FILE_DOMAIN_URL + "/" + sevensItem.relativeUrl+"?"+sevensItem.versionHash}>
+      <Button size="small">View Now</Button>
+      </Link>
       </CardActions>
     </Card>
     </Link>
@@ -140,15 +146,19 @@ export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
   const { data } = await myclient.query({ query: GET_HP_CONTENT });
   try {
 
-      const theSevens = data?.allM_Content_SitecoreSeven.results
+      const theSevens = data?.allM_Content_SitecoreSeven.results;
+      const AssetUrls = data?.allM_Content_SitecoreSeven.results.sitecoreSeven_Title;
+
+
 
       const theSevensProps = theSevens.map((SevensItem) => {
-
 
               return {
                 sitecoreSeven_Title: SevensItem.sitecoreSeven_Title,
                 sitecoreSeven_Summary: SevensItem.sitecoreSeven_Summary,
-                sitecoreSeven_Id: SevensItem.id
+                sitecoreSeven_Id: SevensItem.id,
+                relativeUrl: SevensItem.cmpContentToLinkedAsset.results[0].assetToPublicLink.results[0].relativeUrl,
+                versionHash: SevensItem.cmpContentToLinkedAsset.results[0].assetToPublicLink.results[0].versionHash
               };
 
       });
