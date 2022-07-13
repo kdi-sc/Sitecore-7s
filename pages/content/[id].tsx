@@ -60,7 +60,7 @@ const Content : NextPage<SevensProps> = (props): ReactElement<any> => {
     if (router.isFallback) {
         return <div>loading...</div>
      }
-     logViewEvent();
+     logViewEvent({"page" : "landing page",});
     const { id } = router.query
   return (
  <PreviewContext.Provider value={props}>
