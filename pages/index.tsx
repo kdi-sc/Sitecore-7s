@@ -62,7 +62,7 @@ const GET_HP_CONTENT = gql`{
 
 
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
-
+  logViewEvent({"page" : "homepage",});
   const { sevensList } = props;
 
   return (
@@ -184,5 +184,5 @@ export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
 
 //******
 
-logViewEvent({"page" : "homepage",});
+
 export default Home

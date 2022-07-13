@@ -2,7 +2,7 @@ import axios, { AxiosPromise, AxiosRequestConfig } from 'axios';
 import Script from 'next/script';
 import BoxeverServiceConfig from './BoxeverServiceConfig';
 
-// ***** TYPES *****
+// ***** TYPES ********
 
 type boxeverQueueFunctionType = () => void;
 
