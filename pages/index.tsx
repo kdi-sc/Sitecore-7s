@@ -64,7 +64,7 @@ const GET_HP_CONTENT = gql`{
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
 
   const { sevensList } = props;
-  logViewEvent();
+  logViewEvent({"page" : "homepage",});
   return (
     <PreviewContext.Provider value={props}>
       
