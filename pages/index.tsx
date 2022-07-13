@@ -86,10 +86,10 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         <div className={styles.grid}>
 
         {sevensList.slice(0, 3).map((sevensItem) => (
-        <Link href={{
+        <Link key={sevensItem.sitecoreSeven_Id} href={{
           pathname:"/content/" + sevensItem.sitecoreSeven_Id
         }}>
-      <Card key={sevensItem.sitecoreSeven_Id} className={styles.card}>
+      <Card className={styles.card}>
       <CardMedia
         component="img"
         height="140"
