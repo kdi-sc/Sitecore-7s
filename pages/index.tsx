@@ -15,9 +15,6 @@ import { PreviewContext, PreviewProps } from "../components/previewContext";
 import { identifyVisitor,logViewEvent} from '../utility/CdpService';
 import { createApolloClient } from "../utility/GraphQLApolloClient";
 import { gql } from '@apollo/client';
-import { Modal } from "@mui/material";
-import Box from '@mui/material/Box';
-import ReactPlayer from 'react-player';
 
 const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || '';
 
@@ -63,23 +60,10 @@ const GET_HP_CONTENT = gql`{
 }
 `;
 
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
 
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   const { sevensList } = props;
   logViewEvent();
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   return (
     <PreviewContext.Provider value={props}>
       
@@ -102,6 +86,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         <div className={styles.grid}>
 
         {sevensList.slice(0, 3).map((sevensItem) => (
+        <Link key={sevensItem.sitecoreSeven_Id} href={{
+          pathname:"/content/" + sevensItem.sitecoreSeven_Id
+        }}>
       <Card className={styles.card}>
       <CardMedia
         component="img"
@@ -118,32 +105,17 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         </Typography>
       </CardContent>
       <CardActions>    
-      <Link href={FILE_DOMAIN_URL + "/" + sevensItem.relativeUrl+"?"+sevensItem.versionHash}> </Link>
-      <Button size="small" onClick={handleOpen}>View Now</Button>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-          {sevensItem.sitecoreSeven_Title}
-          </Typography>
-          <ReactPlayer 
-          url={FILE_DOMAIN_URL + "/" + sevensItem.relativeUrl+"?"+sevensItem.versionHash}
-          controls={true}
-          />
-        </Box>
-      </Modal>
-     
-      <Link href={{
+      <Link href={FILE_DOMAIN_URL + "/" + sevensItem.relativeUrl+"?"+sevensItem.versionHash}>
+      <Button size="small">View Now</Button>
+      </Link>
+         <Link href={{
           pathname:"/content/" + sevensItem.sitecoreSeven_Id
         }}>
       <Button size="small">Learn More</Button>
       </Link>
       </CardActions>
     </Card>
+    </Link>
         ))}
         </div>
       </main>
