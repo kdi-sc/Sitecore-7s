@@ -35,5 +35,5 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
     </CacheProvider>
   );
 };
-logViewEvent({"page" : "homepage",});
+
 export default MyApp;
