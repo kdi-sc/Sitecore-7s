@@ -6,6 +6,7 @@ import { gql } from '@apollo/client';
 import { GetStaticProps, NextPage } from 'next';
 import { createApolloClient } from '../../utility/GraphQLApolloClient';
 import { ReactElement } from 'react';
+import { CdpScripts, logViewEvent } from '../../utility/CdpService';
 export interface SevensItem extends PreviewProps{
     sitecoreSeven_Id: string;
     sitecoreSeven_Title: string;
@@ -59,6 +60,7 @@ const Content : NextPage<SevensProps> = (props): ReactElement<any> => {
     if (router.isFallback) {
         return <div>loading...</div>
      }
+     logViewEvent();
     const { id } = router.query
   return (
  <PreviewContext.Provider value={props}>

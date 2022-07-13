@@ -11,8 +11,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link'
 import { PreviewContext, PreviewProps } from "../components/previewContext";
+import { CdpScripts, logViewEvent } from '../utility/CdpService';
 
-import { identifyVisitor,logViewEvent} from '../utility/CdpService';
 import { createApolloClient } from "../utility/GraphQLApolloClient";
 import { gql } from '@apollo/client';
 
@@ -62,6 +62,7 @@ const GET_HP_CONTENT = gql`{
 
 
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
+
   const { sevensList } = props;
   logViewEvent();
   return (
@@ -136,7 +137,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     </PreviewContext.Provider>
   )
 }
-logViewEvent();
+
 
 // ****** 
 export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {

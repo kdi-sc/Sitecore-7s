@@ -134,7 +134,7 @@ export const BoxeverScripts: JSX.Element | undefined = isCdpConfigured ? (
       _boxever_settings = {
         client_key: 'demus02u1pkrra9te2thparua6r964fs',
         target: 'https://api-us.boxever.com/v1.2',
-        cookie_domain: '.localhost',
+        cookie_domain: '.vercel.app',
         web_flow_target: 'https://d35vb5cccm4xzp.cloudfront.net',
         pointOfSale: 'carb-overlayteam'
       };`}</Script>
