@@ -64,7 +64,7 @@ const GET_HP_CONTENT = gql`{
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
 
   const { sevensList } = props;
-  logViewEvent({"page" : "homepage",});
+
   return (
     <PreviewContext.Provider value={props}>
       
@@ -184,5 +184,5 @@ export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
 
 //******
 
-
+logViewEvent({"page" : "homepage",});
 export default Home
