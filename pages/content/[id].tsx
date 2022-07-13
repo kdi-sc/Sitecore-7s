@@ -65,12 +65,10 @@ const Content : NextPage<SevensProps> = (props): ReactElement<any> => {
   <div className={styles.container}>
 
       <Head>
-        <title>{sevensList[0].sitecoreSeven_Title}</title>
+        <title></title>
         <meta name="description" content="A place to find relevant Sitecore content in 7 minute chunks." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      {sevensList[0].sitecoreSeven_Title}
   <p>Content: {id}</p>
 
   </div>
