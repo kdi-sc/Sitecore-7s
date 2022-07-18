@@ -61,6 +61,10 @@ const GET_HP_CONTENT = gql`{
 `;
 
 
+const handleClick = (e) =>  {
+  logViewEvent({"type" : "CONTENT_WATCHED",});
+}
+
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   logViewEvent({"page" : "homepage",});
   const { sevensList } = props;
@@ -107,7 +111,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       </CardContent>
       <CardActions>    
       <Link href={FILE_DOMAIN_URL + "/" + sevensItem.relativeUrl+"?"+sevensItem.versionHash}>
-      <Button size="small">View Now</Button>
+      <Button onClick={handleClick} size="small">View Now</Button>
       </Link>
          <Link href={{
           pathname:"/content/" + sevensItem.sitecoreSeven_Id
@@ -168,7 +172,8 @@ export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
           props: {
             sevensList: [...theSevensProps],
               preview: context.preview ?? false,
-          }
+          },
+          revalidate: 5,
 
       };
   } catch (error) {
