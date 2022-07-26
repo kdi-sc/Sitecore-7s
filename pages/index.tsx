@@ -17,6 +17,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import ReactPlayer from 'react-player'
+import { Fab } from "@mui/material";
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 
 const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || '';
@@ -104,8 +106,10 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       
       <main className={styles.main}>
 
+
+     
         <h1 className={styles.title}>
-        Sitecore 7&apos;s
+        <Image src="/sitecore.png" alt="Sitecore" width={32} height={32} />Sitecore 7&apos;s
         </h1>
         <p className={styles.description}>
         A place to find relevant Sitecore content in 7 minute chunks
@@ -129,7 +133,10 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         </Typography>
       </CardContent>
       <CardActions>    
-      <Button onClick={() => { handleOpen(); logView(); setModalData(sevensItem)}}>View Summary</Button>   
+      {/* <Button onClick={() => { handleOpen(); logView(); setModalData(sevensItem)}}>View Summary</Button>  */}
+      <Fab size="small" aria-label="like">
+      <FavoriteIcon />
+      </Fab>  
       </CardActions>
     </Card>
         ))}
