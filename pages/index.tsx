@@ -117,11 +117,12 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         {sevensList.slice(0, 3).map((sevensItem) => (
       <Card key={sevensItem.sitecoreSeven_Id} className={styles.card} onClick={() => { handleOpen(); logView(); setModalData(sevensItem)}}>
       <CardMedia
-        component="img"
-        height="140"
-        image="/testimg1.png"
-        alt=""
-      />
+        component="video"
+        autoPlay 
+        controls 
+        src={FILE_DOMAIN_URL + "/" + sevensItem.relativeUrl+"?"+sevensItem.versionHash}
+        >
+        </CardMedia>
       <CardContent>
         <Typography gutterBottom variant="h6" component="div">
         {sevensItem.sitecoreSeven_Title.replace(/\&nbsp;/g, '')}
@@ -131,9 +132,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         </Typography>
       </CardContent>
       <CardActions>    
-      {/* <Link href={FILE_DOMAIN_URL + "/" + sevensItem.relativeUrl+"?"+sevensItem.versionHash}> */}
       <Button onClick={() => { handleOpen(); logView(); setModalData(sevensItem)}}>Watch Now</Button>   
-             {/* </Link> */}
       </CardActions>
     </Card>
         ))}
