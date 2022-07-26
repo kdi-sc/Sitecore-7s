@@ -31,6 +31,7 @@ const style = {
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
+  width: '60%',
   p: 4,
 };
 
@@ -149,7 +150,8 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
               <Typography color="text.secondary">
               <ReactPlayer 
                 url={FILE_DOMAIN_URL + "/" + modalData.relativeUrl+"?"+modalData.versionHash} 
-                controls>
+                controls
+                width={"100%"}>
                 </ReactPlayer>
             <p> {modalData.sitecoreSeven_Summary} </p>
               </Typography>
