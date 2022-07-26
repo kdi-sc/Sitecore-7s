@@ -31,7 +31,7 @@ const style = {
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
-  width: '60%',
+  width: '80%',
   p: 4,
 };
 
