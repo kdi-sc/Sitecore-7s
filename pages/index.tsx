@@ -26,7 +26,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  bgcolor: 'black',
+  bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
@@ -124,15 +124,12 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         >
         </CardMedia>
       <CardContent>
-        <Typography gutterBottom variant="h6" component="div">
-        {sevensItem.sitecoreSeven_Title.replace(/\&nbsp;/g, '')}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-        {sevensItem.sitecoreSeven_Summary.replace(/^(.{80}[^\s]*).*/, "$1")}...
+        <Typography gutterBottom variant="body2" component="div">
+        <b>{sevensItem.sitecoreSeven_Title.replace(/\&nbsp;/g, '')}</b>
         </Typography>
       </CardContent>
       <CardActions>    
-      <Button onClick={() => { handleOpen(); logView(); setModalData(sevensItem)}}>Watch Now</Button>   
+      <Button onClick={() => { handleOpen(); logView(); setModalData(sevensItem)}}>View Summary</Button>   
       </CardActions>
     </Card>
         ))}
@@ -142,10 +139,13 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
               aria-labelledby={modalData.sitecoreSeven_Title}
               aria-describedby={modalData.sitecoreSeven_Summary}>
               <Box sx={style}>
-                <ReactPlayer 
+              <Typography color="text.secondary">
+              <ReactPlayer 
                 url={FILE_DOMAIN_URL + "/" + modalData.relativeUrl+"?"+modalData.versionHash} 
                 controls>
                 </ReactPlayer>
+            <p> {modalData.sitecoreSeven_Summary} </p>
+              </Typography>
               </Box>
             </Modal>  
         </div>
