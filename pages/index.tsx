@@ -100,7 +100,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
 
       <Head>
         <title>Sitecore 7&apos;s</title>
-        <meta name="description" content="A place to find relevant Sitecore content in 7 minute chunks." />
+        <meta name="description" content="a place for small bites of Sitecore conversations." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       
@@ -112,7 +112,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         <Image src="/sitecore.png" alt="Sitecore" width={32} height={32} />Sitecore 7&apos;s
         </h1>
         <p className={styles.description}>
-        A place to find relevant Sitecore content in 7 minute chunks
+        A place for small bites of Sitecore conversations
         </p>
         <div className={styles.grid}>
 
