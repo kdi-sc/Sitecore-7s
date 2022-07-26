@@ -4,6 +4,7 @@
 
 .main {
   min-height: 88vh;
+  padding: 2rem;
   flex: 1;
   display: flex;
   flex-direction: column;
