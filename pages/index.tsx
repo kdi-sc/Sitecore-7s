@@ -112,7 +112,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         <Image src="/sitecore.png" alt="Sitecore" width={32} height={32} />Sitecore 7&apos;s
         </h1>
         <p className={styles.description}>
-        A place for small bites of Sitecore conversations
+        A place for small bites of Sitecore conversations.
         </p>
         <div className={styles.grid}>
 
