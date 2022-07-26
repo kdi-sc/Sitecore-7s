@@ -7,16 +7,31 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Link from 'next/link'
 import { PreviewContext, PreviewProps } from "../components/previewContext";
 import { CdpScripts, logViewEvent } from '../utility/CdpService';
-
 import { createApolloClient } from "../utility/GraphQLApolloClient";
 import { gql } from '@apollo/client';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import ReactPlayer from 'react-player'
+
 
 const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || '';
+
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'black',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
 
 export interface SevensItem {
   sitecoreSeven_Id: string;
@@ -61,13 +76,20 @@ const GET_HP_CONTENT = gql`{
 `;
 
 
-const handleClick = (e) =>  {
+const logView = () =>  {
   logViewEvent({"type" : "CONTENT_WATCHED",});
 }
+
 
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   logViewEvent({"page" : "homepage",});
   const { sevensList } = props;
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [modalData, setModalData] = useState({sitecoreSeven_Id:"", sitecoreSeven_Title:"", sitecoreSeven_Summary:"",relativeUrl:"",versionHash:""});
+
 
   return (
     <PreviewContext.Provider value={props}>
@@ -90,11 +112,10 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         </p>
         <div className={styles.grid}>
 
+      
+
         {sevensList.slice(0, 3).map((sevensItem) => (
-        <Link key={sevensItem.sitecoreSeven_Id} href={{
-          pathname:"/content/" + sevensItem.sitecoreSeven_Id
-        }}>
-      <Card className={styles.card}>
+      <Card key={sevensItem.sitecoreSeven_Id} className={styles.card} onClick={() => { handleOpen(); logView(); setModalData(sevensItem)}}>
       <CardMedia
         component="img"
         height="140"
@@ -103,25 +124,31 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       />
       <CardContent>
         <Typography gutterBottom variant="h6" component="div">
-        {sevensItem.sitecoreSeven_Title}
+        {sevensItem.sitecoreSeven_Title.replace(/\&nbsp;/g, '')}
         </Typography>
         <Typography variant="body2" color="text.secondary">
         {sevensItem.sitecoreSeven_Summary.replace(/^(.{80}[^\s]*).*/, "$1")}...
         </Typography>
       </CardContent>
       <CardActions>    
-      <Link href={FILE_DOMAIN_URL + "/" + sevensItem.relativeUrl+"?"+sevensItem.versionHash}>
-      <Button onClick={handleClick} size="small">View Now</Button>
-      </Link>
-         <Link href={{
-          pathname:"/content/" + sevensItem.sitecoreSeven_Id
-        }}>
-      <Button size="small">Learn More</Button>
-      </Link>
+      {/* <Link href={FILE_DOMAIN_URL + "/" + sevensItem.relativeUrl+"?"+sevensItem.versionHash}> */}
+      <Button onClick={() => { handleOpen(); logView(); setModalData(sevensItem)}}>Watch Now</Button>   
+             {/* </Link> */}
       </CardActions>
     </Card>
-    </Link>
         ))}
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby={modalData.sitecoreSeven_Title}
+              aria-describedby={modalData.sitecoreSeven_Summary}>
+              <Box sx={style}>
+                <ReactPlayer 
+                url={FILE_DOMAIN_URL + "/" + modalData.relativeUrl+"?"+modalData.versionHash} 
+                controls>
+                </ReactPlayer>
+              </Box>
+            </Modal>  
         </div>
       </main>
 
