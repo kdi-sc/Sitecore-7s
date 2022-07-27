@@ -115,8 +115,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         </p>
         <div className={styles.grid}>
 
-      
-
         {sevensList.slice(0, 3).map((sevensItem) => (
       <Card key={sevensItem.sitecoreSeven_Id} className={styles.card} onClick={() => { handleOpen(); logView(sevensItem.sitecoreSeven_Id); setModalData(sevensItem)}}>
       <CardMedia
@@ -145,13 +143,13 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
               aria-labelledby={modalData.sitecoreSeven_Title}
               aria-describedby={modalData.sitecoreSeven_Summary}>
               <Box sx={style}>
-              <Typography color="text.secondary">
               <ReactPlayer 
                 url={FILE_DOMAIN_URL + "/" + modalData.relativeUrl+"?"+modalData.versionHash} 
                 controls
                 width={"100%"}>
                 </ReactPlayer>
-            <p> {modalData.sitecoreSeven_Summary} </p>
+                <Typography color="text.secondary">
+               {modalData.sitecoreSeven_Summary}
               </Typography>
               </Box>
             </Modal>  
