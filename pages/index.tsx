@@ -149,7 +149,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 width={"100%"}>
                 </ReactPlayer>
                 <Typography color="text.secondary">
-               {modalData.sitecoreSeven_Summary}
+               <br/> {modalData.sitecoreSeven_Summary}
               </Typography>
               </Box>
             </Modal>  
