@@ -7,17 +7,15 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Link from 'next/link'
 import { PreviewContext, PreviewProps } from "../components/previewContext";
 import { CdpScripts, logViewEvent } from '../utility/CdpService';
 import { createApolloClient } from "../utility/GraphQLApolloClient";
 import { gql } from '@apollo/client';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import ReactPlayer from 'react-player'
-import { Fab } from "@mui/material";
+import { IconButton } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 
@@ -49,6 +47,7 @@ export interface SevensItem {
 export interface SevensProps extends PreviewProps{
   sevensList: Array<SevensItem>;
 }
+
 //Get Homepage Content From Sevens - Everything without Null Title
 const GET_HP_CONTENT = gql`{
   allM_Content_SitecoreSeven(where: { sitecoreSeven_Title_neq: null }) {
@@ -79,15 +78,14 @@ const GET_HP_CONTENT = gql`{
 `;
 
 
-const logView = () =>  {
-  logViewEvent({"type" : "CONTENT_WATCHED",});
+const logView = (id) =>  {
+  logViewEvent({"type" : "CONTENT_WATCHED", "content_hub_id" : id});
 }
 
 
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   logViewEvent({"page" : "homepage",});
   const { sevensList } = props;
-
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -120,11 +118,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       
 
         {sevensList.slice(0, 3).map((sevensItem) => (
-      <Card key={sevensItem.sitecoreSeven_Id} className={styles.card} onClick={() => { handleOpen(); logView(); setModalData(sevensItem)}}>
+      <Card key={sevensItem.sitecoreSeven_Id} className={styles.card} onClick={() => { handleOpen(); logView(sevensItem.sitecoreSeven_Id); setModalData(sevensItem)}}>
       <CardMedia
         component="video"
-        autoPlay 
-        controls 
         src={FILE_DOMAIN_URL + "/" + sevensItem.relativeUrl+"?"+sevensItem.versionHash}
         >
         </CardMedia>
@@ -133,12 +129,14 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         <b>{sevensItem.sitecoreSeven_Title.replace(/\&nbsp;/g, '')}</b>
         </Typography>
       </CardContent>
-      <CardActions>    
-      {/* <Button onClick={() => { handleOpen(); logView(); setModalData(sevensItem)}}>View Summary</Button>  */}
-      <Fab size="small" aria-label="like">
-      <FavoriteIcon />
-      </Fab>  
+      <CardActions disableSpacing>
+        <IconButton aria-label="add to favorites">
+          <FavoriteIcon />
+        </IconButton>
       </CardActions>
+
+
+   
     </Card>
         ))}
             <Modal
