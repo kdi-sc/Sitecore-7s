@@ -1,16 +1,19 @@
-import * as React from "react";
-import type { AppProps } from "next/app";
-import { CacheProvider, EmotionCache } from "@emotion/react";
-import { ThemeProvider, CssBaseline, createTheme } from "@mui/material";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import "../styles/globals.css";
+
+import * as React from "react";
+
+import { CacheProvider, EmotionCache } from "@emotion/react";
+import { CdpScripts, logViewEvent } from "../utility/CdpService";
+import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+
+import { ApolloProvider } from "@apollo/client";
+import type { AppProps } from "next/app";
 import createEmotionCache from "../utility/createEmotionCache";
 import lightThemeOptions from "../styles/theme/lightThemeOptions";
-import "../styles/globals.css";
-import { CdpScripts, logViewEvent } from "../utility/CdpService";
-import { ApolloProvider } from "@apollo/client";
 import useGraphQLApolloClient from "../utility/GraphQLApolloBrowserClient";
 
 interface MyAppProps extends AppProps {

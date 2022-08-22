@@ -1,6 +1,7 @@
-import axios, { AxiosPromise, AxiosRequestConfig } from 'axios';
-import Script from 'next/script';
-import BoxeverServiceConfig from './BoxeverServiceConfig';
+import axios, { AxiosPromise, AxiosRequestConfig } from "axios";
+
+import BoxeverServiceConfig from "./BoxeverServiceConfig";
+import Script from "next/script";
 
 // ***** TYPES ********
 
@@ -114,15 +115,15 @@ type GuestProfileResponse = GuestProfile | undefined;
 
 // ***** API *****
 
-const CDP_PROXY_URL = process.env.CDP_PROXY_HOST || '';
-const CDP_CLIENT_KEY = process.env.NEXT_PUBLIC_CDP_CLIENT_KEY || '';
-const CDP_API_TARGET_ENDPOINT = process.env.NEXT_PUBLIC_CDP_TARGET_URL || '';
+const CDP_PROXY_URL = process.env.CDP_PROXY_HOST || "";
+const CDP_CLIENT_KEY = process.env.NEXT_PUBLIC_CDP_CLIENT_KEY || "";
+const CDP_API_TARGET_ENDPOINT = process.env.NEXT_PUBLIC_CDP_TARGET_URL || "";
 export const isCdpConfigured = !!CDP_CLIENT_KEY && !!CDP_API_TARGET_ENDPOINT;
 
-console.log("CDP_CLIENT_KEY:"+CDP_CLIENT_KEY);
-console.log("CDP_API_TARGET_ENDPOINT:"+CDP_API_TARGET_ENDPOINT);
+console.log("CDP_CLIENT_KEY:" + CDP_CLIENT_KEY);
+console.log("CDP_API_TARGET_ENDPOINT:" + CDP_API_TARGET_ENDPOINT);
 
-console.log("CDPCONFIGURED:"+isCdpConfigured);
+console.log("CDPCONFIGURED:" + isCdpConfigured);
 
 export const BoxeverScripts: JSX.Element | undefined = isCdpConfigured ? (
   <>
@@ -144,7 +145,7 @@ export const BoxeverScripts: JSX.Element | undefined = isCdpConfigured ? (
 
 function isBoxeverConfiguredInBrowser(): boolean {
   return !!(
-    typeof window !== 'undefined' &&
+    typeof window !== "undefined" &&
     window._boxever_settings &&
     window._boxever_settings.client_key
   );
@@ -153,7 +154,7 @@ function isBoxeverConfiguredInBrowser(): boolean {
 function getConfigWithCurrentPage(config: Record<string, unknown>) {
   return Object.assign(
     {
-      page: window.location.pathname + window.location.search,
+      page: window.location.pathname + window.location.search
     },
     config
   );
@@ -165,10 +166,10 @@ function createEventPayload(eventConfig: Record<string, unknown>) {
       browser_id: window.Boxever.getID(), // For eventCreate calls
       browserId: window.Boxever.getID(), // For callFlows calls
       channel: BoxeverServiceConfig.channel,
-      language: window.navigator.language ? window.navigator.language : 'en',
-      currency: 'USD',
-      pos: 'carb-overlayteam',
-      websiteBaseUrl: BoxeverServiceConfig.websiteBaseUrl,
+      language: window.navigator.language ? window.navigator.language : "en",
+      currency: "USD",
+      pos: "carb-overlayteam",
+      websiteBaseUrl: BoxeverServiceConfig.websiteBaseUrl
     },
     eventConfig
   );
@@ -176,7 +177,7 @@ function createEventPayload(eventConfig: Record<string, unknown>) {
 
 function createFlowPayload(flowConfig: Record<string, unknown>) {
   return Object.assign(createEventPayload(flowConfig), {
-    clientKey: window._boxever_settings.client_key,
+    clientKey: window._boxever_settings.client_key
   });
 }
 
@@ -186,17 +187,27 @@ function createFlowPayload(flowConfig: Record<string, unknown>) {
 // initializing.
 // ****************************************************************************
 function delayUntilBoxeverIsReady(functionToDelay: () => unknown) {
-  if (window.Boxever && window.Boxever.getID() !== 'anonymous' && window._boxeverq) {
+  if (
+    window.Boxever &&
+    window.Boxever.getID() !== "anonymous" &&
+    window._boxeverq
+  ) {
     functionToDelay();
   } else {
     const timeToWaitInMilliseconds = 100;
-    console.log(`Boxever is not ready yet. Waiting ${timeToWaitInMilliseconds}ms before retrying.`);
-    window.setTimeout(delayUntilBoxeverIsReady, timeToWaitInMilliseconds, functionToDelay);
+    console.log(
+      `Boxever is not ready yet. Waiting ${timeToWaitInMilliseconds}ms before retrying.`
+    );
+    window.setTimeout(
+      delayUntilBoxeverIsReady,
+      timeToWaitInMilliseconds,
+      functionToDelay
+    );
   }
 }
 
 function sendEventCreate(eventConfig: Record<string, unknown>) {
-  if (typeof window === 'undefined' || !isBoxeverConfiguredInBrowser()) {
+  if (typeof window === "undefined" || !isBoxeverConfiguredInBrowser()) {
     return new Promise<void>(function (resolve) {
       resolve();
     });
@@ -214,14 +225,14 @@ function sendEventCreate(eventConfig: Record<string, unknown>) {
             createEventPayload(eventWithCurrentPage),
             function (response) {
               if (!response) {
-                reject('No response provided.');
+                reject("No response provided.");
               }
-              if (response.status !== 'OK') {
-                reject('Response status: ' + response.status);
+              if (response.status !== "OK") {
+                reject("Response status: " + response.status);
               }
               resolve(response);
             },
-            'json'
+            "json"
           );
         });
       });
@@ -232,7 +243,7 @@ function sendEventCreate(eventConfig: Record<string, unknown>) {
 }
 
 function callFlows(flowConfig: Record<string, unknown>) {
-  if (typeof window === 'undefined' || !isBoxeverConfiguredInBrowser()) {
+  if (typeof window === "undefined" || !isBoxeverConfiguredInBrowser()) {
     return new Promise<void>(function (resolve) {
       resolve();
     });
@@ -250,11 +261,11 @@ function callFlows(flowConfig: Record<string, unknown>) {
             createFlowPayload(eventWithCurrentPage),
             function (response) {
               if (!response) {
-                reject('No response provided.');
+                reject("No response provided.");
               }
               resolve(response);
             },
-            'json'
+            "json"
           );
         });
       });
@@ -265,10 +276,12 @@ function callFlows(flowConfig: Record<string, unknown>) {
 }
 
 // Boxever view page tracking
-export function logViewEvent(additionalData?: Record<string, unknown>): Promise<unknown> {
+export function logViewEvent(
+  additionalData?: Record<string, unknown>
+): Promise<unknown> {
   const eventConfig = Object.assign(
     {
-      type: 'VIEW',
+      type: "VIEW"
     },
     additionalData
   );
@@ -276,10 +289,13 @@ export function logViewEvent(additionalData?: Record<string, unknown>): Promise<
   return sendEventCreate(eventConfig);
 }
 
-export function logEvent(eventName: string, payload?: Record<string, unknown>): Promise<unknown> {
+export function logEvent(
+  eventName: string,
+  payload?: Record<string, unknown>
+): Promise<unknown> {
   const eventConfig = {
     type: eventName,
-    ...payload,
+    ...payload
   };
 
   return sendEventCreate(eventConfig);
@@ -293,14 +309,14 @@ export function identifyVisitor(
   phoneNumber?: string
 ): Promise<unknown> {
   const eventConfig: Record<string, unknown> = {
-    type: 'IDENTITY',
+    type: "IDENTITY",
     email: email,
     identifiers: [
       {
-        provider: 'email',
-        id: email,
-      },
-    ],
+        provider: "email",
+        id: email
+      }
+    ]
   };
   if (firstName) {
     eventConfig.firstname = firstName;
@@ -319,8 +335,8 @@ export function identifyVisitor(
 // Closes current Boxever browsing session.
 // ****************************************************************************
 export function closeSession(): Promise<unknown> {
-  return logEvent('FORCE_CLOSE', {
-    _bx_extended_message: '1',
+  return logEvent("FORCE_CLOSE", {
+    _bx_extended_message: "1"
   });
 }
 
@@ -331,7 +347,7 @@ export function closeSession(): Promise<unknown> {
 // organized to return a promise to know when the asynchronous parts are done.
 // ****************************************************************************
 export function forgetCurrentGuest(): Promise<void> {
-  if (typeof window === 'undefined' || !isBoxeverConfiguredInBrowser()) {
+  if (typeof window === "undefined" || !isBoxeverConfiguredInBrowser()) {
     return new Promise<void>(function (resolve) {
       resolve();
     });
@@ -350,7 +366,7 @@ export function forgetCurrentGuest(): Promise<void> {
         function (data) {
           try {
             if (!data || !data.ref) {
-              reject('No response or ref provided.');
+              reject("No response or ref provided.");
             }
 
             // Code copied from Boxever library to make it into a promise
@@ -386,7 +402,7 @@ export function forgetCurrentGuest(): Promise<void> {
             reject(e);
           }
         },
-        'json'
+        "json"
       );
     } catch (err) {
       reject(err);
@@ -405,34 +421,40 @@ export function forgetCurrentGuest(): Promise<void> {
 // ****************************************************************************
 export function getGuestRef(): Promise<GuestRefResponse> {
   return callFlows({
-    friendlyId: 'getguestref',
+    friendlyId: "getguestref"
   }) as Promise<GuestRefResponse>;
 }
 
-function boxeverPost(action: string, payload?: Record<string, unknown>): AxiosPromise<unknown> {
+function boxeverPost(
+  action: string,
+  payload?: Record<string, unknown>
+): AxiosPromise<unknown> {
   const url = `${CDP_PROXY_URL}/Cdp${action}`;
 
   const options: AxiosRequestConfig = {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'content-type': 'application/json',
+      "content-type": "application/json"
     },
     data: payload,
     withCredentials: false,
-    url,
+    url
   };
 
   return axios(options);
 }
 
-function boxeverGet(action: string, payload?: Record<string, unknown>): AxiosPromise<unknown> {
+function boxeverGet(
+  action: string,
+  payload?: Record<string, unknown>
+): AxiosPromise<unknown> {
   const url = `${CDP_PROXY_URL}/Cdp${action}`;
 
   const options: AxiosRequestConfig = {
-    method: 'GET',
+    method: "GET",
     params: payload,
     withCredentials: false,
-    url,
+    url
   };
 
   return axios(options);
@@ -479,11 +501,17 @@ export function saveDataExtension(
 // ********************************
 // Get non-expanded guest profile
 // ********************************
-function getGuestProfilePromise(guestRef: GuestRef): Promise<GuestProfileResponse> {
-  return boxeverGet(`/getguestByRef?guestRef=${guestRef}`) as Promise<GuestProfileResponse>;
+function getGuestProfilePromise(
+  guestRef: GuestRef
+): Promise<GuestProfileResponse> {
+  return boxeverGet(
+    `/getguestByRef?guestRef=${guestRef}`
+  ) as Promise<GuestProfileResponse>;
 }
 
-export function getGuestProfileResponse(guestRef?: GuestRef): Promise<GuestProfileResponse> {
+export function getGuestProfileResponse(
+  guestRef?: GuestRef
+): Promise<GuestProfileResponse> {
   if (!isBoxeverConfiguredInBrowser()) {
     return new Promise<undefined>(function (resolve) {
       resolve(undefined);
@@ -491,7 +519,9 @@ export function getGuestProfileResponse(guestRef?: GuestRef): Promise<GuestProfi
   }
 
   if (!guestRef) {
-    return getGuestRef().then((response) => getGuestProfilePromise(response.guestRef));
+    return getGuestRef().then((response) =>
+      getGuestProfilePromise(response.guestRef)
+    );
   } else {
     return getGuestProfilePromise(guestRef);
   }
@@ -500,7 +530,9 @@ export function getGuestProfileResponse(guestRef?: GuestRef): Promise<GuestProfi
 // ********************************
 // isAnonymousGuest
 // ********************************
-export function isAnonymousGuestInGuestResponse(guestResponse: GuestProfileResponse): boolean {
+export function isAnonymousGuestInGuestResponse(
+  guestResponse: GuestProfileResponse
+): boolean {
   return !guestResponse?.data?.email;
 }
 
@@ -536,8 +568,10 @@ export function getGuestFullNameInGuestResponse(
   return `${data.firstName} ${data.lastName}`;
 }
 
-export function getGuestFullName(guestRef?: GuestRef): Promise<string | undefined> {
-  const defaultValue = '';
+export function getGuestFullName(
+  guestRef?: GuestRef
+): Promise<string | undefined> {
+  const defaultValue = "";
 
   if (!isBoxeverConfiguredInBrowser()) {
     return new Promise(function (resolve) {
@@ -564,17 +598,17 @@ export function getDynamicWelcomeMessage(
   ipAddress: string,
   language: string
 ): Promise<WelcomeMessage> {
-  const dataExtensionName = 'PersonalInformation';
+  const dataExtensionName = "PersonalInformation";
 
   const dataExtensionPayload = {
     key: dataExtensionName,
     ipAddress,
-    language,
+    language
   };
   return saveDataExtension(dataExtensionName, dataExtensionPayload).then(
     () =>
       callFlows({
-        friendlyId: 'dynamic_welcome_message',
+        friendlyId: "dynamic_welcome_message"
       }) as Promise<WelcomeMessage>
   );
 }

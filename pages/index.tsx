@@ -1,22 +1,23 @@
-import { GetStaticProps, GetServerSideProps, NextPage } from "next";
+import { CdpScripts, logViewEvent } from "../utility/CdpService";
+import { GetServerSideProps, GetStaticProps, NextPage } from "next";
+import { PreviewContext, PreviewProps } from "../components/previewContext";
 import React, { ReactElement, useEffect, useState } from "react";
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
+
+import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import { PreviewContext, PreviewProps } from "../components/previewContext";
-import { CdpScripts, logViewEvent } from "../utility/CdpService";
-import { createApolloClient } from "../utility/GraphQLApolloClient";
-import { gql } from "@apollo/client";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import Head from "next/head";
+import { IconButton } from "@mui/material";
+import Image from "next/image";
 import Modal from "@mui/material/Modal";
 import ReactPlayer from "react-player";
-import { IconButton } from "@mui/material";
-import FavoriteIcon from "@mui/icons-material/Favorite";
+import Typography from "@mui/material/Typography";
+import { createApolloClient } from "../utility/GraphQLApolloClient";
+import { gql } from "@apollo/client";
+import styles from "../styles/Home.module.css";
 
 const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || "";
 

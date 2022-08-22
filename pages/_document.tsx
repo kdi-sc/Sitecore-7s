@@ -1,9 +1,10 @@
 import * as React from "react";
-import Document, { Html, Head, Main, NextScript } from "next/document";
-import createEmotionServer from "@emotion/server/create-instance";
+
 import { CdpScripts, logViewEvent } from "../utility/CdpService";
+import Document, { Head, Html, Main, NextScript } from "next/document";
 
 import createEmotionCache from "../utility/createEmotionCache";
+import createEmotionServer from "@emotion/server/create-instance";
 
 export default class MyDocument extends Document {
   render() {
