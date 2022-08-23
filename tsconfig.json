@@ -17,6 +17,12 @@
     "incremental": true,
     "strictNullChecks": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "utils/cdpLibrary.js", "utility/cdpConfig.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "utils/cdpLibrary.js",
+    "utility/cdpConfig.js"
+  ],
   "exclude": ["node_modules"]
 }

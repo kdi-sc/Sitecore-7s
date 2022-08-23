@@ -3,13 +3,13 @@ import {
   ApolloLink,
   InMemoryCache,
   createHttpLink,
-  from
-} from "@apollo/client";
+  from,
+} from '@apollo/client'
 
-const GRAPHQL_ENDPOINT_PREVIEW = process.env.GRAPHQL_ENDPOINT_PREVIEW || "";
-const GRAPHQL_SECRET_PREVIEW = process.env.GRAPHQL_SECRET_PREVIEW || "";
-const GRAPHQL_ENDPOINT = process.env.GRAPHQL_ENDPOINT || "";
-const GRAPHQL_SECRET = process.env.GRAPHQL_SECRET || "";
+const GRAPHQL_ENDPOINT_PREVIEW = process.env.GRAPHQL_ENDPOINT_PREVIEW || ''
+const GRAPHQL_SECRET_PREVIEW = process.env.GRAPHQL_SECRET_PREVIEW || ''
+const GRAPHQL_ENDPOINT = process.env.GRAPHQL_ENDPOINT || ''
+const GRAPHQL_SECRET = process.env.GRAPHQL_SECRET || ''
 
 class GraphQLApolloClient {
   constructor(private endpoint: string, private graphql_secret: string) {}
@@ -22,8 +22,8 @@ class GraphQLApolloClient {
     //console.log("GetClient: START");
 
     const httpLink = createHttpLink({
-      uri: `${this.endpoint}`
-    });
+      uri: `${this.endpoint}`,
+    })
     //console.log("GetClient: After httpLink");
 
     const authMiddleware = new ApolloLink((operation, forward) => {
@@ -31,15 +31,15 @@ class GraphQLApolloClient {
       operation.setContext(({ headers = {} }) => ({
         headers: {
           ...headers,
-          "X-GQL-Token": `${this.graphql_secret}`
+          'X-GQL-Token': `${this.graphql_secret}`,
         },
         fetchOptions: {
-          mode: "no-cors"
-        }
-      }));
+          mode: 'no-cors',
+        },
+      }))
 
-      return forward(operation);
-    });
+      return forward(operation)
+    })
     //console.log("GetClient: After authMiddleware");
 
     //console.log(`---------------------------------------------------------------------------------`);
@@ -53,20 +53,20 @@ class GraphQLApolloClient {
 
       defaultOptions: {
         query: {
-          fetchPolicy: "no-cache"
-        }
-      }
-    });
-    return client;
+          fetchPolicy: 'no-cache',
+        },
+      },
+    })
+    return client
   }
 }
 
 const previewGraphQLClient = new GraphQLApolloClient(
   GRAPHQL_ENDPOINT_PREVIEW,
-  GRAPHQL_SECRET_PREVIEW
-);
+  GRAPHQL_SECRET_PREVIEW,
+)
 
-const graphQLClient = new GraphQLApolloClient(GRAPHQL_ENDPOINT, GRAPHQL_SECRET);
+const graphQLClient = new GraphQLApolloClient(GRAPHQL_ENDPOINT, GRAPHQL_SECRET)
 
 export const createApolloClient = (preview: boolean) =>
-  preview ? previewGraphQLClient : graphQLClient;
+  preview ? previewGraphQLClient : graphQLClient

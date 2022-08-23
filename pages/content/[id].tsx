@@ -1,24 +1,24 @@
-import { CdpScripts, logViewEvent } from "../../utility/CdpService";
-import { GetStaticProps, NextPage } from "next";
-import { PreviewContext, PreviewProps } from "../../components/previewContext";
+import { CdpScripts, logViewEvent } from '../../utility/CdpService'
+import { GetStaticProps, NextPage } from 'next'
+import { PreviewContext, PreviewProps } from '../../components/previewContext'
 
-import Head from "next/head";
-import { ReactElement } from "react";
-import { createApolloClient } from "../../utility/GraphQLApolloClient";
-import { gql } from "@apollo/client";
-import styles from "../../styles/Home.module.css";
-import { useRouter } from "next/router";
+import Head from 'next/head'
+import { ReactElement } from 'react'
+import { createApolloClient } from '../../utility/GraphQLApolloClient'
+import { gql } from '@apollo/client'
+import styles from '../../styles/Home.module.css'
+import { useRouter } from 'next/router'
 
 export interface SevensItem extends PreviewProps {
-  sitecoreSeven_Id: string;
-  sitecoreSeven_Title: string;
-  sitecoreSeven_Summary: string;
-  assetFileName: string;
-  assetId: string;
+  sitecoreSeven_Id: string
+  sitecoreSeven_Title: string
+  sitecoreSeven_Summary: string
+  assetFileName: string
+  assetId: string
 }
 
 export interface SevensProps extends PreviewProps {
-  sevensList: Array<SevensItem>;
+  sevensList: Array<SevensItem>
 }
 
 //Get Homepage Content From Sevens - Everything without Null Title
@@ -38,7 +38,7 @@ const GET_ALL_CONTENT = gql`
       }
     }
   }
-`;
+`
 
 const GET_CURRENT_CONTENT = gql`
   {
@@ -56,18 +56,18 @@ const GET_CURRENT_CONTENT = gql`
       }
     }
   }
-`;
+`
 
 const Content: NextPage<SevensProps> = (props): ReactElement<any> => {
-  const { sevensList } = props;
-  const router = useRouter();
+  const { sevensList } = props
+  const router = useRouter()
   if (router.isFallback) {
-    return <div>loading...</div>;
+    return <div>loading...</div>
   }
 
-  const { id } = router.query;
+  const { id } = router.query
 
-  logViewEvent({ page: "landing page", contentHubID: id });
+  logViewEvent({ page: 'landing page', contentHubID: id })
   return (
     <PreviewContext.Provider value={props}>
       <div className={styles.container}>
@@ -82,46 +82,46 @@ const Content: NextPage<SevensProps> = (props): ReactElement<any> => {
         <p>Content: {id}</p>
       </div>
     </PreviewContext.Provider>
-  );
-};
+  )
+}
 
 export async function getStaticPaths() {
-  const myclient = await createApolloClient(false).getClient();
+  const myclient = await createApolloClient(false).getClient()
   const { data } = await myclient.query({
-    query: GET_ALL_CONTENT
-  });
-  const theSevens = data?.allM_Content_SitecoreSeven.results;
+    query: GET_ALL_CONTENT,
+  })
+  const theSevens = data?.allM_Content_SitecoreSeven.results
   const paths = theSevens.map((content) => ({
-    params: { id: content.id }
-  }));
+    params: { id: content.id },
+  }))
   return {
     paths,
-    fallback: true
-  };
+    fallback: true,
+  }
 }
 
 export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
-  const myclient = await createApolloClient(false).getClient();
+  const myclient = await createApolloClient(false).getClient()
 
-  const { data } = await myclient.query({ query: GET_CURRENT_CONTENT });
+  const { data } = await myclient.query({ query: GET_CURRENT_CONTENT })
   try {
-    const sitecore_seven_item = data?.allM_Content_SitecoreSeven.results;
-    console.log(sitecore_seven_item);
+    const sitecore_seven_item = data?.allM_Content_SitecoreSeven.results
+    console.log(sitecore_seven_item)
     return {
       props: {
         sevensList: sitecore_seven_item,
-        preview: context.preview ?? false
-      }
-    };
+        preview: context.preview ?? false,
+      },
+    }
   } catch (error) {
-    console.log(error);
+    console.log(error)
     return {
       props: {
         sevensList: {},
-        preview: context.preview ?? false
-      }
-    };
+        preview: context.preview ?? false,
+      },
+    }
   }
-};
+}
 
-export default Content;
+export default Content

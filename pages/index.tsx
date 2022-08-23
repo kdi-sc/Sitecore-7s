@@ -1,50 +1,50 @@
-import { CdpScripts, logViewEvent } from "../utility/CdpService";
-import { GetServerSideProps, GetStaticProps, NextPage } from "next";
-import { PreviewContext, PreviewProps } from "../components/previewContext";
-import React, { ReactElement, useEffect, useState } from "react";
+import { CdpScripts, getMyThree7s, logViewEvent } from '../utility/CdpService'
+import { GetServerSideProps, GetStaticProps, NextPage } from 'next'
+import { PreviewContext, PreviewProps } from '../components/previewContext'
+import React, { ReactElement, useEffect, useState } from 'react'
 
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import Head from "next/head";
-import { IconButton } from "@mui/material";
-import Image from "next/image";
-import Modal from "@mui/material/Modal";
-import ReactPlayer from "react-player";
-import Typography from "@mui/material/Typography";
-import { createApolloClient } from "../utility/GraphQLApolloClient";
-import { gql } from "@apollo/client";
-import styles from "../styles/Home.module.css";
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardActions from '@mui/material/CardActions'
+import CardContent from '@mui/material/CardContent'
+import CardMedia from '@mui/material/CardMedia'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import Head from 'next/head'
+import { IconButton } from '@mui/material'
+import Image from 'next/image'
+import Modal from '@mui/material/Modal'
+import ReactPlayer from 'react-player'
+import Typography from '@mui/material/Typography'
+import { createApolloClient } from '../utility/GraphQLApolloClient'
+import { gql } from '@apollo/client'
+import styles from '../styles/Home.module.css'
 
-const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || "";
+const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || ''
 
 const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  bgcolor: "background.paper",
-  border: "2px solid #000",
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
   boxShadow: 24,
-  width: "80%",
-  p: 4
-};
+  width: '80%',
+  p: 4,
+}
 
 export interface SevensItem {
-  sitecoreSeven_Id: string;
-  sitecoreSeven_Title: string;
-  sitecoreSeven_Summary: string;
-  assetFileName: string;
-  assetId: string;
-  relativeUrl: string;
-  versionHash: string;
+  sitecoreSeven_Id: string
+  sitecoreSeven_Title: string
+  sitecoreSeven_Summary: string
+  assetFileName: string
+  assetId: string
+  relativeUrl: string
+  versionHash: string
 }
 
 export interface SevensProps extends PreviewProps {
-  sevensList: Array<SevensItem>;
+  sevensList: Array<SevensItem>
 }
 
 //Get Homepage Content From Sevens - Everything without Null Title
@@ -75,25 +75,25 @@ const GET_HP_CONTENT = gql`
       }
     }
   }
-`;
+`
 
 const logView = (id) => {
-  logViewEvent({ type: "CONTENT_WATCHED", content_hub_id: id });
-};
+  logViewEvent({ type: 'CONTENT_WATCHED', content_hub_id: id })
+}
 
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
-  logViewEvent({ page: "homepage" });
-  const { sevensList } = props;
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  logViewEvent({ page: 'homepage' })
+  const { sevensList } = props
+  const [open, setOpen] = React.useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
   const [modalData, setModalData] = useState({
-    sitecoreSeven_Id: "",
-    sitecoreSeven_Title: "",
-    sitecoreSeven_Summary: "",
-    relativeUrl: "",
-    versionHash: ""
-  });
+    sitecoreSeven_Id: '',
+    sitecoreSeven_Title: '',
+    sitecoreSeven_Summary: '',
+    relativeUrl: '',
+    versionHash: '',
+  })
 
   return (
     <PreviewContext.Provider value={props}>
@@ -121,25 +121,25 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 key={sevensItem.sitecoreSeven_Id}
                 className={styles.card}
                 onClick={() => {
-                  handleOpen();
-                  logView(sevensItem.sitecoreSeven_Id);
-                  setModalData(sevensItem);
+                  handleOpen()
+                  logView(sevensItem.sitecoreSeven_Id)
+                  setModalData(sevensItem)
                 }}
               >
                 <CardMedia
                   component="video"
                   src={
                     FILE_DOMAIN_URL +
-                    "/" +
+                    '/' +
                     sevensItem.relativeUrl +
-                    "?" +
+                    '?' +
                     sevensItem.versionHash
                   }
                 ></CardMedia>
                 <CardContent>
                   <Typography gutterBottom variant="body2" component="div">
                     <b>
-                      {sevensItem.sitecoreSeven_Title.replace(/\&nbsp;/g, "")}
+                      {sevensItem.sitecoreSeven_Title.replace(/\&nbsp;/g, '')}
                     </b>
                   </Typography>
                 </CardContent>
@@ -160,13 +160,13 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 <ReactPlayer
                   url={
                     FILE_DOMAIN_URL +
-                    "/" +
+                    '/' +
                     modalData.relativeUrl +
-                    "?" +
+                    '?' +
                     modalData.versionHash
                   }
                   controls
-                  width={"100%"}
+                  width={'100%'}
                 ></ReactPlayer>
                 <Typography color="text.secondary">
                   <br /> {modalData.sitecoreSeven_Summary}
@@ -182,7 +182,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Powered by{" "}
+            Powered by{' '}
             <span className={styles.logo}>
               <Image
                 src="/logo.svg"
@@ -195,18 +195,24 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         </footer>
       </div>
     </PreviewContext.Provider>
-  );
-};
+  )
+}
 
 // ******
 export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
-  const myclient = await createApolloClient(false).getClient();
+  const myclient = await createApolloClient(false).getClient()
 
-  const { data } = await myclient.query({ query: GET_HP_CONTENT });
+  const { data } = await myclient.query({ query: GET_HP_CONTENT })
   try {
-    const theSevens = data?.allM_Content_SitecoreSeven.results;
+    /* Get content list from Boxever */
+    const cdpContent = getMyThree7s()
+    console.log('getMyThree7s')
+    console.log(cdpContent)
+
+    /* Get content list from content Hub */
+    const theSevens = data?.allM_Content_SitecoreSeven.results
     const AssetUrls =
-      data?.allM_Content_SitecoreSeven.results.sitecoreSeven_Title;
+      data?.allM_Content_SitecoreSeven.results.sitecoreSeven_Title
 
     const theSevensProps = theSevens.map((SevensItem) => {
       return {
@@ -218,28 +224,28 @@ export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
             .results[0].relativeUrl,
         versionHash:
           SevensItem.cmpContentToLinkedAsset.results[0].assetToPublicLink
-            .results[0].versionHash
-      };
-    });
+            .results[0].versionHash,
+      }
+    })
 
     return {
       props: {
         sevensList: [...theSevensProps],
-        preview: context.preview ?? false
+        preview: context.preview ?? false,
       },
-      revalidate: 5
-    };
+      revalidate: 5,
+    }
   } catch (error) {
-    console.log(error);
+    console.log(error)
     return {
       props: {
         sevensList: [],
-        preview: context.preview ?? false
-      }
-    };
+        preview: context.preview ?? false,
+      },
+    }
   }
-};
+}
 
 //******
 
-export default Home;
+export default Home

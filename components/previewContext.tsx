@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react'
 
 export interface PreviewProps {
-  preview: boolean;
+  preview: boolean
 }
 
 export const PreviewContext = React.createContext<PreviewProps>({
-  preview: false
-});
+  preview: false,
+})
