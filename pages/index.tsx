@@ -156,7 +156,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
             A place for small bites of Sitecore conversations.
           </p>
           <div>
-            Personlized for me
+            Personalize
             <Switch
               value="Personlized for me"
               onChange={handleChange}
