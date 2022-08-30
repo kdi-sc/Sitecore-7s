@@ -1,129 +1,133 @@
-import axios, { AxiosPromise, AxiosRequestConfig } from 'axios'
+import axios, { AxiosPromise, AxiosRequestConfig } from "axios";
 
-import BoxeverServiceConfig from './BoxeverServiceConfig'
-import Script from 'next/script'
+import BoxeverServiceConfig from "./BoxeverServiceConfig";
+import Script from "next/script";
+import { WatchRounded } from "@mui/icons-material";
+import { json } from "stream/consumers";
+import { resolve } from "path";
+import { responsePathAsArray } from "graphql";
 
 // ***** TYPES ********
 
-type boxeverQueueFunctionType = () => void
+type boxeverQueueFunctionType = () => void;
 
 interface eventCreateResponse {
-  status: string
+  status: string;
 }
 
 type eventCreateCallbackType = (
   // eslint-disable-next-line no-unused-vars
-  response: eventCreateResponse,
-) => void
+  response: eventCreateResponse
+) => void;
 
 type callFlowsCallbackType = (
   // eslint-disable-next-line no-unused-vars
-  response: unknown,
-) => void
+  response: unknown
+) => void;
 
 interface browserCreateResponse {
-  ref: string
+  ref: string;
 }
 
 type browserCreateCallbackType = (
   // eslint-disable-next-line no-unused-vars
-  data: browserCreateResponse,
-) => void
+  data: browserCreateResponse
+) => void;
 
 interface Boxever {
-  getID(): string
+  getID(): string;
   eventCreate(
     // eslint-disable-next-line no-unused-vars
     payload: Record<string, unknown>,
     // eslint-disable-next-line no-unused-vars
     callback: eventCreateCallbackType,
     // eslint-disable-next-line no-unused-vars
-    type: string,
-  ): void
+    type: string
+  ): void;
   callFlows(
     // eslint-disable-next-line no-unused-vars
     payload: Record<string, unknown>,
     // eslint-disable-next-line no-unused-vars
     callback: callFlowsCallbackType,
     // eslint-disable-next-line no-unused-vars
-    type: string,
-  ): void
+    type: string
+  ): void;
   storage: {
     removeItem(
       // eslint-disable-next-line no-unused-vars
-      name: string,
-    ): void
+      name: string
+    ): void;
     setItem(
       // eslint-disable-next-line no-unused-vars
       name: string,
       // eslint-disable-next-line no-unused-vars
       browserId: string,
       // eslint-disable-next-line no-unused-vars
-      cookieExpiresDays: number | { TTL: number },
-    ): void
-  }
-  cookie_name: string
+      cookieExpiresDays: number | { TTL: number }
+    ): void;
+  };
+  cookie_name: string;
   browserCreate(
     // eslint-disable-next-line no-unused-vars
     payload: Record<string, unknown>,
     // eslint-disable-next-line no-unused-vars
     callback: browserCreateCallbackType,
     // eslint-disable-next-line no-unused-vars
-    type: string,
-  ): void
-  browser_id: string
-  isITPBrowser: boolean
-  cookie_expires_days: number
-  storage_ttl: number
-  initWebFlowSDK(): void
+    type: string
+  ): void;
+  browser_id: string;
+  isITPBrowser: boolean;
+  cookie_expires_days: number;
+  storage_ttl: number;
+  initWebFlowSDK(): void;
 }
 
 declare global {
   interface Window {
     _boxever_settings: {
-      client_key: string
-      target: string
-      cookie_domain: string
-    }
-    Boxever: Boxever
-    _boxever: Boxever
-    _boxeverq: boxeverQueueFunctionType[]
+      client_key: string;
+      target: string;
+      cookie_domain: string;
+    };
+    Boxever: Boxever;
+    _boxever: Boxever;
+    _boxeverq: boxeverQueueFunctionType[];
     __boxeverQueue: {
-      new (): []
-    }
+      new (): [];
+    };
     BoxeverJERS: {
-      errors: unknown[]
-    }
+      errors: unknown[];
+    };
   }
 }
 
-type GuestRef = string
+type GuestRef = string;
 
 interface GuestRefResponse {
-  guestRef: GuestRef
+  guestRef: GuestRef;
 }
 
 interface GuestProfile {
   data: {
-    firstName: string
-    lastName: string
-    email: string
-  }
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
 }
 
-type GuestProfileResponse = GuestProfile | undefined
+type GuestProfileResponse = GuestProfile | undefined;
 
 // ***** API *****
 
-const CDP_PROXY_URL = process.env.CDP_PROXY_HOST || ''
-const CDP_CLIENT_KEY = process.env.NEXT_PUBLIC_CDP_CLIENT_KEY || ''
-const CDP_API_TARGET_ENDPOINT = process.env.NEXT_PUBLIC_CDP_TARGET_URL || ''
-export const isCdpConfigured = !!CDP_CLIENT_KEY && !!CDP_API_TARGET_ENDPOINT
+const CDP_PROXY_URL = process.env.CDP_PROXY_HOST || "";
+const CDP_CLIENT_KEY = process.env.NEXT_PUBLIC_CDP_CLIENT_KEY || "";
+const CDP_API_TARGET_ENDPOINT = process.env.NEXT_PUBLIC_CDP_TARGET_URL || "";
+export const isCdpConfigured = !!CDP_CLIENT_KEY && !!CDP_API_TARGET_ENDPOINT;
 
-console.log('CDP_CLIENT_KEY:' + CDP_CLIENT_KEY)
-console.log('CDP_API_TARGET_ENDPOINT:' + CDP_API_TARGET_ENDPOINT)
+console.log("CDP_CLIENT_KEY:" + CDP_CLIENT_KEY);
+console.log("CDP_API_TARGET_ENDPOINT:" + CDP_API_TARGET_ENDPOINT);
 
-console.log('CDPCONFIGURED:' + isCdpConfigured)
+console.log("CDPCONFIGURED:" + isCdpConfigured);
 
 export const BoxeverScripts: JSX.Element | undefined = isCdpConfigured ? (
   <>
@@ -141,23 +145,23 @@ export const BoxeverScripts: JSX.Element | undefined = isCdpConfigured ? (
       };`}</Script>
     <Script src="https://d1mj578wat5n4o.cloudfront.net/boxever-1.4.8.min.js"></Script>
   </>
-) : undefined
+) : undefined;
 
 function isBoxeverConfiguredInBrowser(): boolean {
   return !!(
-    typeof window !== 'undefined' &&
+    typeof window !== "undefined" &&
     window._boxever_settings &&
     window._boxever_settings.client_key
-  )
+  );
 }
 
 function getConfigWithCurrentPage(config: Record<string, unknown>) {
   return Object.assign(
     {
-      page: window.location.pathname + window.location.search,
+      page: window.location.pathname + window.location.search
     },
-    config,
-  )
+    config
+  );
 }
 
 function createEventPayload(eventConfig: Record<string, unknown>) {
@@ -166,19 +170,19 @@ function createEventPayload(eventConfig: Record<string, unknown>) {
       browser_id: window.Boxever.getID(), // For eventCreate calls
       browserId: window.Boxever.getID(), // For callFlows calls
       channel: BoxeverServiceConfig.channel,
-      language: window.navigator.language ? window.navigator.language : 'en',
-      currency: 'USD',
-      pos: 'carb-overlayteam',
-      websiteBaseUrl: BoxeverServiceConfig.websiteBaseUrl,
+      language: window.navigator.language ? window.navigator.language : "en",
+      currencyCode: "USD",
+      pointOfSale: "carb-overlayteam",
+      websiteBaseUrl: BoxeverServiceConfig.websiteBaseUrl
     },
-    eventConfig,
-  )
+    eventConfig
+  );
 }
 
 function createFlowPayload(flowConfig: Record<string, unknown>) {
   return Object.assign(createEventPayload(flowConfig), {
-    clientKey: window._boxever_settings.client_key,
-  })
+    clientKey: window._boxever_settings.client_key
+  });
 }
 
 // ****************************************************************************
@@ -189,32 +193,32 @@ function createFlowPayload(flowConfig: Record<string, unknown>) {
 function delayUntilBoxeverIsReady(functionToDelay: () => unknown) {
   if (
     window.Boxever &&
-    window.Boxever.getID() !== 'anonymous' &&
+    window.Boxever.getID() !== "anonymous" &&
     window._boxeverq
   ) {
-    functionToDelay()
+    functionToDelay();
   } else {
-    const timeToWaitInMilliseconds = 100
+    const timeToWaitInMilliseconds = 100;
     console.log(
-      `Boxever is not ready yet. Waiting ${timeToWaitInMilliseconds}ms before retrying.`,
-    )
+      `Boxever is not ready yet. Waiting ${timeToWaitInMilliseconds}ms before retrying.`
+    );
     window.setTimeout(
       delayUntilBoxeverIsReady,
       timeToWaitInMilliseconds,
-      functionToDelay,
-    )
+      functionToDelay
+    );
   }
 }
 
 function sendEventCreate(eventConfig: Record<string, unknown>) {
-  if (typeof window === 'undefined' || !isBoxeverConfiguredInBrowser()) {
+  if (typeof window === "undefined" || !isBoxeverConfiguredInBrowser()) {
     return new Promise<void>(function (resolve) {
-      resolve()
-    })
+      resolve();
+    });
   }
 
   // Set the page now as the location might have already changed when createEventPayload will be executed.
-  const eventWithCurrentPage = getConfigWithCurrentPage(eventConfig)
+  const eventWithCurrentPage = getConfigWithCurrentPage(eventConfig);
 
   return new Promise(function (resolve, reject) {
     try {
@@ -225,32 +229,32 @@ function sendEventCreate(eventConfig: Record<string, unknown>) {
             createEventPayload(eventWithCurrentPage),
             function (response) {
               if (!response) {
-                reject('No response provided.')
+                reject("No response provided.");
               }
-              if (response.status !== 'OK') {
-                reject('Response status: ' + response.status)
+              if (response.status !== "OK") {
+                reject("Response status: " + response.status);
               }
-              resolve(response)
+              resolve(response);
             },
-            'json',
-          )
-        })
-      })
+            "json"
+          );
+        });
+      });
     } catch (err) {
-      reject(err)
+      reject(err);
     }
-  })
+  });
 }
 
 function callFlows(flowConfig: Record<string, unknown>) {
-  if (typeof window === 'undefined' || !isBoxeverConfiguredInBrowser()) {
+  if (typeof window === "undefined" || !isBoxeverConfiguredInBrowser()) {
     return new Promise<void>(function (resolve) {
-      resolve()
-    })
+      resolve();
+    });
   }
 
   // Set the page now as the location might have already changed when createFlowPayload will be executed.
-  const eventWithCurrentPage = getConfigWithCurrentPage(flowConfig)
+  const eventWithCurrentPage = getConfigWithCurrentPage(flowConfig);
 
   return new Promise(function (resolve, reject) {
     try {
@@ -261,44 +265,44 @@ function callFlows(flowConfig: Record<string, unknown>) {
             createFlowPayload(eventWithCurrentPage),
             function (response) {
               if (!response) {
-                reject('No response provided.')
+                reject("No response provided.");
               }
-              resolve(response)
+              resolve(response);
             },
-            'json',
-          )
-        })
-      })
+            "json"
+          );
+        });
+      });
     } catch (err) {
-      reject(err)
+      reject(err);
     }
-  })
+  });
 }
 
 // Boxever view page tracking
 export function logViewEvent(
-  additionalData?: Record<string, unknown>,
+  additionalData?: Record<string, unknown>
 ): Promise<unknown> {
   const eventConfig = Object.assign(
     {
-      type: 'VIEW',
+      type: "VIEW"
     },
-    additionalData,
-  )
+    additionalData
+  );
 
-  return sendEventCreate(eventConfig)
+  return sendEventCreate(eventConfig);
 }
 
 export function logEvent(
   eventName: string,
-  payload?: Record<string, unknown>,
+  payload?: Record<string, unknown>
 ): Promise<unknown> {
   const eventConfig = {
     type: eventName,
-    ...payload,
-  }
+    ...payload
+  };
 
-  return sendEventCreate(eventConfig)
+  return sendEventCreate(eventConfig);
 }
 
 // Boxever identification
@@ -306,38 +310,38 @@ export function identifyVisitor(
   email: string,
   firstName?: string,
   lastName?: string,
-  phoneNumber?: string,
+  phoneNumber?: string
 ): Promise<unknown> {
   const eventConfig: Record<string, unknown> = {
-    type: 'IDENTITY',
+    type: "IDENTITY",
     email: email,
     identifiers: [
       {
-        provider: 'email',
-        id: email,
-      },
-    ],
-  }
+        provider: "email",
+        id: email
+      }
+    ]
+  };
   if (firstName) {
-    eventConfig.firstname = firstName
+    eventConfig.firstname = firstName;
   }
   if (lastName) {
-    eventConfig.lastname = lastName
+    eventConfig.lastname = lastName;
   }
   if (phoneNumber) {
-    eventConfig.phone = phoneNumber
+    eventConfig.phone = phoneNumber;
   }
 
-  return sendEventCreate(eventConfig)
+  return sendEventCreate(eventConfig);
 }
 
 // ****************************************************************************
 // Closes current Boxever browsing session.
 // ****************************************************************************
 export function closeSession(): Promise<unknown> {
-  return logEvent('FORCE_CLOSE', {
-    _bx_extended_message: '1',
-  })
+  return logEvent("FORCE_CLOSE", {
+    _bx_extended_message: "1"
+  });
 }
 
 // ****************************************************************************
@@ -347,18 +351,18 @@ export function closeSession(): Promise<unknown> {
 // organized to return a promise to know when the asynchronous parts are done.
 // ****************************************************************************
 export function forgetCurrentGuest(): Promise<void> {
-  if (typeof window === 'undefined' || !isBoxeverConfiguredInBrowser()) {
+  if (typeof window === "undefined" || !isBoxeverConfiguredInBrowser()) {
     return new Promise<void>(function (resolve) {
-      resolve()
-    })
+      resolve();
+    });
   }
 
   return new Promise<void>(function (resolve, reject) {
     try {
       // Code copied from Boxever library
-      window._boxeverq = []
+      window._boxeverq = [];
       if (window.Boxever.storage) {
-        window.Boxever.storage.removeItem(window.Boxever.cookie_name)
+        window.Boxever.storage.removeItem(window.Boxever.cookie_name);
       }
 
       window.Boxever.browserCreate(
@@ -366,48 +370,48 @@ export function forgetCurrentGuest(): Promise<void> {
         function (data) {
           try {
             if (!data || !data.ref) {
-              reject('No response or ref provided.')
+              reject("No response or ref provided.");
             }
 
             // Code copied from Boxever library to make it into a promise
-            window._boxever.browser_id = data.ref
+            window._boxever.browser_id = data.ref;
             // If ITP Version of Safari set storage with storage_ttl
             if (window._boxever.isITPBrowser) {
               window._boxever.storage.setItem(
                 window._boxever.cookie_name,
                 window._boxever.browser_id,
-                { TTL: window._boxever.storage_ttl },
-              )
+                { TTL: window._boxever.storage_ttl }
+              );
             } else {
               // Set the cookie expiration time to be the current time
               // plus cookie_expires_days
               window._boxever.storage.setItem(
                 window._boxever.cookie_name,
                 window._boxever.browser_id,
-                window._boxever.cookie_expires_days,
-              )
+                window._boxever.cookie_expires_days
+              );
             }
             // get the existing _boxeverq array
-            const _old_boxeverq = window._boxeverq
+            const _old_boxeverq = window._boxeverq;
             // create a new _boxeverq object
-            window._boxeverq = new window.__boxeverQueue()
+            window._boxeverq = new window.__boxeverQueue();
             // execute all of the queued up events - apply()
             // turns the array entries into individual arguments
             // eslint-disable-next-line prefer-spread
-            window._boxeverq.push.apply(window._boxeverq, _old_boxeverq)
-            window._boxever.initWebFlowSDK()
-            resolve()
+            window._boxeverq.push.apply(window._boxeverq, _old_boxeverq);
+            window._boxever.initWebFlowSDK();
+            resolve();
           } catch (e) {
-            window.BoxeverJERS.errors.push(e)
-            reject(e)
+            window.BoxeverJERS.errors.push(e);
+            reject(e);
           }
         },
-        'json',
-      )
+        "json"
+      );
     } catch (err) {
-      reject(err)
+      reject(err);
     }
-  })
+  });
 }
 
 // ****************************************************************************
@@ -421,43 +425,43 @@ export function forgetCurrentGuest(): Promise<void> {
 // ****************************************************************************
 export function getGuestRef(): Promise<GuestRefResponse> {
   return callFlows({
-    friendlyId: 'getguestref',
-  }) as Promise<GuestRefResponse>
+    friendlyId: "getguestref"
+  }) as Promise<GuestRefResponse>;
 }
 
 function boxeverPost(
   action: string,
-  payload?: Record<string, unknown>,
+  payload?: Record<string, unknown>
 ): AxiosPromise<unknown> {
-  const url = `${CDP_PROXY_URL}/Cdp${action}`
+  const url = `${CDP_PROXY_URL}/Cdp${action}`;
 
   const options: AxiosRequestConfig = {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'content-type': 'application/json',
+      "content-type": "application/json"
     },
     data: payload,
     withCredentials: false,
-    url,
-  }
+    url
+  };
 
-  return axios(options)
+  return axios(options);
 }
 
 function boxeverGet(
   action: string,
-  payload?: Record<string, unknown>,
+  payload?: Record<string, unknown>
 ): AxiosPromise<unknown> {
-  const url = `${CDP_PROXY_URL}/Cdp${action}`
+  const url = `${CDP_PROXY_URL}/Cdp${action}`;
 
   const options: AxiosRequestConfig = {
-    method: 'GET',
+    method: "GET",
     params: payload,
     withCredentials: false,
-    url,
-  }
+    url
+  };
 
-  return axios(options)
+  return axios(options);
 }
 
 // TEMP: Keeping this commented method for near future use
@@ -482,48 +486,48 @@ function boxeverGet(
 // ********************************
 export function saveDataExtension(
   dataExtensionName: string,
-  payload?: Record<string, unknown>,
+  payload?: Record<string, unknown>
 ): Promise<unknown> {
   if (!isBoxeverConfiguredInBrowser()) {
     return new Promise<undefined>(function (resolve) {
-      resolve(undefined)
-    })
+      resolve(undefined);
+    });
   }
 
   return getGuestRef().then((response) =>
     boxeverPost(
       `/createguestdataextension?guestRef=${response.guestRef}&dataExtensionName=${dataExtensionName}`,
-      payload,
-    ),
-  )
+      payload
+    )
+  );
 }
 
 // ********************************
 // Get non-expanded guest profile
 // ********************************
 function getGuestProfilePromise(
-  guestRef: GuestRef,
+  guestRef: GuestRef
 ): Promise<GuestProfileResponse> {
   return boxeverGet(
-    `/getguestByRef?guestRef=${guestRef}`,
-  ) as Promise<GuestProfileResponse>
+    `/getguestByRef?guestRef=${guestRef}`
+  ) as Promise<GuestProfileResponse>;
 }
 
 export function getGuestProfileResponse(
-  guestRef?: GuestRef,
+  guestRef?: GuestRef
 ): Promise<GuestProfileResponse> {
   if (!isBoxeverConfiguredInBrowser()) {
     return new Promise<undefined>(function (resolve) {
-      resolve(undefined)
-    })
+      resolve(undefined);
+    });
   }
 
   if (!guestRef) {
     return getGuestRef().then((response) =>
-      getGuestProfilePromise(response.guestRef),
-    )
+      getGuestProfilePromise(response.guestRef)
+    );
   } else {
-    return getGuestProfilePromise(guestRef)
+    return getGuestProfilePromise(guestRef);
   }
 }
 
@@ -531,84 +535,116 @@ export function getGuestProfileResponse(
 // isAnonymousGuest
 // ********************************
 export function isAnonymousGuestInGuestResponse(
-  guestResponse: GuestProfileResponse,
+  guestResponse: GuestProfileResponse
 ): boolean {
-  return !guestResponse?.data?.email
+  return !guestResponse?.data?.email;
 }
 
 export function isAnonymousGuest(guestRef?: GuestRef): Promise<boolean> {
-  const defaultValue = true
+  const defaultValue = true;
 
   if (!isBoxeverConfiguredInBrowser()) {
     return new Promise<boolean>(function (resolve) {
-      resolve(defaultValue)
-    })
+      resolve(defaultValue);
+    });
   }
 
   return getGuestProfileResponse(guestRef)
     .then((guestResponse) => isAnonymousGuestInGuestResponse(guestResponse))
     .catch((e) => {
-      console.log(e)
-      return defaultValue
-    })
+      console.log(e);
+      return defaultValue;
+    });
 }
 
 // ********************************
 // getGuestFullName
 // ********************************
 export function getGuestFullNameInGuestResponse(
-  guestResponse: GuestProfileResponse,
+  guestResponse: GuestProfileResponse
 ): string | undefined {
-  const data = guestResponse?.data
+  const data = guestResponse?.data;
 
   if (!data || !data.firstName || !data.lastName) {
-    return
+    return;
   }
 
-  return `${data.firstName} ${data.lastName}`
+  return `${data.firstName} ${data.lastName}`;
 }
 
 export function getGuestFullName(
-  guestRef?: GuestRef,
+  guestRef?: GuestRef
 ): Promise<string | undefined> {
-  const defaultValue = ''
+  const defaultValue = "";
 
   if (!isBoxeverConfiguredInBrowser()) {
     return new Promise(function (resolve) {
-      resolve(defaultValue)
-    })
+      resolve(defaultValue);
+    });
   }
 
   return getGuestProfileResponse(guestRef)
     .then((guestResponse) => getGuestFullNameInGuestResponse(guestResponse))
     .catch((e) => {
-      console.log(e)
-      return defaultValue
-    })
+      console.log(e);
+      return defaultValue;
+    });
 }
 
 // ********************************
 // Get Dynamic welcome message
 // ********************************
 export interface WelcomeMessage {
-  message: string
+  message: string;
 }
 
 export function getDynamicWelcomeMessage(
   ipAddress: string,
-  language: string,
+  language: string
 ): Promise<WelcomeMessage> {
-  const dataExtensionName = 'PersonalInformation'
+  const dataExtensionName = "PersonalInformation";
 
   const dataExtensionPayload = {
     key: dataExtensionName,
     ipAddress,
-    language,
-  }
+    language
+  };
   return saveDataExtension(dataExtensionName, dataExtensionPayload).then(
     () =>
       callFlows({
-        friendlyId: 'dynamic_welcome_message',
-      }) as Promise<WelcomeMessage>,
-  )
+        friendlyId: "dynamic_welcome_message"
+      }) as Promise<WelcomeMessage>
+  );
+}
+
+export interface ContentItem {
+  id: string;
+  title: string;
+  summary: string;
+  relativeUrl: string;
+  versionHash: string;
+}
+
+export interface ContentWatched {
+  content_watched: Array<string>;
+  orderBy: string;
+}
+
+export function getSortOrder(response: ContentWatched): string[] {
+  if (!response || !response.content_watched) return [];
+  else {
+    console.log("getSortOrder: ", response.content_watched);
+    return response.content_watched;
+  }
+}
+
+export function getMyWatched7s(): string[] {
+  callFlows({ friendlyId: "my_three_7s" })
+    .then((response) => {
+      return getSortOrder(response as ContentWatched);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+  return [];
 }

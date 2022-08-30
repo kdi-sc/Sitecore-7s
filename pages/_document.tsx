@@ -1,6 +1,5 @@
 import * as React from 'react'
 
-import { CdpScripts, logViewEvent } from '../utility/CdpService'
 import Document, { Head, Html, Main, NextScript } from 'next/document'
 
 import createEmotionCache from '../utility/createEmotionCache'

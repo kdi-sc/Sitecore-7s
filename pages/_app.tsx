@@ -7,14 +7,12 @@ import '../styles/globals.css'
 import * as React from 'react'
 
 import { CacheProvider, EmotionCache } from '@emotion/react'
-import { CdpScripts, logViewEvent } from '../utility/CdpService'
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
 
-import { ApolloProvider } from '@apollo/client'
 import type { AppProps } from 'next/app'
+import { CdpScripts } from '../utility/CdpService'
 import createEmotionCache from '../utility/createEmotionCache'
 import lightThemeOptions from '../styles/theme/lightThemeOptions'
-import useGraphQLApolloClient from '../utility/GraphQLApolloBrowserClient'
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache

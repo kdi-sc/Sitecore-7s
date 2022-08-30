@@ -1,50 +1,52 @@
-import { CdpScripts, getMyThree7s, logViewEvent } from '../utility/CdpService'
-import { GetServerSideProps, GetStaticProps, NextPage } from 'next'
-import { PreviewContext, PreviewProps } from '../components/previewContext'
-import React, { ReactElement, useEffect, useState } from 'react'
+import { GetStaticProps, NextPage } from "next";
+import { IconButton, Switch } from "@mui/material";
+import { PreviewContext, PreviewProps } from "../components/previewContext";
+import React, { ReactElement, useState } from "react";
 
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import CardActions from '@mui/material/CardActions'
-import CardContent from '@mui/material/CardContent'
-import CardMedia from '@mui/material/CardMedia'
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import Head from 'next/head'
-import { IconButton } from '@mui/material'
-import Image from 'next/image'
-import Modal from '@mui/material/Modal'
-import ReactPlayer from 'react-player'
-import Typography from '@mui/material/Typography'
-import { createApolloClient } from '../utility/GraphQLApolloClient'
-import { gql } from '@apollo/client'
-import styles from '../styles/Home.module.css'
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import Head from "next/head";
+import Image from "next/image";
+import Modal from "@mui/material/Modal";
+import ReactPlayer from "react-player";
+import Typography from "@mui/material/Typography";
+import { createApolloClient } from "../utility/GraphQLApolloClient";
+import { getMyWatched7s } from "../utility/BoxeverService";
+import { gql } from "@apollo/client";
+import { logViewEvent } from "../utility/CdpService";
+import styles from "../styles/Home.module.css";
 
-const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || ''
+const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || "";
 
 const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  position: "absolute" as "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "background.paper",
+  border: "2px solid #000",
   boxShadow: 24,
-  width: '80%',
-  p: 4,
-}
+  width: "80%",
+  p: 4
+};
 
 export interface SevensItem {
-  sitecoreSeven_Id: string
-  sitecoreSeven_Title: string
-  sitecoreSeven_Summary: string
-  assetFileName: string
-  assetId: string
-  relativeUrl: string
-  versionHash: string
+  sitecoreSeven_Id: string;
+  sitecoreSeven_CreatedOn: Date;
+  sitecoreSeven_Title: string;
+  sitecoreSeven_Summary: string;
+  assetFileName: string;
+  assetId: string;
+  relativeUrl: string;
+  versionHash: string;
 }
 
 export interface SevensProps extends PreviewProps {
-  sevensList: Array<SevensItem>
+  sevensList: Array<SevensItem>;
 }
 
 //Get Homepage Content From Sevens - Everything without Null Title
@@ -54,6 +56,7 @@ const GET_HP_CONTENT = gql`
       total
       results {
         id
+        createdOn
         sitecoreSeven_Title
         sitecoreSeven_Summary
         cmpContentToLinkedAsset {
@@ -75,25 +78,64 @@ const GET_HP_CONTENT = gql`
       }
     }
   }
-`
+`;
 
 const logView = (id) => {
-  logViewEvent({ type: 'CONTENT_WATCHED', content_hub_id: id })
-}
+  logViewEvent({ type: "CONTENT_WATCHED", content_hub_id: id });
+};
 
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
-  logViewEvent({ page: 'homepage' })
-  const { sevensList } = props
-  const [open, setOpen] = React.useState(false)
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  logViewEvent({ page: "homepage" });
+  let sortOrder: string[];
+
+  let { sevensList } = props;
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const [modalData, setModalData] = useState({
-    sitecoreSeven_Id: '',
-    sitecoreSeven_Title: '',
-    sitecoreSeven_Summary: '',
-    relativeUrl: '',
-    versionHash: '',
-  })
+    sitecoreSeven_Id: "",
+    sitecoreSeven_CreatedOn: new Date(),
+    sitecoreSeven_Title: "",
+    sitecoreSeven_Summary: "",
+    relativeUrl: "",
+    versionHash: ""
+  });
+
+  const [checked, setChecked] = React.useState(false);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+    if (!checked) {
+      console.log("Sitecore Personlize Enabled!");
+      // Get Watched Video List IDs from Sitecore Personlize
+      sortOrder = getMyWatched7s();
+      console.log("index.tsx Line 111 ", sortOrder);
+      /* For testing purpose only to manually sort some items.*/
+      sortOrder = [
+        "iYSfV35WMkyrUgnwRU3zGA",
+        "fFqa3btJyEagFaX8g_wdgg",
+        "irhQOl-aYEKfBhz4eHrAlg"
+      ];
+
+      console.log("Sort Order: ", sortOrder);
+
+      sevensList.sort(function (a, b) {
+        return (
+          sortOrder.indexOf(a.sitecoreSeven_Id) -
+          sortOrder.indexOf(b.sitecoreSeven_Id)
+        );
+      });
+    } else {
+      // Back to default sort order
+      // this is a temporary dummy fix unless we decide if we should group the list into watched, continue watching etc.
+      console.log("Sitecore Personlize Disabled! Sorted by created date");
+      console.log("sevensList before the sort: ", sevensList);
+      // Sort in Ascending order based on the created date.
+      sevensList.sort((a: SevensItem, b: SevensItem) => {
+        return b.sitecoreSeven_CreatedOn > a.sitecoreSeven_CreatedOn ? 1 : -1;
+      });
+      console.log("sevensList sorted ASC: ", sevensList);
+    }
+  };
 
   return (
     <PreviewContext.Provider value={props}>
@@ -115,31 +157,39 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
           <p className={styles.description}>
             A place for small bites of Sitecore conversations.
           </p>
+          <div>
+            Personlized for me
+            <Switch
+              value="Personlized for me"
+              onChange={handleChange}
+              inputProps={{ "aria-label": "Personlize" }}
+            />
+          </div>
           <div className={styles.grid}>
-            {sevensList.slice(0, 3).map((sevensItem) => (
+            {sevensList.slice(0, 4).map((sevensItem) => (
               <Card
                 key={sevensItem.sitecoreSeven_Id}
                 className={styles.card}
                 onClick={() => {
-                  handleOpen()
-                  logView(sevensItem.sitecoreSeven_Id)
-                  setModalData(sevensItem)
+                  handleOpen();
+                  logView(sevensItem.sitecoreSeven_Id);
+                  setModalData(sevensItem);
                 }}
               >
                 <CardMedia
                   component="video"
                   src={
                     FILE_DOMAIN_URL +
-                    '/' +
+                    "/" +
                     sevensItem.relativeUrl +
-                    '?' +
+                    "?" +
                     sevensItem.versionHash
                   }
                 ></CardMedia>
                 <CardContent>
                   <Typography gutterBottom variant="body2" component="div">
                     <b>
-                      {sevensItem.sitecoreSeven_Title.replace(/\&nbsp;/g, '')}
+                      {sevensItem.sitecoreSeven_Title.replace(/&nbsp;/g, "")}
                     </b>
                   </Typography>
                 </CardContent>
@@ -160,13 +210,13 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 <ReactPlayer
                   url={
                     FILE_DOMAIN_URL +
-                    '/' +
+                    "/" +
                     modalData.relativeUrl +
-                    '?' +
+                    "?" +
                     modalData.versionHash
                   }
                   controls
-                  width={'100%'}
+                  width={"100%"}
                 ></ReactPlayer>
                 <Typography color="text.secondary">
                   <br /> {modalData.sitecoreSeven_Summary}
@@ -182,7 +232,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Powered by{' '}
+            Powered by{" "}
             <span className={styles.logo}>
               <Image
                 src="/logo.svg"
@@ -195,57 +245,56 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         </footer>
       </div>
     </PreviewContext.Provider>
-  )
-}
+  );
+};
 
 // ******
 export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
-  const myclient = await createApolloClient(false).getClient()
+  const myclient = await createApolloClient(false).getClient();
 
-  const { data } = await myclient.query({ query: GET_HP_CONTENT })
+  const { data } = await myclient.query({ query: GET_HP_CONTENT });
   try {
-    /* Get content list from Boxever */
-    const cdpContent = getMyThree7s()
-    console.log('getMyThree7s')
-    console.log(cdpContent)
-
-    /* Get content list from content Hub */
-    const theSevens = data?.allM_Content_SitecoreSeven.results
-    const AssetUrls =
-      data?.allM_Content_SitecoreSeven.results.sitecoreSeven_Title
-
+    /**
+     *  Get all content list from content Hub
+     */
+    const theSevens = data?.allM_Content_SitecoreSeven.results;
     const theSevensProps = theSevens.map((SevensItem) => {
       return {
         sitecoreSeven_Title: SevensItem.sitecoreSeven_Title,
         sitecoreSeven_Summary: SevensItem.sitecoreSeven_Summary,
         sitecoreSeven_Id: SevensItem.id,
+        sitecoreSeven_CreatedOn: SevensItem.createdOn,
         relativeUrl:
           SevensItem.cmpContentToLinkedAsset.results[0].assetToPublicLink
             .results[0].relativeUrl,
         versionHash:
           SevensItem.cmpContentToLinkedAsset.results[0].assetToPublicLink
-            .results[0].versionHash,
-      }
-    })
+            .results[0].versionHash
+      };
+    });
+
+    /**
+     * Get the list of watched videos from CDP based on the brwoserId.
+     */
 
     return {
       props: {
         sevensList: [...theSevensProps],
-        preview: context.preview ?? false,
+        preview: context.preview ?? false
       },
-      revalidate: 5,
-    }
+      revalidate: 5
+    };
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return {
       props: {
         sevensList: [],
-        preview: context.preview ?? false,
-      },
-    }
+        preview: context.preview ?? false
+      }
+    };
   }
-}
+};
 
 //******
 
-export default Home
+export default Home;

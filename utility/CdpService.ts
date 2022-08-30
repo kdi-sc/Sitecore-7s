@@ -7,8 +7,6 @@ import {
   saveDataExtension
 } from "./BoxeverService";
 
-import { resultKeyNameFromField } from "@apollo/client/utilities";
-
 export const CdpScripts: JSX.Element | undefined = BoxeverScripts;
 
 /**
