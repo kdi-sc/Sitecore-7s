@@ -86,7 +86,7 @@ const logView = (id) => {
 
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   logViewEvent({ page: "homepage" });
-  let sortOrder: string[];
+  const [sortOrder, setSortOrder] = useState([""]);
 
   let { sevensList } = props;
   const [open, setOpen] = React.useState(false);
@@ -102,20 +102,18 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   });
 
   const [checked, setChecked] = React.useState(false);
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange =  (event: React.ChangeEvent<HTMLInputElement>) =>{
     setChecked(event.target.checked);
     if (!checked) {
       console.log("Sitecore Personlize Enabled!");
       // Get Watched Video List IDs from Sitecore Personlize
-      sortOrder = getMyWatched7s();
       console.log("index.tsx Line 111 ", sortOrder);
       /* For testing purpose only to manually sort some items.*/
-      sortOrder = [
+      setSortOrder([
         "iYSfV35WMkyrUgnwRU3zGA",
         "fFqa3btJyEagFaX8g_wdgg",
         "irhQOl-aYEKfBhz4eHrAlg"
-      ];
-
+      ]);
       console.log("Sort Order: ", sortOrder);
 
       sevensList.sort(function (a, b) {
@@ -166,7 +164,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
             />
           </div>
           <div className={styles.grid}>
-            {sevensList.slice(0, 4).map((sevensItem) => (
+            {sevensList.slice(0, 3).map((sevensItem) => (
               <Card
                 key={sevensItem.sitecoreSeven_Id}
                 className={styles.card}
