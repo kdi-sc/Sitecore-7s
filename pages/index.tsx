@@ -170,7 +170,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 className={styles.card}
                 onClick={() => {
                   handleOpen();
-                  logView(sevensItem.sitecoreSeven_Id, "CONTENT_WATCHED");
+                  logView(sevensItem.sitecoreSeven_Id, "CONTENT_VIEWED");
                   setModalData(sevensItem);
                 }}
               >
