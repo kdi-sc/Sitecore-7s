@@ -80,8 +80,8 @@ const GET_HP_CONTENT = gql`
   }
 `;
 
-const logView = (id) => {
-  logViewEvent({ type: "CONTENT_WATCHED", content_hub_id: id });
+const logView = (id, eventType) => {
+  logViewEvent({ type: eventType, content_hub_id: id });
 };
 
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
@@ -102,7 +102,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   });
 
   const [checked, setChecked] = React.useState(false);
-  const handleChange =  (event: React.ChangeEvent<HTMLInputElement>) =>{
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
     if (!checked) {
       console.log("Sitecore Personlize Enabled!");
@@ -170,7 +170,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 className={styles.card}
                 onClick={() => {
                   handleOpen();
-                  logView(sevensItem.sitecoreSeven_Id);
+                  logView(sevensItem.sitecoreSeven_Id, "CONTENT_WATCHED");
                   setModalData(sevensItem);
                 }}
               >
@@ -212,6 +212,15 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     modalData.relativeUrl +
                     "?" +
                     modalData.versionHash
+                  }
+                  onStart={() =>
+                    logView(modalData.sitecoreSeven_Id, "VIDEO_STARTED")
+                  }
+                  onPause={() =>
+                    logView(modalData.sitecoreSeven_Id, "VIDEO_PAUSED")
+                  }
+                  onEnded={() =>
+                    logView(modalData.sitecoreSeven_Id, "VIDEO_ENDED")
                   }
                   controls
                   width={"100%"}
