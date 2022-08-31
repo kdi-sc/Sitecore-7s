@@ -86,8 +86,8 @@ const logView = (id, eventType) => {
 
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   logViewEvent({ page: "homepage" });
-  const [sortOrder, setSortOrder] = useState([""]);
-
+  // const [sortOrder, setSortOrder] = useState([""]);
+  let sortOrder: string[];
   let { sevensList } = props;
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -109,7 +109,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       // Get Watched Video List IDs from Sitecore Personlize
       console.log("index.tsx Line 111 ", sortOrder);
       /* For testing purpose only to manually sort some items.*/
-      setSortOrder([
+      sortOrder = ([
         "iYSfV35WMkyrUgnwRU3zGA",
         "fFqa3btJyEagFaX8g_wdgg",
         "irhQOl-aYEKfBhz4eHrAlg"
