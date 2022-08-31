@@ -216,6 +216,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   onStart={() =>
                     logView(modalData.sitecoreSeven_Id, "VIDEO_STARTED")
                   }
+                  onPlay={() =>
+                    logView(modalData.sitecoreSeven_Id, "VIDEO_PLAYED")
+                  }
                   onPause={() =>
                     logView(modalData.sitecoreSeven_Id, "VIDEO_PAUSED")
                   }
