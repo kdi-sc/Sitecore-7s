@@ -246,7 +246,7 @@ function sendEventCreate(eventConfig: Record<string, unknown>) {
   });
 }
 
-function callFlows(flowConfig: Record<string, unknown>) {
+export function callFlows(flowConfig: Record<string, unknown>) {
   if (typeof window === "undefined" || !isBoxeverConfiguredInBrowser()) {
     return new Promise<void>(function (resolve) {
       resolve();
@@ -623,28 +623,4 @@ export interface ContentItem {
   summary: string;
   relativeUrl: string;
   versionHash: string;
-}
-
-export interface ContentWatched {
-  content_watched: Array<string>;
-  orderBy: string;
-}
-
-export function getSortOrder(response: ContentWatched): string[] {
-  if (!response || !response.content_watched) return [];
-  else {
-    console.log("getSortOrder: ", response.content_watched);
-    return response.content_watched;
-  }
-}
-
-export function getMyWatched7s(): string[] {
-  callFlows({ friendlyId: "my_three_7s" })
-    .then((response) => {
-      return getSortOrder(response as ContentWatched);
-    })
-    .catch((e) => {
-      console.log(e);
-    });
-  return [];
 }

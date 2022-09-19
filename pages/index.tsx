@@ -1,7 +1,7 @@
 import { GetStaticProps, NextPage } from "next";
 import { IconButton, Switch, Snackbar } from "@mui/material";
 import { PreviewContext, PreviewProps } from "../components/previewContext";
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -15,7 +15,7 @@ import Modal from "@mui/material/Modal";
 import ReactPlayer from "react-player";
 import Typography from "@mui/material/Typography";
 import { createApolloClient } from "../utility/GraphQLApolloClient";
-import { getMyWatched7s } from "../utility/BoxeverService";
+import { callFlows } from "../utility/BoxeverService";
 import { gql } from "@apollo/client";
 import { logViewEvent } from "../utility/CdpService";
 import styles from "../styles/Home.module.css";
@@ -43,6 +43,11 @@ export interface SevensItem {
   assetId: string;
   relativeUrl: string;
   versionHash: string;
+}
+
+export interface ContentWatched {
+  content_watched: Array<string>;
+  orderBy: string;
 }
 
 export interface SevensProps extends PreviewProps {
@@ -85,11 +90,9 @@ const logView = (id, eventType) => {
 };
 
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
-  logViewEvent({ page: "homepage" });
-  // const [sortOrder, setSortOrder] = useState([""]);
-  let sortOrder: string[];
-  let { sevensList } = props;
-  const [openShare, setOpenShare] = useState(false)
+  logViewEvent({ page: "homepage" })
+  const[sevensList, setSevensList] = useState(props.sevensList)
+  const [openShare, setOpenShare] = useState(false);
   const handleShareClick = () => {
     setOpenShare(true)
   }
@@ -108,34 +111,43 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   const [checked, setChecked] = React.useState(false);
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
+
     if (!checked) {
       console.log("Sitecore Personlize Enabled!");
       // Get Watched Video List IDs from Sitecore Personlize
-      console.log("index.tsx Line 111 ", sortOrder);
+    
       /* For testing purpose only to manually sort some items.*/
-      sortOrder = ([
-        "iYSfV35WMkyrUgnwRU3zGA",
-        "fFqa3btJyEagFaX8g_wdgg",
-        "irhQOl-aYEKfBhz4eHrAlg"
-      ]);
-      console.log("Sort Order: ", sortOrder);
+      // sortOrder = ([
+      //   "iYSfV35WMkyrUgnwRU3zGA",
+      //   "fFqa3btJyEagFaX8g_wdgg",
+      //   "irhQOl-aYEKfBhz4eHrAlg"
+      // ]);
 
-      sevensList.sort(function (a, b) {
+    callFlows({ friendlyId: "my_three_7s" })
+    .then((response) => {
+      var data = response as ContentWatched;
+      var sortOrder = data.content_watched;
+      console.log("Sort Order: ", sortOrder) 
+      let sortedSevens = [...sevensList];
+      setSevensList(sortedSevens.sort(function (a, b) {
         return (
           sortOrder.indexOf(a.sitecoreSeven_Id) -
           sortOrder.indexOf(b.sitecoreSeven_Id)
         );
-      });
+      }));
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+
     } else {
       // Back to default sort order
       // this is a temporary dummy fix unless we decide if we should group the list into watched, continue watching etc.
       console.log("Sitecore Personlize Disabled! Sorted by created date");
-      console.log("sevensList before the sort: ", sevensList);
       // Sort in Ascending order based on the created date.
       sevensList.sort((a: SevensItem, b: SevensItem) => {
         return b.sitecoreSeven_CreatedOn > a.sitecoreSeven_CreatedOn ? 1 : -1;
       });
-      console.log("sevensList sorted ASC: ", sevensList);
     }
   };
 
@@ -181,7 +193,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     "/" +
                     sevensItem.relativeUrl +
                     "?" +
-                    sevensItem.versionHash + '#t=0.1'
+                    sevensItem.versionHash + '#t=.01'
                   }
                   onClick={() => {
                     handleOpen();
