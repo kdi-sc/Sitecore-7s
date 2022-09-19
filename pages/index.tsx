@@ -176,7 +176,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 <CardMedia
                   component="video"
                   height="100%"
-                  src={
+                  image={
                     FILE_DOMAIN_URL +
                     "/" +
                     sevensItem.relativeUrl +
