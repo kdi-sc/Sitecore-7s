@@ -274,10 +274,10 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
             Powered by{" "}
             <span className={styles.logo}>
               <Image
-                src="/logo.svg"
+                src="/logo.png"
                 alt="Sitecore Logo"
-                width={72}
-                height={16}
+                width={90}
+                height={20}
               />
             </span>
           </a>
