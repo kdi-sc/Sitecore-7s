@@ -1,14 +1,14 @@
 import { GetStaticProps, NextPage } from "next";
-import { IconButton, Switch } from "@mui/material";
+import { IconButton, Switch, Snackbar } from "@mui/material";
 import { PreviewContext, PreviewProps } from "../components/previewContext";
 import React, { ReactElement, useState } from "react";
-
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import ShareIcon from "@mui/icons-material/Share";
 import Head from "next/head";
 import Image from "next/image";
 import Modal from "@mui/material/Modal";
@@ -89,6 +89,10 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   // const [sortOrder, setSortOrder] = useState([""]);
   let sortOrder: string[];
   let { sevensList } = props;
+  const [openShare, setOpenShare] = useState(false)
+  const handleShareClick = () => {
+    setOpenShare(true)
+  }
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -168,11 +172,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
               <Card
                 key={sevensItem.sitecoreSeven_Id}
                 className={styles.card}
-                onClick={() => {
-                  handleOpen();
-                  logView(sevensItem.sitecoreSeven_Id, "CONTENT_VIEWED");
-                  setModalData(sevensItem);
-                }}
               >
                 <CardMedia
                   component="video"
@@ -183,8 +182,18 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     "?" +
                     sevensItem.versionHash
                   }
+                  onClick={() => {
+                    handleOpen();
+                    logView(sevensItem.sitecoreSeven_Id, "CONTENT_VIEWED");
+                    setModalData(sevensItem);
+                  }}
                 ></CardMedia>
-                <CardContent>
+                <CardContent
+                   onClick={() => {
+                      handleOpen();
+                      logView(sevensItem.sitecoreSeven_Id, "CONTENT_VIEWED");
+                      setModalData(sevensItem);
+                            }}>
                   <Typography gutterBottom variant="body2" component="div">
                     <b>
                       {sevensItem.sitecoreSeven_Title.replace(/&nbsp;/g, "")}
@@ -195,6 +204,17 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   <IconButton aria-label="add to favorites">
                     <FavoriteIcon />
                   </IconButton>
+                  
+                  <IconButton aria-label="share"
+                  onClick={() => {handleShareClick(); navigator.clipboard.writeText( FILE_DOMAIN_URL + "/" + sevensItem.relativeUrl + "?" + sevensItem.versionHash)}} >
+                  <ShareIcon />
+                  <Snackbar
+                 open={openShare}
+                 onClose={() => setOpenShare(false)}
+                 autoHideDuration={2000}
+                 message="Video link copied to clipboard"
+                  />
+                 </IconButton>
                 </CardActions>
               </Card>
             ))}
@@ -228,8 +248,17 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   controls
                   width={"100%"}
                 ></ReactPlayer>
+             
                 <Typography color="text.secondary">
-                  <br /> {modalData.sitecoreSeven_Summary}
+                <IconButton aria-label="add to favorites">
+                    <FavoriteIcon />
+                  </IconButton>
+                  <IconButton aria-label="share"
+                  onClick={() => {handleShareClick(); navigator.clipboard.writeText( FILE_DOMAIN_URL + "/" + modalData.relativeUrl + "?" + modalData.versionHash)}} >
+                  <ShareIcon />
+                 </IconButton>
+                  <br /> {modalData.sitecoreSeven_Summary}             
+              
                 </Typography>
               </Box>
             </Modal>
