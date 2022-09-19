@@ -175,7 +175,8 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
               >
                 <CardMedia
                   component="video"
-                  image={
+                  height="100%"
+                  src={
                     FILE_DOMAIN_URL +
                     "/" +
                     sevensItem.relativeUrl +
@@ -203,8 +204,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 <CardActions disableSpacing>
                   <IconButton aria-label="add to favorites">
                     <FavoriteIcon />
-                  </IconButton>
-                  
+                  </IconButton>  
                   <IconButton aria-label="share"
                   onClick={() => {handleShareClick(); navigator.clipboard.writeText( FILE_DOMAIN_URL + "/" + sevensItem.relativeUrl + "?" + sevensItem.versionHash)}} >
                   <ShareIcon />
