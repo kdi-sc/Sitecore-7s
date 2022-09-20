@@ -177,9 +177,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
           <div>
             Personalize
             <Switch
-              value="Personlized"
+              value="Personalized"
               onChange={handleChange}
-              inputProps={{ "aria-label": "Personlize" }}
+              inputProps={{ "aria-label": "Personalize" }}
             />
             <Snackbar
                  open={openPersonalize}
@@ -202,7 +202,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     "/" +
                     sevensItem.relativeUrl +
                     "?" +
-                    sevensItem.versionHash + '#t=.01'
+                    sevensItem.versionHash + "#t=0.001"
                   }
                   onClick={() => {
                     handleOpen();
