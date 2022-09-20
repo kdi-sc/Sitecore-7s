@@ -177,7 +177,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
           <div>
             Personalize
             <Switch
-              value="Personlized for me"
+              value="Personlized"
               onChange={handleChange}
               inputProps={{ "aria-label": "Personlize" }}
             />
@@ -197,12 +197,12 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 <CardMedia
                   component="video"
                   height="100%"
-                  image={
+                  src={
                     FILE_DOMAIN_URL +
                     "/" +
                     sevensItem.relativeUrl +
                     "?" +
-                    sevensItem.versionHash + '#t=.1'
+                    sevensItem.versionHash + '#t=.01'
                   }
                   onClick={() => {
                     handleOpen();
