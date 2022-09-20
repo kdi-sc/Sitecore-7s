@@ -196,14 +196,13 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
               >
                 <CardMedia
                   component="video"
-                  controls
                   height="100%"
                   src={
                     FILE_DOMAIN_URL +
                     "/" +
                     sevensItem.relativeUrl +
                     "?" +
-                    sevensItem.versionHash
+                    sevensItem.versionHash + "#t=0.001"
                   }
                   onClick={() => {
                     handleOpen();
