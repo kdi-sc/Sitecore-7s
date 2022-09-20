@@ -186,6 +186,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                  onClose={() => setOpenPersonalize(false)}
                  autoHideDuration={4200}
                  message="Content is being personalized based on what you have viewed"
+                 anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center'}}
                   />
           </div>
           <div className={styles.grid}>
@@ -235,6 +238,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                  onClose={() => setOpenShare(false)}
                  autoHideDuration={2000}
                  message="Video link copied to clipboard"
+                 anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center'}}
                   />
                  </IconButton>
                 </CardActions>
