@@ -96,6 +96,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   const handleShareClick = () => {
     setOpenShare(true)
   }
+  const [openPersonalize, setOpenPersonalize] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -112,8 +113,10 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
 
+
     if (!checked) {
       console.log("Sitecore Personlize Enabled!");
+      setOpenPersonalize(true)
       // Get Watched Video List IDs from Sitecore Personlize
     
       /* For testing purpose only to manually sort some items.*/
@@ -178,6 +181,12 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
               onChange={handleChange}
               inputProps={{ "aria-label": "Personlize" }}
             />
+            <Snackbar
+                 open={openPersonalize}
+                 onClose={() => setOpenPersonalize(false)}
+                 autoHideDuration={4200}
+                 message="Content is being personalized based on what you have viewed"
+                  />
           </div>
           <div className={styles.grid}>
             {sevensList.slice(0, 3).map((sevensItem) => (
