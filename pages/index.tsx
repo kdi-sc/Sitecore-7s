@@ -237,7 +237,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                  open={openShare}
                  onClose={() => setOpenShare(false)}
                  autoHideDuration={2000}
-                 message="Video link copied to clipboard"
+                 message="Share link copied to clipboard"
                  anchorOrigin={{
                   vertical: 'top',
                   horizontal: 'center'}}
