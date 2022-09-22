@@ -20,6 +20,8 @@ import { gql } from "@apollo/client";
 import { logViewEvent } from "../utility/CdpService";
 import styles from "../styles/Home.module.css";
 import Grow from '@mui/material/Grow';
+import Fade from '@mui/material/Fade';
+
 
 const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || "";
 
@@ -200,6 +202,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 key={sevensItem.sitecoreSeven_Id}
                 className={styles.card}
               >
+                <Fade in={checked || !checked} style={{ transitionDelay: '400ms'}}>
                 <CardMedia
                   component="video"
                   preload="metadata"
@@ -217,6 +220,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     setModalData(sevensItem);
                   }}
                 ></CardMedia>
+                </Fade>
                 <CardContent
                    onClick={() => {
                       handleOpen();
