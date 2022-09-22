@@ -202,7 +202,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 key={sevensItem.sitecoreSeven_Id}
                 className={styles.card}
               >
-                <Fade in={checked || !checked} style={{ transitionDelay: '200ms'}}>
                 <CardMedia
                   component="video"
                   preload="metadata"
@@ -220,7 +219,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     setModalData(sevensItem);
                   }}
                 ></CardMedia>
-                </Fade>
                 <CardContent
                    onClick={() => {
                       handleOpen();
