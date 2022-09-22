@@ -206,7 +206,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   component="video"
                   preload="metadata"
                   height="100%"
-                  src={
+                  image={
                     FILE_DOMAIN_URL +
                     "/" +
                     sevensItem.relativeUrl +
