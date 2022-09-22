@@ -49,7 +49,7 @@ export interface SevensItem {
 }
 
 export interface ContentWatched {
-  content_watched: Array<string>;
+  content_viewed: Array<string>;
   orderBy: string;
 }
 
@@ -132,7 +132,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     callFlows({ friendlyId: "my_three_7s" })
     .then((response) => {
       var data = response as ContentWatched;
-      var sortOrder = data.content_watched;
+      var sortOrder = data.content_viewed;
       console.log("Sort Order: ", sortOrder) 
       let sortedSevens = [...sevensList];
       setSevensList(sortedSevens.sort(function (a, b) {
