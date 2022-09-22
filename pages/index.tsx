@@ -19,7 +19,6 @@ import { callFlows } from "../utility/BoxeverService";
 import { gql } from "@apollo/client";
 import { logViewEvent } from "../utility/CdpService";
 import styles from "../styles/Home.module.css";
-import Grow from '@mui/material/Grow';
 import Fade from '@mui/material/Fade';
 
 
@@ -197,7 +196,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
           <div className={styles.grid}>
             {sevensList.slice(0, 3).map((sevensItem) => (
               
-              <Grow key={sevensItem.sitecoreSeven_Id} in={checked || !checked} style={{ transitionDelay: '200ms'}}>
+              <Fade key={sevensItem.sitecoreSeven_Id} in={checked || !checked} style={{ transitionDelay: '200ms'}}>
               <Card
                 key={sevensItem.sitecoreSeven_Id}
                 className={styles.card}
@@ -250,7 +249,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                  </IconButton>
                 </CardActions>
               </Card>
-              </Grow>
+              </Fade>
             ))}
             <Modal
               open={open}
