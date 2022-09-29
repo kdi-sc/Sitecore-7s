@@ -342,10 +342,12 @@ export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
         sitecoreSeven_CreatedOn: SevensItem.createdOn,
         relativeUrl:
           SevensItem.cmpContentToLinkedAsset.results[0].assetToPublicLink
-            .results[0].relativeUrl,
+            .results[0] ? SevensItem.cmpContentToLinkedAsset.results[0].assetToPublicLink
+            .results[0].relativeUrl : "",
         versionHash:
           SevensItem.cmpContentToLinkedAsset.results[0].assetToPublicLink
-            .results[0].versionHash
+            .results[0] ? SevensItem.cmpContentToLinkedAsset.results[0].assetToPublicLink
+            .results[0].versionHash : ""
       };
     });
     return {
