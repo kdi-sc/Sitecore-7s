@@ -47,7 +47,7 @@ export interface SevensItem {
   versionHash: string;
 }
 
-export interface ContentWatched {
+export interface ContentViewed {
   content_viewed: Array<string>;
   orderBy: string;
 }
@@ -130,7 +130,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
 
     callFlows({ friendlyId: "my_three_7s" })
     .then((response) => {
-      var data = response as ContentWatched;
+      var data = response as ContentViewed;
       var sortOrder = data.content_viewed;
       console.log("Sort Order: ", sortOrder) 
       let sortedSevens = [...sevensList];
@@ -210,7 +210,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     "/" +
                     sevensItem.relativeUrl +
                     "?" +
-                    sevensItem.versionHash + "#t=0.001"
+                    sevensItem.versionHash + "#t=1"
                   }
                   onClick={() => {
                     handleOpen();
@@ -344,11 +344,6 @@ export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
             .results[0].versionHash
       };
     });
-
-    /**
-     * Get the list of watched videos from CDP based on the brwoserId.
-     */
-
     return {
       props: {
         sevensList: [...theSevensProps],
