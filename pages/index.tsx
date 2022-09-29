@@ -41,6 +41,7 @@ export interface SevensItem {
   sitecoreSeven_CreatedOn: Date;
   sitecoreSeven_Title: string;
   sitecoreSeven_Summary: string;
+  sitecoreSeven_Image:string;
   assetFileName: string;
   assetId: string;
   relativeUrl: string;
@@ -66,6 +67,7 @@ const GET_HP_CONTENT = gql`
         createdOn
         sitecoreSeven_Title
         sitecoreSeven_Summary
+        sitecoreSeven_image
         cmpContentToLinkedAsset {
           total
           results {
@@ -87,9 +89,10 @@ const GET_HP_CONTENT = gql`
   }
 `;
 
-const logView = (id, eventType) => {
-  logViewEvent({ type: eventType, content_hub_id: id });
-};
+    const logView = (id, eventType) => {
+      logViewEvent({ type: eventType, content_hub_id: id });
+    };
+
 
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   logViewEvent({ page: "homepage" })
@@ -107,6 +110,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     sitecoreSeven_CreatedOn: new Date(),
     sitecoreSeven_Title: "",
     sitecoreSeven_Summary: "",
+    sitecoreSeven_Image:"",
     relativeUrl: "",
     versionHash: ""
   });
@@ -195,22 +199,20 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
           </div>
           <div className={styles.grid}>
             {sevensList.slice(0, 3).map((sevensItem) => (
-              
-              <Fade key={sevensItem.sitecoreSeven_Id} in={checked || !checked} style={{ transitionDelay: '200ms'}}>
+           <Fade key={sevensItem.sitecoreSeven_Id} in={checked || !checked} style={{ transitionDelay: '200ms'}}>      
               <Card
                 key={sevensItem.sitecoreSeven_Id}
-                className={styles.card}
-              >
+                className={styles.card}>
                 <CardMedia
                   component="video"
                   preload="metadata"
-                  height="100%"
+                  height="200px"
                   image={
                     FILE_DOMAIN_URL +
                     "/" +
                     sevensItem.relativeUrl +
                     "?" +
-                    sevensItem.versionHash + "#t=1"
+                    sevensItem.versionHash + "#t=2"
                   }
                   onClick={() => {
                     handleOpen();
@@ -331,9 +333,11 @@ export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
      */
     const theSevens = data?.allM_Content_SitecoreSeven.results;
     const theSevensProps = theSevens.map((SevensItem) => {
+
       return {
         sitecoreSeven_Title: SevensItem.sitecoreSeven_Title,
         sitecoreSeven_Summary: SevensItem.sitecoreSeven_Summary,
+        sitecoreSeven_Image: SevensItem.sitecoreSeven_Image ? SevensItem.sitecoreSeven_Image : "",
         sitecoreSeven_Id: SevensItem.id,
         sitecoreSeven_CreatedOn: SevensItem.createdOn,
         relativeUrl:
