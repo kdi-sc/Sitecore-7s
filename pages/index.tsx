@@ -199,7 +199,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
           </div>
           <div className={styles.grid}>
             {sevensList.slice(0, 3).map((sevensItem) => (
-           <Fade key={sevensItem.sitecoreSeven_Id} in={checked || !checked} style={{ transitionDelay: '300ms'}}>      
+           <Fade key={sevensItem.sitecoreSeven_Id} in={checked || !checked} style={{ transitionDelay: '420ms'}}>      
               <Card
                 key={sevensItem.sitecoreSeven_Id}
                 className={styles.card}>
