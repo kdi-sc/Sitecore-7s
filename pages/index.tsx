@@ -1,7 +1,7 @@
 import { GetStaticProps, NextPage } from "next";
 import { IconButton, Switch, Snackbar } from "@mui/material";
 import { PreviewContext, PreviewProps } from "../components/previewContext";
-import React, { ReactElement, useState, useEffect } from "react";
+import React, { ReactElement, useState } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -89,9 +89,8 @@ const GET_HP_CONTENT = gql`
   }
 `;
 
-    const logView = (id, eventType) => {
-      logViewEvent({ type: eventType, content_hub_id: id });
-    };
+const logView = (id, eventType) => {
+ logViewEvent({ type: eventType, content_hub_id: id });   };
 
 
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
@@ -100,6 +99,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   const [openShare, setOpenShare] = useState(false);
   const handleShareClick = () => {
     setOpenShare(true)
+  }
+  const handleHeartClick = (id) => {
+    logView(id, "CONTENT_HEARTED")
   }
   const [openPersonalize, setOpenPersonalize] = useState(false);
   const [open, setOpen] = React.useState(false);
@@ -233,7 +235,8 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   </Typography>
                 </CardContent>
                 <CardActions disableSpacing>
-                  <IconButton aria-label="add to favorites">
+                  <IconButton aria-label="add to favorites"
+                   onClick={() => {handleHeartClick(sevensItem.sitecoreSeven_Id)}} >
                     <FavoriteIcon />
                   </IconButton>  
                   <IconButton aria-label="share"
@@ -293,7 +296,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   <ShareIcon />
                  </IconButton>
                   <br /> {modalData.sitecoreSeven_Summary}             
-              
                 </Typography>
               </Box>
             </Modal>
@@ -324,8 +326,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
 
 // ******
 export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
-  const myclient = await createApolloClient(false).getClient();
-
+  const myclient = createApolloClient(false).getClient();
   const { data } = await myclient.query({ query: GET_HP_CONTENT });
   try {
     /**
