@@ -212,7 +212,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     "/" +
                     sevensItem.relativeUrl +
                     "?" +
-                    sevensItem.versionHash + "#t=2"
+                    sevensItem.versionHash + "#t=20"
                   }
                   onClick={() => {
                     handleOpen();
