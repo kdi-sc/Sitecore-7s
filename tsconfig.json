@@ -23,6 +23,6 @@
     "**/*.tsx",
     "utils/cdpLibrary.js",
     "utility/cdpConfig.js"
-  ],
+, "pages/content/[id].tsx.disable"  ],
   "exclude": ["node_modules"]
 }
