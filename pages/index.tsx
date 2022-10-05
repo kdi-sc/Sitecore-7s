@@ -1,6 +1,7 @@
 import { GetStaticProps, NextPage } from "next";
 import { IconButton, Switch, Snackbar } from "@mui/material";
 import { PreviewContext, PreviewProps } from "../components/previewContext";
+import Header from "../components/header"
 import React, { ReactElement, useState } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -126,13 +127,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       console.log("Sitecore Personlize Enabled!");
       setOpenPersonalize(true)
       // Get Watched Video List IDs from Sitecore Personlize
-    
-      /* For testing purpose only to manually sort some items.*/
-      // sortOrder = ([
-      //   "iYSfV35WMkyrUgnwRU3zGA",
-      //   "fFqa3btJyEagFaX8g_wdgg",
-      //   "irhQOl-aYEKfBhz4eHrAlg"
-      // ]);
 
     callFlows({ friendlyId: "my_three_7s" })
     .then((response) => {
@@ -163,6 +157,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   };
 
   return (
+    
     <PreviewContext.Provider value={props}>
       <div className={styles.container}>
         <Head>
@@ -173,7 +168,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
           />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-
+        <Header />
         <main className={styles.main}>
           <h1 className={styles.title}>
             <Image src="/sitecore.png" alt="Sitecore" width={32} height={32} />

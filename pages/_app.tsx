@@ -14,8 +14,12 @@ import { CdpScripts } from '../utility/CdpService'
 import createEmotionCache from '../utility/createEmotionCache'
 import lightThemeOptions from '../styles/theme/lightThemeOptions'
 
+import { SessionProvider } from "next-auth/react"
+import type { Session } from "next-auth"
+
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache
+  session: Session
 }
 
 const clientSideEmotionCache = createEmotionCache()
@@ -23,9 +27,10 @@ const clientSideEmotionCache = createEmotionCache()
 const lightTheme = createTheme(lightThemeOptions)
 
 const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
-  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
+  const { Component, emotionCache = clientSideEmotionCache, session, pageProps } = props
 
   return (
+    <SessionProvider session={session}>
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={lightTheme}>
         <CssBaseline />
@@ -33,6 +38,7 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
       </ThemeProvider>
       {CdpScripts}
     </CacheProvider>
+    </SessionProvider>
   )
 }
 
