@@ -23,12 +23,12 @@ interface MyAppProps extends AppProps {
 }
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDqxqR_61hR0fzzy0GdcOvmDCP_OjJYIC0",
-  authDomain: "sitecore-7s.firebaseapp.com",
-  projectId: "sitecore-7s",
-  storageBucket: "sitecore-7s.appspot.com",
-  messagingSenderId: "798976054914",
-  appId: "1:798976054914:web:a119d1183b8bf10201869b"
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId:process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID
 
 };
 
