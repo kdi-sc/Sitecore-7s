@@ -36,16 +36,16 @@ export default function Header() {
           )}
           {session?.user && (
             <>
-              {session.user.image && (
+              {/* {session.user.image && (
                 <span
                   style={{ backgroundImage: `url('${session.user.image}')` }}
                   className={styles.avatar}
                 />
-              )}
+              )} */}
               <span className={styles.signedInText}>
-                <small>Signed in as</small>
-                <br />
-                <strong>{session.user.email ?? session.user.name}</strong>
+                {/* <small>Signed in as</small>
+                <br /> */}
+                <small><strong>{session.user.email ?? session.user.name}</strong></small>
               </span>
               <a
                 href={`/api/auth/signout`}
@@ -55,7 +55,7 @@ export default function Header() {
                   signOut()
                 }}
               >
-                Sign out
+                <small>Sign out</small>
               </a>
             </>
           )}
