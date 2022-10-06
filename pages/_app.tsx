@@ -5,7 +5,7 @@ import '@fontsource/roboto/700.css'
 import '../styles/globals.css'
 
 import * as React from 'react'
-
+import { initializeApp } from 'firebase/app';
 import { CacheProvider, EmotionCache } from '@emotion/react'
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
 
@@ -21,6 +21,19 @@ interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache
   session: Session
 }
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDqxqR_61hR0fzzy0GdcOvmDCP_OjJYIC0",
+  authDomain: "sitecore-7s.firebaseapp.com",
+  projectId: "sitecore-7s",
+  storageBucket: "sitecore-7s.appspot.com",
+  messagingSenderId: "798976054914",
+  appId: "1:798976054914:web:a119d1183b8bf10201869b"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
 
 const clientSideEmotionCache = createEmotionCache()
 
