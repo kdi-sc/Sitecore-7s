@@ -30,7 +30,7 @@ export default function Header() {
                   signIn()
                 }}
               >
-                Sign in
+                Log In
               </a>
             </>
           )}
@@ -55,7 +55,7 @@ export default function Header() {
                   signOut()
                 }}
               >
-                <small>Sign out</small>
+                <small>Log Out</small>
               </a>
             </>
           )}
