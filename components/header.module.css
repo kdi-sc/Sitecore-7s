@@ -1,6 +1,5 @@
 /* Set min-height to avoid page reflow while session loading */
 .signedInStatus {
-  display: inline-block;
   min-height: 0rem;
   width: 100%;
 }
@@ -25,9 +24,8 @@
 .signedInText,
 .notSignedInText {
   position: absolute;
-  padding-top: 1.2rem;
   left: 1rem;
-  right: 6.5rem;
+  top:.06rem;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;

@@ -13,11 +13,6 @@ a {
   box-sizing: border-box;
 }
 
-li,
-p {
-  line-height: 1.5rem;
-}
-
 a {
   font-weight: 500;
 }

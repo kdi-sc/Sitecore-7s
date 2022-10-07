@@ -1,6 +1,13 @@
 import Link from "next/link"
 import { signIn, signOut, useSession } from "next-auth/react"
 import styles from "./header.module.css"
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
 
 // The approach used in this component shows how to build a sign in and sign out
 // component that works on pages which support both client and server side
@@ -11,7 +18,10 @@ export default function Header() {
 
   return (
     <header>
-      <noscript>
+      <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static">
+        <Toolbar>
+          <noscript>
         <style>{`.nojs-show { opacity: 1; top: 0; }`}</style>
       </noscript>
       <div className={styles.signedInStatus}>
@@ -30,7 +40,7 @@ export default function Header() {
                   signIn()
                 }}
               >
-                Log In
+                Login
               </a>
             </>
           )}
@@ -61,6 +71,10 @@ export default function Header() {
           )}
         </p>
       </div>
+        </Toolbar>
+      </AppBar>
+    </Box>
+     
     </header>
   )
 }
