@@ -159,7 +159,8 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   return (
     
     <PreviewContext.Provider value={props}>
-      <div className={styles.container}>
+    <Header />
+    <div className={styles.container}>
         <Head>
           <title>Sitecore 7&apos;s</title>
           <meta
@@ -168,7 +169,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
           />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Header />
         <main className={styles.main}>
           <h1 className={styles.title}>
             <Image src="/sitecore.png" alt="Sitecore" width={32} height={32} />

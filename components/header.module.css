@@ -7,10 +7,9 @@
 .loading,
 .loaded {
   position: relative;
-  top: 0;
   opacity: 1;
   border-radius: 0 0 0.6rem 0.6rem;
-  padding: 0rem 1rem;
+  padding: 0rem .4rem;
   margin: 0;
   background-color: rgba(0, 0, 0, 0.05);
   transition: all 0.4s ease-in;
@@ -24,7 +23,6 @@
 .signedInText,
 .notSignedInText {
   position: absolute;
-  left: 1rem;
   top:.06rem;
   white-space: nowrap;
   text-overflow: ellipsis;
