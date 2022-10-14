@@ -202,7 +202,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 className={styles.card}>
                 <CardMedia
                   component="video"
-                  preload="none"
+                  preload="metadata"
                   height="200px"
                   src={
                     FILE_DOMAIN_URL +
@@ -329,7 +329,6 @@ export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
      */
     const theSevens = data?.allM_Content_SitecoreSeven.results;
     const theSevensProps = theSevens.map((SevensItem) => {
-
       return {
         sitecoreSeven_Title: SevensItem.sitecoreSeven_Title,
         sitecoreSeven_Summary: SevensItem.sitecoreSeven_Summary,
