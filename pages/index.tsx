@@ -201,10 +201,11 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 key={sevensItem.sitecoreSeven_Id}
                 className={styles.card}>
                 <CardMedia
+                  className="lazy"
                   component="video"
                   preload="metadata"
                   height="200px"
-                  image={
+                  src={
                     FILE_DOMAIN_URL +
                     "/" +
                     sevensItem.relativeUrl +
