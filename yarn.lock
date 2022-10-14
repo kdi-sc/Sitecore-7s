@@ -2489,6 +2489,11 @@
   dependencies:
     "js-tokens" "^3.0.0 || ^4.0.0"
 
+"lozad@^1.16.0":
+  "integrity" "sha512-JBr9WjvEFeKoyim3svo/gsQPTkgG/mOHJmDctZ/+U9H3ymUuvEkqpn8bdQMFsvTMcyRJrdJkLv0bXqGm0sP72w=="
+  "resolved" "https://registry.npmjs.org/lozad/-/lozad-1.16.0.tgz"
+  "version" "1.16.0"
+
 "lru-cache@^6.0.0":
   "integrity" "sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA=="
   "resolved" "https://registry.npmjs.org/lru-cache/-/lru-cache-6.0.0.tgz"
@@ -3419,11 +3424,6 @@
   "integrity" "sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA=="
   "resolved" "https://registry.npmjs.org/v8-compile-cache/-/v8-compile-cache-2.3.0.tgz"
   "version" "2.3.0"
-
-"vanilla-lazyload@^17.8.3":
-  "integrity" "sha512-0eYjhkSkfP/JCDIzVpmgnh9I3XKAA8/i/6FpRrH8qjcC+nHv5mYZ6DQZUIGU16TqJei23hHl0J/Zuv/zmCC2Zw=="
-  "resolved" "https://registry.npmjs.org/vanilla-lazyload/-/vanilla-lazyload-17.8.3.tgz"
-  "version" "17.8.3"
 
 "webidl-conversions@^3.0.0":
   "integrity" "sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ=="
