@@ -90,8 +90,8 @@ const GET_HP_CONTENT = gql`
   }
 `;
 
-const logView = (id, eventType) => {
- logViewEvent({ type: eventType, content_hub_id: id });   };
+const logEvent = (id, eventType) => {
+ logViewEvent({ type: eventType, ext: {contentHubID: id} });   };
 
 
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
@@ -102,7 +102,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     setOpenShare(true)
   }
   const handleHeartClick = (id) => {
-    logView(id, "CONTENT_HEARTED")
+    logEvent(id, "CONTENT_HEARTED")
   }
   const [openPersonalize, setOpenPersonalize] = useState(false);
   const [open, setOpen] = React.useState(false);
@@ -213,14 +213,14 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   }
                   onClick={() => {
                     handleOpen();
-                    logView(sevensItem.sitecoreSeven_Id, "CONTENT_VIEWED");
+                    logEvent(sevensItem.sitecoreSeven_Id, "CONTENT_VIEWED");
                     setModalData(sevensItem);
                   }}
                 ></CardMedia>
                 <CardContent
                    onClick={() => {
                       handleOpen();
-                      logView(sevensItem.sitecoreSeven_Id, "CONTENT_VIEWED");
+                      logEvent(sevensItem.sitecoreSeven_Id, "CONTENT_VIEWED");
                       setModalData(sevensItem);
                             }}>
                   <Typography gutterBottom variant="body2" component="div">
@@ -267,16 +267,16 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     modalData.versionHash
                   }
                   onStart={() =>
-                    logView(modalData.sitecoreSeven_Id, "VIDEO_STARTED")
+                    logEvent(modalData.sitecoreSeven_Id, "VIDEO_STARTED")
                   }
                   onPlay={() =>
-                    logView(modalData.sitecoreSeven_Id, "VIDEO_PLAYED")
+                    logEvent(modalData.sitecoreSeven_Id, "VIDEO_PLAYED")
                   }
                   onPause={() =>
-                    logView(modalData.sitecoreSeven_Id, "VIDEO_PAUSED")
+                    logEvent(modalData.sitecoreSeven_Id, "VIDEO_PAUSED")
                   }
                   onEnded={() =>
-                    logView(modalData.sitecoreSeven_Id, "VIDEO_ENDED")
+                    logEvent(modalData.sitecoreSeven_Id, "VIDEO_ENDED")
                   }
                   controls
                   width={"100%"}
