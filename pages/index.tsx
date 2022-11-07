@@ -1,5 +1,5 @@
 import { GetStaticProps, NextPage } from "next";
-import { IconButton, Switch, Snackbar } from "@mui/material";
+import { IconButton, Switch, Snackbar, CardHeader } from "@mui/material";
 import { PreviewContext, PreviewProps } from "../components/previewContext";
 import Header from "../components/header"
 import React, { ReactElement, useState } from "react";
@@ -9,6 +9,9 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import GroupsIcon from '@mui/icons-material/Groups';
+import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
+import PersonIcon from '@mui/icons-material/Person';
 import ShareIcon from "@mui/icons-material/Share";
 import Head from "next/head";
 import Image from "next/image";
@@ -195,47 +198,106 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   />
           </div>
           <div className={styles.grid}>
-            {sevensList.slice(0, 3).map((sevensItem) => (
-           <Fade key={sevensItem.sitecoreSeven_Id} in={checked || !checked} style={{ transitionDelay: '420ms'}}>      
+
+             {/* *****Individual Content****** */}
+
+             <Fade key={sevensList[0].sitecoreSeven_Id} in={checked || !checked} style={{ transitionDelay: '420ms'}}>   
               <Card
-                key={sevensItem.sitecoreSeven_Id}
+                key={sevensList[0].sitecoreSeven_Id}
                 className={styles.card}>
+                  <CardHeader 
+                  avatar={<PersonIcon fontSize="large"/>}
+                  title={sevensList[0].sitecoreSeven_Title.replace(/&nbsp;/g, "")}
+                  subheader="For You"
+                  />
+                
                 <CardMedia
                   component="video"
                   preload="metadata"
-                  height="200px"
                   src={
                     FILE_DOMAIN_URL +
                     "/" +
-                    sevensItem.relativeUrl +
+                    sevensList[0].relativeUrl +
                     "?" +
-                    sevensItem.versionHash + "#t=42"
+                    sevensList[0].versionHash + "#t=42"
                   }
                   onClick={() => {
                     handleOpen();
-                    logEvent(sevensItem.sitecoreSeven_Id, "CONTENT_VIEWED");
-                    setModalData(sevensItem);
+                    logEvent(sevensList[0].sitecoreSeven_Id, "CONTENT_VIEWED");
+                    setModalData(sevensList[0]);
                   }}
                 ></CardMedia>
                 <CardContent
                    onClick={() => {
                       handleOpen();
-                      logEvent(sevensItem.sitecoreSeven_Id, "CONTENT_VIEWED");
-                      setModalData(sevensItem);
+                      logEvent(sevensList[0].sitecoreSeven_Id, "CONTENT_VIEWED");
+                      setModalData(sevensList[0]);
                             }}>
-                  <Typography gutterBottom variant="body2" component="div">
-                    <b>
-                      {sevensItem.sitecoreSeven_Title.replace(/&nbsp;/g, "")}
-                    </b>
-                  </Typography>
                 </CardContent>
                 <CardActions disableSpacing>
                   <IconButton aria-label="add to favorites"
-                   onClick={() => {handleHeartClick(sevensItem.sitecoreSeven_Id)}} >
+                   onClick={() => {handleHeartClick(sevensList[0].sitecoreSeven_Id)}} >
                     <FavoriteIcon />
                   </IconButton>  
                   <IconButton aria-label="share"
-                  onClick={() => {handleShareClick(); navigator.clipboard.writeText( FILE_DOMAIN_URL + "/" + sevensItem.relativeUrl + "?" + sevensItem.versionHash)}} >
+                  onClick={() => {handleShareClick(); navigator.clipboard.writeText( FILE_DOMAIN_URL + "/" + sevensList[0].relativeUrl + "?" + sevensList[0].versionHash)}} >
+                  <ShareIcon />
+                  <Snackbar
+                 open={openShare}
+                 onClose={() => setOpenShare(false)}
+                 autoHideDuration={2000}
+                 message="Share link copied to clipboard"
+                 anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center'}}
+                  />
+                 </IconButton>
+                </CardActions> 
+              </Card>
+              </Fade>
+
+              {/* *****Trending Content****** */}
+
+              <Fade key={sevensList[1].sitecoreSeven_Id} in={checked || !checked} style={{ transitionDelay: '420ms'}}>   
+              <Card
+                key={sevensList[1].sitecoreSeven_Id}
+                className={styles.card}>
+                  <CardHeader 
+                  avatar={<GroupsIcon fontSize="large"/>}
+                  title={sevensList[1].sitecoreSeven_Title.replace(/&nbsp;/g, "")}
+                  subheader="Trending"
+                  />
+                
+                <CardMedia
+                  component="video"
+                  preload="metadata"
+                  src={
+                    FILE_DOMAIN_URL +
+                    "/" +
+                    sevensList[1].relativeUrl +
+                    "?" +
+                    sevensList[1].versionHash + "#t=42"
+                  }
+                  onClick={() => {
+                    handleOpen();
+                    logEvent(sevensList[1].sitecoreSeven_Id, "CONTENT_VIEWED");
+                    setModalData(sevensList[1]);
+                  }}
+                ></CardMedia>
+                <CardContent
+                   onClick={() => {
+                      handleOpen();
+                      logEvent(sevensList[1].sitecoreSeven_Id, "CONTENT_VIEWED");
+                      setModalData(sevensList[1]);
+                            }}>
+                </CardContent>
+                <CardActions disableSpacing>
+                  <IconButton aria-label="add to favorites"
+                   onClick={() => {handleHeartClick(sevensList[1].sitecoreSeven_Id)}} >
+                    <FavoriteIcon />
+                  </IconButton>  
+                  <IconButton aria-label="share"
+                  onClick={() => {handleShareClick(); navigator.clipboard.writeText( FILE_DOMAIN_URL + "/" + sevensList[1].relativeUrl + "?" + sevensList[1].versionHash)}} >
                   <ShareIcon />
                   <Snackbar
                  open={openShare}
@@ -248,9 +310,66 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   />
                  </IconButton>
                 </CardActions>
+                
               </Card>
               </Fade>
-            ))}
+
+               {/* *****Brand Boosted Content****** */}
+
+               <Fade key={sevensList[2].sitecoreSeven_Id} in={checked || !checked} style={{ transitionDelay: '420ms'}}>   
+              <Card
+                key={sevensList[2].sitecoreSeven_Id}
+                className={styles.card}>
+                  <CardHeader 
+                  avatar={<ElectricBoltIcon fontSize="large"/>}
+                  title={sevensList[2].sitecoreSeven_Title.replace(/&nbsp;/g, "")}
+                  subheader="Brand Boosted"
+                  />
+                <CardMedia
+                  component="video"
+                  preload="metadata"
+                  src={
+                    FILE_DOMAIN_URL +
+                    "/" +
+                    sevensList[2].relativeUrl +
+                    "?" +
+                    sevensList[2].versionHash + "#t=42"
+                  }
+                  onClick={() => {
+                    handleOpen();
+                    logEvent(sevensList[2].sitecoreSeven_Id, "CONTENT_VIEWED");
+                    setModalData(sevensList[2]);
+                  }}
+                ></CardMedia>
+                <CardContent
+                   onClick={() => {
+                      handleOpen();
+                      logEvent(sevensList[2].sitecoreSeven_Id, "CONTENT_VIEWED");
+                      setModalData(sevensList[2]);
+                            }}>
+                </CardContent>
+                <CardActions disableSpacing>
+                  <IconButton aria-label="add to favorites"
+                   onClick={() => {handleHeartClick(sevensList[2].sitecoreSeven_Id)}} >
+                    <FavoriteIcon />
+                  </IconButton>  
+                  <IconButton aria-label="share"
+                  onClick={() => {handleShareClick(); navigator.clipboard.writeText( FILE_DOMAIN_URL + "/" + sevensList[2].relativeUrl + "?" + sevensList[2].versionHash)}} >
+                  <ShareIcon />
+                  <Snackbar
+                 open={openShare}
+                 onClose={() => setOpenShare(false)}
+                 autoHideDuration={2000}
+                 message="Share link copied to clipboard"
+                 anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center'}}
+                  />
+                 </IconButton>
+                </CardActions> 
+              </Card>
+              </Fade>
+
             <Modal
               open={open}
               onClose={handleClose}
