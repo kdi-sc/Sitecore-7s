@@ -323,7 +323,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   <CardHeader 
                   avatar={<ElectricBoltIcon fontSize="large"/>}
                   title={sevensList[2].sitecoreSeven_Title.replace(/&nbsp;/g, "")}
-                  subheader="Brand Boosted"
+                  subheader="Boosted"
                   />
                 <CardMedia
                   component="video"
