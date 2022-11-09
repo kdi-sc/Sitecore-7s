@@ -68,9 +68,6 @@ export interface Slot{
   decisionDescription: string;
 }
 
-export interface PersonalizedContent {
-  slotsList:Array<Slot>;
-}
 
 
 //Get Homepage Content From Sevens - Everything without Null Title
