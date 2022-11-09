@@ -52,14 +52,26 @@ export interface SevensItem {
   versionHash: string;
 }
 
-export interface ContentViewed {
-  content_viewed: Array<string>;
-  orderBy: string;
-}
-
 export interface SevensProps extends PreviewProps {
   sevensList: Array<SevensItem>;
 }
+
+export interface SlotsList{
+  slot1: Slot;
+  slot2: Slot;
+  slot3: Slot;
+}
+
+export interface Slot{
+  contentID: string;
+  decisionName: string;
+  decisionDescription: string;
+}
+
+export interface PersonalizedContent {
+  slotsList:Array<Slot>;
+}
+
 
 //Get Homepage Content From Sevens - Everything without Null Title
 const GET_HP_CONTENT = gql`
@@ -100,6 +112,8 @@ const logEvent = (id, eventType) => {
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   logViewEvent({ page: "homepage" })
   const[sevensList, setSevensList] = useState(props.sevensList)
+  const[slotsList, setSlotsList] = useState({})
+
   const [openShare, setOpenShare] = useState(false);
   const handleShareClick = () => {
     setOpenShare(true)
@@ -122,25 +136,29 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   });
 
   const [checked, setChecked] = React.useState(false);
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePersonalize = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
 
-
     if (!checked) {
-      console.log("Sitecore Personlize Enabled!");
+      console.log("Fetching real-time data from Sitecore personalize!");
       setOpenPersonalize(true)
-      // Get Watched Video List IDs from Sitecore Personlize
-
+      //Get Content from Sitecore Personalize
     callFlows({ friendlyId: "my_three_7s" })
     .then((response) => {
-      var data = response as ContentViewed;
-      var sortOrder = data.content_viewed;
-      console.log("Sort Order: ", sortOrder) 
+      var slots = response as SlotsList;
+      setSlotsList(({...slotsList, 
+        slot1: slots.slot1,
+        slot2: slots.slot2,
+        slot3: slots.slot3
+      }))
+
+    //TODO: pass slots directly to component, sorting is error-prone
+      var sortOrder = [slots.slot1.contentID, slots.slot2.contentID, slots.slot3.contentID];
       let sortedSevens = [...sevensList];
-      setSevensList(sortedSevens.sort(function (a, b) {
+      setSevensList(sevensList.sort(function (a, b) {
         return (
-          sortOrder.indexOf(a.sitecoreSeven_Id) -
-          sortOrder.indexOf(b.sitecoreSeven_Id)
+          sortOrder.indexOf(b.sitecoreSeven_Id) -
+          sortOrder.indexOf(a.sitecoreSeven_Id) 
         );
       }));
     })
@@ -149,8 +167,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     });
 
     } else {
-      // Back to default sort order
-      // this is a temporary dummy fix unless we decide if we should group the list into watched, continue watching etc.
+      // Back to defaults
       console.log("Sitecore Personlize Disabled! Sorted by created date");
       // Sort in Ascending order based on the created date.
       sevensList.sort((a: SevensItem, b: SevensItem) => {
@@ -184,7 +201,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
             Personalize
             <Switch
               value="Personalized"
-              onChange={handleChange}
+              onChange={handlePersonalize}
               inputProps={{ "aria-label": "Personalize" }}
             />
             <Snackbar
@@ -438,7 +455,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   );
 };
 
-// ******
+
 export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
   const myclient = createApolloClient(false).getClient();
   const { data } = await myclient.query({ query: GET_HP_CONTENT });
@@ -482,6 +499,5 @@ export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
   }
 };
 
-//******
 
 export default Home;
