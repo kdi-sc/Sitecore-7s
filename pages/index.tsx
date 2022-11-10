@@ -134,7 +134,8 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     sitecoreSeven_Image:"",
     relativeUrl: "",
     versionHash: ""
-  });
+  }
+  );
 
   const getSeven = (id): SevensItem =>{
       var seven = sevensList?.find(x => x.sitecoreSeven_Id === id);
@@ -181,9 +182,10 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       // Back to defaults
       console.log("Sitecore Personlize Disabled! Sorted by created date");
             // Sort in Ascending order based on the created date.
-     sevensList.sort((a: SevensItem, b: SevensItem) => {
-        return b.sitecoreSeven_CreatedOn > a.sitecoreSeven_CreatedOn ? 1 : -1;
-       });
+
+            // sevensList.sort((a: SevensItem, b: SevensItem) => {
+            //   return b.sitecoreSeven_CreatedOn > a.sitecoreSeven_CreatedOn ? 1 : -1;
+            //  });
       setSlotsList(({...slotsList, 
         slot1:{contentID:sevensList[0].sitecoreSeven_Id},
         slot2:{contentID:sevensList[1].sitecoreSeven_Id},
