@@ -1,74 +1,71 @@
-import { GetStaticProps, NextPage } from "next";
-import { IconButton, Switch, Snackbar, CardHeader } from "@mui/material";
-import { PreviewContext, PreviewProps } from "../components/previewContext";
-import Header from "../components/header"
-import React, { ReactElement, useState } from "react";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import GroupsIcon from '@mui/icons-material/Groups';
-import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
-import PersonIcon from '@mui/icons-material/Person';
-import ShareIcon from "@mui/icons-material/Share";
-import Head from "next/head";
-import Image from "next/image";
-import Modal from "@mui/material/Modal";
-import ReactPlayer from "react-player";
-import Typography from "@mui/material/Typography";
-import { createApolloClient } from "../utility/GraphQLApolloClient";
-import { callFlows } from "../utility/BoxeverService";
-import { gql } from "@apollo/client";
-import { logViewEvent } from "../utility/CdpService";
-import styles from "../styles/Home.module.css";
-import Fade from '@mui/material/Fade';
+import { GetStaticProps, NextPage } from 'next'
+import { IconButton, Switch, Snackbar, CardHeader } from '@mui/material'
+import { PreviewContext, PreviewProps } from '../components/previewContext'
+import Header from '../components/header'
+import React, { ReactElement, useState } from 'react'
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardActions from '@mui/material/CardActions'
+import CardContent from '@mui/material/CardContent'
+import CardMedia from '@mui/material/CardMedia'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import GroupsIcon from '@mui/icons-material/Groups'
+import ElectricBoltIcon from '@mui/icons-material/ElectricBolt'
+import PersonIcon from '@mui/icons-material/Person'
+import ShareIcon from '@mui/icons-material/Share'
+import Head from 'next/head'
+import Image from 'next/image'
+import Modal from '@mui/material/Modal'
+import ReactPlayer from 'react-player'
+import Typography from '@mui/material/Typography'
+import { createApolloClient } from '../utility/GraphQLApolloClient'
+import { callFlows } from '../utility/BoxeverService'
+import { gql } from '@apollo/client'
+import { logViewEvent } from '../utility/CdpService'
+import styles from '../styles/Home.module.css'
+import Fade from '@mui/material/Fade'
 
-
-const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || "";
+const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || ''
 
 const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  bgcolor: "background.paper",
-  border: "2px solid #000",
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
   boxShadow: 24,
-  width: "80%",
-  p: 4
-};
+  width: '80%',
+  p: 4,
+}
 
 export interface SevensItem {
-  sitecoreSeven_Id: string;
-  sitecoreSeven_CreatedOn: Date;
-  sitecoreSeven_Title: string;
-  sitecoreSeven_Summary: string;
-  sitecoreSeven_Image:string;
-  assetFileName: string;
-  assetId: string;
-  relativeUrl: string;
-  versionHash: string;
+  sitecoreSeven_Id: string
+  sitecoreSeven_CreatedOn: Date
+  sitecoreSeven_Title: string
+  sitecoreSeven_Summary: string
+  sitecoreSeven_Image: string
+  assetFileName: string
+  assetId: string
+  relativeUrl: string
+  versionHash: string
 }
 
 export interface SevensProps extends PreviewProps {
-  sevensList: Array<SevensItem>;
+  sevensList: Array<SevensItem>
 }
 
-export interface SlotsList{
-  slot1: Slot;
-  slot2: Slot;
-  slot3: Slot;
+export interface SlotsList {
+  slot1: Slot
+  slot2: Slot
+  slot3: Slot
 }
 
-export interface Slot{
-  contentID: string;
-  decisionName: string;
-  decisionDescription: string;
+export interface Slot {
+  contentID: string
+  decisionName: string
+  decisionDescription: string
 }
-
-
 
 //Get Homepage Content From Sevens - Everything without Null Title
 const GET_HP_CONTENT = gql`
@@ -100,106 +97,103 @@ const GET_HP_CONTENT = gql`
       }
     }
   }
-`;
+`
 
 const logEvent = (id, eventType) => {
- logViewEvent({ type: eventType, ext: {contentHubID: id} });   };
-
+  logViewEvent({ type: eventType, ext: { contentHubID: id } })
+}
 
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
-  logViewEvent({ page: "homepage" })
-  const[sevensList, setSevensList] = useState(props.sevensList)
-  const[slotsList, setSlotsList] = useState({
-    slot1:{contentID:props.sevensList[0].sitecoreSeven_Id},
-    slot2:{contentID:props.sevensList[1].sitecoreSeven_Id},
-    slot3:{contentID:props.sevensList[2].sitecoreSeven_Id}
+  logViewEvent({ page: 'homepage' })
+  const [sevensList, setSevensList] = useState(props.sevensList)
+  const [slotsList, setSlotsList] = useState({
+    slot1: { contentID: props.sevensList[0].sitecoreSeven_Id },
+    slot2: { contentID: props.sevensList[1].sitecoreSeven_Id },
+    slot3: { contentID: props.sevensList[2].sitecoreSeven_Id },
   })
 
-  const [openShare, setOpenShare] = useState(false);
+  const [openShare, setOpenShare] = useState(false)
   const handleShareClick = () => {
     setOpenShare(true)
   }
   const handleHeartClick = (id) => {
-    logEvent(id, "CONTENT_HEARTED")
+    logEvent(id, 'CONTENT_HEARTED')
   }
-  const [openPersonalize, setOpenPersonalize] = useState(false);
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [openPersonalize, setOpenPersonalize] = useState(false)
+  const [open, setOpen] = React.useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
   const [modalData, setModalData] = useState({
-    sitecoreSeven_Id: "",
+    sitecoreSeven_Id: '',
     sitecoreSeven_CreatedOn: new Date(),
-    sitecoreSeven_Title: "",
-    sitecoreSeven_Summary: "",
-    sitecoreSeven_Image:"",
-    relativeUrl: "",
-    versionHash: ""
-  }
-  );
+    sitecoreSeven_Title: '',
+    sitecoreSeven_Summary: '',
+    sitecoreSeven_Image: '',
+    relativeUrl: '',
+    versionHash: '',
+  })
 
-  const getSeven = (id): SevensItem =>{
-      var seven = sevensList?.find(x => x.sitecoreSeven_Id === id);
-      if(seven){
-      return seven;
-      }
-      return sevensList[0];
+  const getSeven = (id): SevensItem => {
+    var seven = sevensList?.find((x) => x.sitecoreSeven_Id === id)
+    if (seven) {
+      return seven
+    }
+    return sevensList[0]
   }
-  
 
-  const [checked, setChecked] = React.useState(false);
+  const [checked, setChecked] = React.useState(false)
   const handlePersonalize = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
+    setChecked(event.target.checked)
 
     if (!checked) {
-      console.log("Fetching real-time data from Sitecore personalize!");
+      console.log('Fetching real-time data from Sitecore personalize!')
       setOpenPersonalize(true)
       //Get Content from Sitecore Personalize
-    callFlows({ friendlyId: "my_three_7s" })
-    .then((response) => {
-      var slots = response as SlotsList;
-      console.log(slots);
-      setSlotsList(({...slotsList, 
-        slot1: slots.slot1,
-        slot2: slots.slot2,
-        slot3: slots.slot3
-      }))
+      callFlows({ friendlyId: 'my_three_7s' })
+        .then((response) => {
+          var slots = response as SlotsList
+          console.log(slots)
+          setSlotsList({
+            ...slotsList,
+            slot1: slots.slot1,
+            slot2: slots.slot2,
+            slot3: slots.slot3,
+          })
 
-    //TODO: pass slots directly to component, sorting is error-prone
-      // var sortOrder = [slots.slot1.contentID, slots.slot2.contentID, slots.slot3.contentID];
-      // let sortedSevens = [...sevensList];
-      // setSevensList(sevensList.sort(function (a, b) {
-      //   return (
-      //     sortOrder.indexOf(b.sitecoreSeven_Id) -
-      //     sortOrder.indexOf(a.sitecoreSeven_Id) 
-      //   );
-      // }));
-    })
-    .catch((e) => {
-      console.log(e);
-    });
-
+          //TODO: pass slots directly to component, sorting is error-prone
+          // var sortOrder = [slots.slot1.contentID, slots.slot2.contentID, slots.slot3.contentID];
+          // let sortedSevens = [...sevensList];
+          // setSevensList(sevensList.sort(function (a, b) {
+          //   return (
+          //     sortOrder.indexOf(b.sitecoreSeven_Id) -
+          //     sortOrder.indexOf(a.sitecoreSeven_Id)
+          //   );
+          // }));
+        })
+        .catch((e) => {
+          console.log(e)
+        })
     } else {
       // Back to defaults
-      console.log("Sitecore Personlize Disabled! Sorted by created date");
-            // Sort in Ascending order based on the created date.
+      console.log('Sitecore Personlize Disabled! Sorted by created date')
+      // Sort in Ascending order based on the created date.
 
-            // sevensList.sort((a: SevensItem, b: SevensItem) => {
-            //   return b.sitecoreSeven_CreatedOn > a.sitecoreSeven_CreatedOn ? 1 : -1;
-            //  });
-      setSlotsList(({...slotsList, 
-        slot1:{contentID:sevensList[0].sitecoreSeven_Id},
-        slot2:{contentID:sevensList[1].sitecoreSeven_Id},
-        slot3:{contentID:sevensList[2].sitecoreSeven_Id}
-      }))
-
+      // sevensList.sort((a: SevensItem, b: SevensItem) => {
+      //   return b.sitecoreSeven_CreatedOn > a.sitecoreSeven_CreatedOn ? 1 : -1;
+      //  });
+      setSlotsList({
+        ...slotsList,
+        slot1: { contentID: sevensList[0].sitecoreSeven_Id },
+        slot2: { contentID: sevensList[1].sitecoreSeven_Id },
+        slot3: { contentID: sevensList[2].sitecoreSeven_Id },
+      })
     }
-  };
+  }
 
   return (
-    
     <PreviewContext.Provider value={props}>
-    <Header />
-    <div className={styles.container}>
+      <Header />
+      <div className={styles.container}>
         <Head>
           <title>Sitecore 7&apos;s</title>
           <meta
@@ -221,181 +215,245 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
             <Switch
               value="Personalized"
               onChange={handlePersonalize}
-              inputProps={{ "aria-label": "Personalize" }}
+              inputProps={{ 'aria-label': 'Personalize' }}
             />
             <Snackbar
-                 open={openPersonalize}
-                 onClose={() => setOpenPersonalize(false)}
-                 autoHideDuration={4200}
-                 message="Content is being personalized based on what you have viewed"
-                 anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center'}}
-                  />
+              open={openPersonalize}
+              onClose={() => setOpenPersonalize(false)}
+              autoHideDuration={4200}
+              message="Content is being personalized based on what you have viewed"
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'center',
+              }}
+            />
           </div>
           <div className={styles.grid}>
+            {/* *****Individual Content****** */}
 
-             {/* *****Individual Content****** */}
-             
-              <Card
-                key={getSeven(slotsList.slot1.contentID).sitecoreSeven_Id}
-                className={styles.card}>
-                  <CardHeader 
-                  avatar={<PersonIcon fontSize="large"/>}
-                  title={getSeven(slotsList.slot1.contentID).sitecoreSeven_Title.replace(/&nbsp;/g, "")}
-                  subheader="For You"
-                  />
-                
-                <CardMedia
-                  component="video"
-                  preload="metadata"
-                  src={
-                    FILE_DOMAIN_URL +
-                    "/" +
-                    getSeven(slotsList.slot1.contentID).relativeUrl +
-                    "?" +
-                    getSeven(slotsList.slot1.contentID).versionHash + "#t=42"
-                  }
-                  onClick={() => {
-                    handleOpen();
-                    logEvent(getSeven(slotsList.slot1.contentID).sitecoreSeven_Id, "CONTENT_VIEWED");
-                    setModalData(getSeven(slotsList.slot1.contentID));
-                  }}
-                ></CardMedia>
-                <CardContent
-                   onClick={() => {
-                      handleOpen();
-                      logEvent(getSeven(slotsList.slot1.contentID).sitecoreSeven_Id, "CONTENT_VIEWED");
-                      setModalData(getSeven(slotsList.slot1.contentID));
-                            }}>
-                </CardContent>
-                <CardActions disableSpacing>
-                  <IconButton aria-label="add to favorites"
-                   onClick={() => {handleHeartClick(getSeven(slotsList.slot1.contentID).sitecoreSeven_Id)}} >
-                    <FavoriteIcon />
-                  </IconButton>  
-                  <IconButton aria-label="share"
-                  onClick={() => {handleShareClick(); navigator.clipboard.writeText( FILE_DOMAIN_URL + "/" + getSeven(slotsList.slot1.contentID).relativeUrl + "?" + getSeven(slotsList.slot1.contentID).versionHash)}} >
-                  <ShareIcon />
-                  <Snackbar
-                 open={openShare}
-                 onClose={() => setOpenShare(false)}
-                 autoHideDuration={2000}
-                 message="Share link copied to clipboard"
-                 anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center'}}
-                  />
-                 </IconButton>
-                </CardActions> 
-              </Card>
-              {/* *****Trending Content****** */}
-              <Card
-                key={slotsList.slot2.contentID}
-                className={styles.card}>
-                  <CardHeader 
-                  avatar={<GroupsIcon fontSize="large"/>}
-                  title={getSeven(slotsList.slot2.contentID).sitecoreSeven_Title.replace(/&nbsp;/g, "")}
-                  subheader="Trending"
-                  />
-                
-                <CardMedia
-                  component="video"
-                  preload="metadata"
-                  src={
-                    FILE_DOMAIN_URL +
-                    "/" +
-                    getSeven(slotsList.slot2.contentID).relativeUrl +
-                    "?" +
-                    getSeven(slotsList.slot2.contentID).versionHash + "#t=42"
-                  }
-                  onClick={() => {
-                    handleOpen();
-                    logEvent(slotsList.slot2.contentID, "CONTENT_VIEWED");
-                    setModalData(getSeven(slotsList.slot2.contentID));
-                  }}
-                ></CardMedia>
-                <CardContent
-                   onClick={() => {
-                      handleOpen();
-                      logEvent(slotsList.slot2.contentID, "CONTENT_VIEWED");
-                      setModalData(getSeven(slotsList.slot2.contentID));
-                            }}>
-                </CardContent>
-                <CardActions disableSpacing>
-                  <IconButton aria-label="add to favorites"
-                   onClick={() => {handleHeartClick(slotsList.slot2.contentID)}} >
-                    <FavoriteIcon />
-                  </IconButton>  
-                  <IconButton aria-label="share"
-                  onClick={() => {handleShareClick(); navigator.clipboard.writeText( FILE_DOMAIN_URL + "/" + getSeven(slotsList.slot2.contentID).relativeUrl + "?" + getSeven(slotsList.slot2.contentID).versionHash)}} >
-                  <ShareIcon />
-                  <Snackbar
-                 open={openShare}
-                 onClose={() => setOpenShare(false)}
-                 autoHideDuration={2000}
-                 message="Share link copied to clipboard"
-                 anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center'}}
-                  />
-                 </IconButton>
-                </CardActions>
-                
-              </Card>
+            <Card
+              key={getSeven(slotsList.slot1.contentID).sitecoreSeven_Id}
+              className={styles.card}
+            >
+              <CardHeader
+                avatar={<PersonIcon fontSize="large" />}
+                title={getSeven(
+                  slotsList.slot1.contentID,
+                ).sitecoreSeven_Title.replace(/&nbsp;/g, '')}
+                subheader="For You"
+              />
 
-               {/* *****Brand Boosted Content****** */}
-              <Card
-                key={slotsList.slot3.contentID}
-                className={styles.card}>
-                  <CardHeader 
-                  avatar={<ElectricBoltIcon fontSize="large"/>}
-                  title={getSeven(slotsList.slot3.contentID).sitecoreSeven_Title.replace(/&nbsp;/g, "")}
-                  subheader="Boosted"
-                  />
-                <CardMedia
-                  component="video"
-                  preload="metadata"
-                  src={
-                    FILE_DOMAIN_URL +
-                    "/" +
-                    getSeven(slotsList.slot3.contentID).relativeUrl +
-                    "?" +
-                    getSeven(slotsList.slot3.contentID).versionHash + "#t=42"
-                  }
+              <CardMedia
+                component="video"
+                preload="metadata"
+                src={
+                  FILE_DOMAIN_URL +
+                  '/' +
+                  getSeven(slotsList.slot1.contentID).relativeUrl +
+                  '?' +
+                  getSeven(slotsList.slot1.contentID).versionHash +
+                  '#t=42'
+                }
+                onClick={() => {
+                  handleOpen()
+                  logEvent(
+                    getSeven(slotsList.slot1.contentID).sitecoreSeven_Id,
+                    'CONTENT_VIEWED',
+                  )
+                  setModalData(getSeven(slotsList.slot1.contentID))
+                }}
+              ></CardMedia>
+              <CardContent
+                onClick={() => {
+                  handleOpen()
+                  logEvent(
+                    getSeven(slotsList.slot1.contentID).sitecoreSeven_Id,
+                    'CONTENT_VIEWED',
+                  )
+                  setModalData(getSeven(slotsList.slot1.contentID))
+                }}
+              ></CardContent>
+              <CardActions disableSpacing>
+                <IconButton
+                  aria-label="add to favorites"
                   onClick={() => {
-                    handleOpen();
-                    logEvent(getSeven(slotsList.slot3.contentID).sitecoreSeven_Id, "CONTENT_VIEWED");
-                    setModalData(getSeven(slotsList.slot3.contentID));
+                    handleHeartClick(
+                      getSeven(slotsList.slot1.contentID).sitecoreSeven_Id,
+                    )
                   }}
-                ></CardMedia>
-                <CardContent
-                   onClick={() => {
-                      handleOpen();
-                      logEvent(slotsList.slot3.contentID, "CONTENT_VIEWED");
-                      setModalData(getSeven(slotsList.slot3.contentID));
-                            }}>
-                </CardContent>
-                <CardActions disableSpacing>
-                  <IconButton aria-label="add to favorites"
-                   onClick={() => {handleHeartClick(slotsList.slot3.contentID)}} >
-                    <FavoriteIcon />
-                  </IconButton>  
-                  <IconButton aria-label="share"
-                  onClick={() => {handleShareClick(); navigator.clipboard.writeText( FILE_DOMAIN_URL + "/" + getSeven(slotsList.slot3.contentID).relativeUrl + "?" + getSeven(slotsList.slot3.contentID).versionHash)}} >
+                >
+                  <FavoriteIcon />
+                </IconButton>
+                <IconButton
+                  aria-label="share"
+                  onClick={() => {
+                    handleShareClick()
+                    navigator.clipboard.writeText(
+                      FILE_DOMAIN_URL +
+                      '/' +
+                      getSeven(slotsList.slot1.contentID).relativeUrl +
+                      '?' +
+                      getSeven(slotsList.slot1.contentID).versionHash,
+                    )
+                  }}
+                >
                   <ShareIcon />
                   <Snackbar
-                 open={openShare}
-                 onClose={() => setOpenShare(false)}
-                 autoHideDuration={2000}
-                 message="Share link copied to clipboard"
-                 anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center'}}
+                    open={openShare}
+                    onClose={() => setOpenShare(false)}
+                    autoHideDuration={2000}
+                    message="Share link copied to clipboard"
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'center',
+                    }}
                   />
-                 </IconButton>
-                </CardActions> 
-              </Card>
+                </IconButton>
+              </CardActions>
+            </Card>
+            {/* *****Trending Content****** */}
+            <Card key={slotsList.slot2.contentID} className={styles.card}>
+              <CardHeader
+                avatar={<GroupsIcon fontSize="large" />}
+                title={getSeven(
+                  slotsList.slot2.contentID,
+                ).sitecoreSeven_Title.replace(/&nbsp;/g, '')}
+                subheader="Trending"
+              />
+
+              <CardMedia
+                component="video"
+                preload="metadata"
+                src={
+                  FILE_DOMAIN_URL +
+                  '/' +
+                  getSeven(slotsList.slot2.contentID).relativeUrl +
+                  '?' +
+                  getSeven(slotsList.slot2.contentID).versionHash +
+                  '#t=42'
+                }
+                onClick={() => {
+                  handleOpen()
+                  logEvent(slotsList.slot2.contentID, 'CONTENT_VIEWED')
+                  setModalData(getSeven(slotsList.slot2.contentID))
+                }}
+              ></CardMedia>
+              <CardContent
+                onClick={() => {
+                  handleOpen()
+                  logEvent(slotsList.slot2.contentID, 'CONTENT_VIEWED')
+                  setModalData(getSeven(slotsList.slot2.contentID))
+                }}
+              ></CardContent>
+              <CardActions disableSpacing>
+                <IconButton
+                  aria-label="add to favorites"
+                  onClick={() => {
+                    handleHeartClick(slotsList.slot2.contentID)
+                  }}
+                >
+                  <FavoriteIcon />
+                </IconButton>
+                <IconButton
+                  aria-label="share"
+                  onClick={() => {
+                    handleShareClick()
+                    navigator.clipboard.writeText(
+                      FILE_DOMAIN_URL +
+                      '/' +
+                      getSeven(slotsList.slot2.contentID).relativeUrl +
+                      '?' +
+                      getSeven(slotsList.slot2.contentID).versionHash,
+                    )
+                  }}
+                >
+                  <ShareIcon />
+                  <Snackbar
+                    open={openShare}
+                    onClose={() => setOpenShare(false)}
+                    autoHideDuration={2000}
+                    message="Share link copied to clipboard"
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'center',
+                    }}
+                  />
+                </IconButton>
+              </CardActions>
+            </Card>
+
+            {/* *****Brand Boosted Content****** */}
+            <Card key={slotsList.slot3.contentID} className={styles.card}>
+              <CardHeader
+                avatar={<ElectricBoltIcon fontSize="large" />}
+                title={getSeven(
+                  slotsList.slot3.contentID,
+                ).sitecoreSeven_Title.replace(/&nbsp;/g, '')}
+                subheader="Boosted"
+              />
+              <CardMedia
+                component="video"
+                preload="metadata"
+                src={
+                  FILE_DOMAIN_URL +
+                  '/' +
+                  getSeven(slotsList.slot3.contentID).relativeUrl +
+                  '?' +
+                  getSeven(slotsList.slot3.contentID).versionHash +
+                  '#t=42'
+                }
+                onClick={() => {
+                  handleOpen()
+                  logEvent(
+                    getSeven(slotsList.slot3.contentID).sitecoreSeven_Id,
+                    'CONTENT_VIEWED',
+                  )
+                  setModalData(getSeven(slotsList.slot3.contentID))
+                }}
+              ></CardMedia>
+              <CardContent
+                onClick={() => {
+                  handleOpen()
+                  logEvent(slotsList.slot3.contentID, 'CONTENT_VIEWED')
+                  setModalData(getSeven(slotsList.slot3.contentID))
+                }}
+              ></CardContent>
+              <CardActions disableSpacing>
+                <IconButton
+                  aria-label="add to favorites"
+                  onClick={() => {
+                    handleHeartClick(slotsList.slot3.contentID)
+                  }}
+                >
+                  <FavoriteIcon />
+                </IconButton>
+                <IconButton
+                  aria-label="share"
+                  onClick={() => {
+                    handleShareClick()
+                    navigator.clipboard.writeText(
+                      FILE_DOMAIN_URL +
+                      '/' +
+                      getSeven(slotsList.slot3.contentID).relativeUrl +
+                      '?' +
+                      getSeven(slotsList.slot3.contentID).versionHash,
+                    )
+                  }}
+                >
+                  <ShareIcon />
+                  <Snackbar
+                    open={openShare}
+                    onClose={() => setOpenShare(false)}
+                    autoHideDuration={2000}
+                    message="Share link copied to clipboard"
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'center',
+                    }}
+                  />
+                </IconButton>
+              </CardActions>
+            </Card>
 
             <Modal
               open={open}
@@ -407,36 +465,47 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 <ReactPlayer
                   url={
                     FILE_DOMAIN_URL +
-                    "/" +
+                    '/' +
                     modalData.relativeUrl +
-                    "?" +
+                    '?' +
                     modalData.versionHash
                   }
                   onStart={() =>
-                    logEvent(modalData.sitecoreSeven_Id, "VIDEO_STARTED")
+                    logEvent(modalData.sitecoreSeven_Id, 'VIDEO_STARTED')
                   }
                   onPlay={() =>
-                    logEvent(modalData.sitecoreSeven_Id, "VIDEO_PLAYED")
+                    logEvent(modalData.sitecoreSeven_Id, 'VIDEO_PLAYED')
                   }
                   onPause={() =>
-                    logEvent(modalData.sitecoreSeven_Id, "VIDEO_PAUSED")
+                    logEvent(modalData.sitecoreSeven_Id, 'VIDEO_PAUSED')
                   }
                   onEnded={() =>
-                    logEvent(modalData.sitecoreSeven_Id, "VIDEO_ENDED")
+                    logEvent(modalData.sitecoreSeven_Id, 'VIDEO_ENDED')
                   }
                   controls
-                  width={"100%"}
+                  width={'100%'}
                 ></ReactPlayer>
-             
+
                 <Typography color="text.secondary">
-                <IconButton aria-label="add to favorites">
+                  <IconButton aria-label="add to favorites">
                     <FavoriteIcon />
                   </IconButton>
-                  <IconButton aria-label="share"
-                  onClick={() => {handleShareClick(); navigator.clipboard.writeText( FILE_DOMAIN_URL + "/" + modalData.relativeUrl + "?" + modalData.versionHash)}} >
-                  <ShareIcon />
-                 </IconButton>
-                  <br /> {modalData.sitecoreSeven_Summary}             
+                  <IconButton
+                    aria-label="share"
+                    onClick={() => {
+                      handleShareClick()
+                      navigator.clipboard.writeText(
+                        FILE_DOMAIN_URL +
+                        '/' +
+                        modalData.relativeUrl +
+                        '?' +
+                        modalData.versionHash,
+                      )
+                    }}
+                  >
+                    <ShareIcon />
+                  </IconButton>
+                  <br /> {modalData.sitecoreSeven_Summary}
                 </Typography>
               </Box>
             </Modal>
@@ -449,7 +518,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Powered by{" "}
+            Powered by{' '}
             <span className={styles.logo}>
               <Image
                 src="/logo.png"
@@ -462,52 +531,54 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         </footer>
       </div>
     </PreviewContext.Provider>
-  );
-};
-
+  )
+}
 
 export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
-  const myclient = createApolloClient(false).getClient();
-  const { data } = await myclient.query({ query: GET_HP_CONTENT });
+  const myclient = createApolloClient(false).getClient()
+  const { data } = await myclient.query({ query: GET_HP_CONTENT })
   try {
     /**
      *  Get all content list from content Hub
      */
-    const theSevens = data?.allM_Content_SitecoreSeven.results;
+    const theSevens = data?.allM_Content_SitecoreSeven.results
     const theSevensProps = theSevens.map((SevensItem) => {
       return {
         sitecoreSeven_Title: SevensItem.sitecoreSeven_Title,
         sitecoreSeven_Summary: SevensItem.sitecoreSeven_Summary,
-        sitecoreSeven_Image: SevensItem.sitecoreSeven_Image ? SevensItem.sitecoreSeven_Image : "",
+        sitecoreSeven_Image: SevensItem.sitecoreSeven_Image
+          ? SevensItem.sitecoreSeven_Image
+          : '',
         sitecoreSeven_Id: SevensItem.id,
         sitecoreSeven_CreatedOn: SevensItem.createdOn,
-        relativeUrl:
-          SevensItem.cmpContentToLinkedAsset.results[0].assetToPublicLink
-            .results[0] ? SevensItem.cmpContentToLinkedAsset.results[0].assetToPublicLink
-            .results[0].relativeUrl : "",
-        versionHash:
-          SevensItem.cmpContentToLinkedAsset.results[0].assetToPublicLink
-            .results[0] ? SevensItem.cmpContentToLinkedAsset.results[0].assetToPublicLink
-            .results[0].versionHash : ""
-      };
-    });
+        relativeUrl: SevensItem.cmpContentToLinkedAsset.results[0]
+          .assetToPublicLink.results[0]
+          ? SevensItem.cmpContentToLinkedAsset.results[0].assetToPublicLink
+            .results[0].relativeUrl
+          : '',
+        versionHash: SevensItem.cmpContentToLinkedAsset.results[0]
+          .assetToPublicLink.results[0]
+          ? SevensItem.cmpContentToLinkedAsset.results[0].assetToPublicLink
+            .results[0].versionHash
+          : '',
+      }
+    })
     return {
       props: {
         sevensList: [...theSevensProps],
-        preview: context.preview ?? false
+        preview: context.preview ?? false,
       },
-      revalidate: 5
-    };
+      revalidate: 5,
+    }
   } catch (error) {
-    console.log(error);
+    console.log(error)
     return {
       props: {
         sevensList: [],
-        preview: context.preview ?? false
-      }
-    };
+        preview: context.preview ?? false,
+      },
+    }
   }
-};
+}
 
-
-export default Home;
+export default Home
