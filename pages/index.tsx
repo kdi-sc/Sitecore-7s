@@ -156,6 +156,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     callFlows({ friendlyId: "my_three_7s" })
     .then((response) => {
       var slots = response as SlotsList;
+      console.log(slots);
       setSlotsList(({...slotsList, 
         slot1: slots.slot1,
         slot2: slots.slot2,
