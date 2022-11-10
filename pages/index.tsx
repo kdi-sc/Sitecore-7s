@@ -160,7 +160,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
             slot3: slots.slot3,
           })
 
-          //TODO: pass slots directly to component, sorting is error-prone
           // var sortOrder = [slots.slot1.contentID, slots.slot2.contentID, slots.slot3.contentID];
           // let sortedSevens = [...sevensList];
           // setSevensList(sevensList.sort(function (a, b) {
@@ -177,7 +176,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       // Back to defaults
       console.log('Sitecore Personlize Disabled! Sorted by created date')
       // Sort in Ascending order based on the created date.
-
+      
       // sevensList.sort((a: SevensItem, b: SevensItem) => {
       //   return b.sitecoreSeven_CreatedOn > a.sitecoreSeven_CreatedOn ? 1 : -1;
       //  });
