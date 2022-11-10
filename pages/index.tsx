@@ -109,7 +109,11 @@ const logEvent = (id, eventType) => {
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   logViewEvent({ page: "homepage" })
   const[sevensList, setSevensList] = useState(props.sevensList)
-  const[slotsList, setSlotsList] = useState({})
+  const[slotsList, setSlotsList] = useState({
+    slot1:{contentID:props.sevensList[0].sitecoreSeven_Id},
+    slot2:{contentID:props.sevensList[1].sitecoreSeven_Id},
+    slot3:{contentID:props.sevensList[2].sitecoreSeven_Id}
+  })
 
   const [openShare, setOpenShare] = useState(false);
   const handleShareClick = () => {
@@ -132,6 +136,15 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     versionHash: ""
   });
 
+  const getSeven = (id): SevensItem =>{
+      var seven = sevensList?.find(x => x.sitecoreSeven_Id === id);
+      if(seven){
+      return seven;
+      }
+      return sevensList[0];
+  }
+  
+
   const [checked, setChecked] = React.useState(false);
   const handlePersonalize = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
@@ -150,14 +163,14 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       }))
 
     //TODO: pass slots directly to component, sorting is error-prone
-      var sortOrder = [slots.slot1.contentID, slots.slot2.contentID, slots.slot3.contentID];
-      let sortedSevens = [...sevensList];
-      setSevensList(sevensList.sort(function (a, b) {
-        return (
-          sortOrder.indexOf(b.sitecoreSeven_Id) -
-          sortOrder.indexOf(a.sitecoreSeven_Id) 
-        );
-      }));
+      // var sortOrder = [slots.slot1.contentID, slots.slot2.contentID, slots.slot3.contentID];
+      // let sortedSevens = [...sevensList];
+      // setSevensList(sevensList.sort(function (a, b) {
+      //   return (
+      //     sortOrder.indexOf(b.sitecoreSeven_Id) -
+      //     sortOrder.indexOf(a.sitecoreSeven_Id) 
+      //   );
+      // }));
     })
     .catch((e) => {
       console.log(e);
@@ -166,10 +179,16 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     } else {
       // Back to defaults
       console.log("Sitecore Personlize Disabled! Sorted by created date");
-      // Sort in Ascending order based on the created date.
-      sevensList.sort((a: SevensItem, b: SevensItem) => {
+            // Sort in Ascending order based on the created date.
+     sevensList.sort((a: SevensItem, b: SevensItem) => {
         return b.sitecoreSeven_CreatedOn > a.sitecoreSeven_CreatedOn ? 1 : -1;
-      });
+       });
+      setSlotsList(({...slotsList, 
+        slot1:{contentID:sevensList[0].sitecoreSeven_Id},
+        slot2:{contentID:sevensList[1].sitecoreSeven_Id},
+        slot3:{contentID:sevensList[2].sitecoreSeven_Id}
+      }))
+
     }
   };
 
@@ -214,14 +233,13 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
           <div className={styles.grid}>
 
              {/* *****Individual Content****** */}
-
-             <Fade key={sevensList[0].sitecoreSeven_Id} in={checked || !checked} style={{ transitionDelay: '420ms'}}>   
+             
               <Card
-                key={sevensList[0].sitecoreSeven_Id}
+                key={getSeven(slotsList.slot1.contentID).sitecoreSeven_Id}
                 className={styles.card}>
                   <CardHeader 
                   avatar={<PersonIcon fontSize="large"/>}
-                  title={sevensList[0].sitecoreSeven_Title.replace(/&nbsp;/g, "")}
+                  title={getSeven(slotsList.slot1.contentID).sitecoreSeven_Title.replace(/&nbsp;/g, "")}
                   subheader="For You"
                   />
                 
@@ -231,30 +249,30 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   src={
                     FILE_DOMAIN_URL +
                     "/" +
-                    sevensList[0].relativeUrl +
+                    getSeven(slotsList.slot1.contentID).relativeUrl +
                     "?" +
-                    sevensList[0].versionHash + "#t=42"
+                    getSeven(slotsList.slot1.contentID).versionHash + "#t=42"
                   }
                   onClick={() => {
                     handleOpen();
-                    logEvent(sevensList[0].sitecoreSeven_Id, "CONTENT_VIEWED");
-                    setModalData(sevensList[0]);
+                    logEvent(getSeven(slotsList.slot1.contentID).sitecoreSeven_Id, "CONTENT_VIEWED");
+                    setModalData(getSeven(slotsList.slot1.contentID));
                   }}
                 ></CardMedia>
                 <CardContent
                    onClick={() => {
                       handleOpen();
-                      logEvent(sevensList[0].sitecoreSeven_Id, "CONTENT_VIEWED");
-                      setModalData(sevensList[0]);
+                      logEvent(getSeven(slotsList.slot1.contentID).sitecoreSeven_Id, "CONTENT_VIEWED");
+                      setModalData(getSeven(slotsList.slot1.contentID));
                             }}>
                 </CardContent>
                 <CardActions disableSpacing>
                   <IconButton aria-label="add to favorites"
-                   onClick={() => {handleHeartClick(sevensList[0].sitecoreSeven_Id)}} >
+                   onClick={() => {handleHeartClick(getSeven(slotsList.slot1.contentID).sitecoreSeven_Id)}} >
                     <FavoriteIcon />
                   </IconButton>  
                   <IconButton aria-label="share"
-                  onClick={() => {handleShareClick(); navigator.clipboard.writeText( FILE_DOMAIN_URL + "/" + sevensList[0].relativeUrl + "?" + sevensList[0].versionHash)}} >
+                  onClick={() => {handleShareClick(); navigator.clipboard.writeText( FILE_DOMAIN_URL + "/" + getSeven(slotsList.slot1.contentID).relativeUrl + "?" + getSeven(slotsList.slot1.contentID).versionHash)}} >
                   <ShareIcon />
                   <Snackbar
                  open={openShare}
@@ -268,17 +286,13 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                  </IconButton>
                 </CardActions> 
               </Card>
-              </Fade>
-
               {/* *****Trending Content****** */}
-
-              <Fade key={sevensList[1].sitecoreSeven_Id} in={checked || !checked} style={{ transitionDelay: '420ms'}}>   
               <Card
-                key={sevensList[1].sitecoreSeven_Id}
+                key={slotsList.slot2.contentID}
                 className={styles.card}>
                   <CardHeader 
                   avatar={<GroupsIcon fontSize="large"/>}
-                  title={sevensList[1].sitecoreSeven_Title.replace(/&nbsp;/g, "")}
+                  title={getSeven(slotsList.slot2.contentID).sitecoreSeven_Title.replace(/&nbsp;/g, "")}
                   subheader="Trending"
                   />
                 
@@ -288,30 +302,30 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   src={
                     FILE_DOMAIN_URL +
                     "/" +
-                    sevensList[1].relativeUrl +
+                    getSeven(slotsList.slot2.contentID).relativeUrl +
                     "?" +
-                    sevensList[1].versionHash + "#t=42"
+                    getSeven(slotsList.slot2.contentID).versionHash + "#t=42"
                   }
                   onClick={() => {
                     handleOpen();
-                    logEvent(sevensList[1].sitecoreSeven_Id, "CONTENT_VIEWED");
-                    setModalData(sevensList[1]);
+                    logEvent(slotsList.slot2.contentID, "CONTENT_VIEWED");
+                    setModalData(getSeven(slotsList.slot2.contentID));
                   }}
                 ></CardMedia>
                 <CardContent
                    onClick={() => {
                       handleOpen();
-                      logEvent(sevensList[1].sitecoreSeven_Id, "CONTENT_VIEWED");
-                      setModalData(sevensList[1]);
+                      logEvent(slotsList.slot2.contentID, "CONTENT_VIEWED");
+                      setModalData(getSeven(slotsList.slot2.contentID));
                             }}>
                 </CardContent>
                 <CardActions disableSpacing>
                   <IconButton aria-label="add to favorites"
-                   onClick={() => {handleHeartClick(sevensList[1].sitecoreSeven_Id)}} >
+                   onClick={() => {handleHeartClick(slotsList.slot2.contentID)}} >
                     <FavoriteIcon />
                   </IconButton>  
                   <IconButton aria-label="share"
-                  onClick={() => {handleShareClick(); navigator.clipboard.writeText( FILE_DOMAIN_URL + "/" + sevensList[1].relativeUrl + "?" + sevensList[1].versionHash)}} >
+                  onClick={() => {handleShareClick(); navigator.clipboard.writeText( FILE_DOMAIN_URL + "/" + getSeven(slotsList.slot2.contentID).relativeUrl + "?" + getSeven(slotsList.slot2.contentID).versionHash)}} >
                   <ShareIcon />
                   <Snackbar
                  open={openShare}
@@ -326,17 +340,14 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 </CardActions>
                 
               </Card>
-              </Fade>
 
                {/* *****Brand Boosted Content****** */}
-
-               <Fade key={sevensList[2].sitecoreSeven_Id} in={checked || !checked} style={{ transitionDelay: '420ms'}}>   
               <Card
-                key={sevensList[2].sitecoreSeven_Id}
+                key={slotsList.slot3.contentID}
                 className={styles.card}>
                   <CardHeader 
                   avatar={<ElectricBoltIcon fontSize="large"/>}
-                  title={sevensList[2].sitecoreSeven_Title.replace(/&nbsp;/g, "")}
+                  title={getSeven(slotsList.slot3.contentID).sitecoreSeven_Title.replace(/&nbsp;/g, "")}
                   subheader="Boosted"
                   />
                 <CardMedia
@@ -345,30 +356,30 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   src={
                     FILE_DOMAIN_URL +
                     "/" +
-                    sevensList[2].relativeUrl +
+                    getSeven(slotsList.slot3.contentID).relativeUrl +
                     "?" +
-                    sevensList[2].versionHash + "#t=42"
+                    getSeven(slotsList.slot3.contentID).versionHash + "#t=42"
                   }
                   onClick={() => {
                     handleOpen();
-                    logEvent(sevensList[2].sitecoreSeven_Id, "CONTENT_VIEWED");
-                    setModalData(sevensList[2]);
+                    logEvent(getSeven(slotsList.slot3.contentID).sitecoreSeven_Id, "CONTENT_VIEWED");
+                    setModalData(getSeven(slotsList.slot3.contentID));
                   }}
                 ></CardMedia>
                 <CardContent
                    onClick={() => {
                       handleOpen();
-                      logEvent(sevensList[2].sitecoreSeven_Id, "CONTENT_VIEWED");
-                      setModalData(sevensList[2]);
+                      logEvent(slotsList.slot3.contentID, "CONTENT_VIEWED");
+                      setModalData(getSeven(slotsList.slot3.contentID));
                             }}>
                 </CardContent>
                 <CardActions disableSpacing>
                   <IconButton aria-label="add to favorites"
-                   onClick={() => {handleHeartClick(sevensList[2].sitecoreSeven_Id)}} >
+                   onClick={() => {handleHeartClick(slotsList.slot3.contentID)}} >
                     <FavoriteIcon />
                   </IconButton>  
                   <IconButton aria-label="share"
-                  onClick={() => {handleShareClick(); navigator.clipboard.writeText( FILE_DOMAIN_URL + "/" + sevensList[2].relativeUrl + "?" + sevensList[2].versionHash)}} >
+                  onClick={() => {handleShareClick(); navigator.clipboard.writeText( FILE_DOMAIN_URL + "/" + getSeven(slotsList.slot3.contentID).relativeUrl + "?" + getSeven(slotsList.slot3.contentID).versionHash)}} >
                   <ShareIcon />
                   <Snackbar
                  open={openShare}
@@ -382,7 +393,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                  </IconButton>
                 </CardActions> 
               </Card>
-              </Fade>
 
             <Modal
               open={open}
