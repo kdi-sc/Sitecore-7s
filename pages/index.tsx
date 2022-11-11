@@ -176,7 +176,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       // Back to defaults
       console.log('Sitecore Personlize Disabled! Sorted by created date')
       // Sort in Ascending order based on the created date.
-      
+
       // sevensList.sort((a: SevensItem, b: SevensItem) => {
       //   return b.sitecoreSeven_CreatedOn > a.sitecoreSeven_CreatedOn ? 1 : -1;
       //  });
@@ -229,7 +229,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
           </div>
           <div className={styles.grid}>
             {/* *****Individual Content****** */}
-
+            <Fade in={checked || !checked} style={{ transitionDelay: '600ms'}}>  
             <Card
               key={getSeven(slotsList.slot1.contentID).sitecoreSeven_Id}
               className={styles.card}
@@ -310,7 +310,10 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 </IconButton>
               </CardActions>
             </Card>
+            </Fade>
+
             {/* *****Trending Content****** */}
+            <Fade in={checked || !checked} style={{ transitionDelay: '600ms'}}>  
             <Card key={slotsList.slot2.contentID} className={styles.card}>
               <CardHeader
                 avatar={<GroupsIcon fontSize="large" />}
@@ -380,8 +383,10 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 </IconButton>
               </CardActions>
             </Card>
+            </Fade>
 
             {/* *****Brand Boosted Content****** */}
+            <Fade in={checked || !checked} style={{ transitionDelay: '600ms'}}>  
             <Card key={slotsList.slot3.contentID} className={styles.card}>
               <CardHeader
                 avatar={<ElectricBoltIcon fontSize="large" />}
@@ -453,7 +458,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 </IconButton>
               </CardActions>
             </Card>
-
+            </Fade>
             <Modal
               open={open}
               onClose={handleClose}
