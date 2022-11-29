@@ -240,6 +240,14 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   slotsList.slot1.contentID,
                 ).sitecoreSeven_Title.replace(/&nbsp;/g, '')}
                 subheader="For You"
+                onClick={() => {
+                  handleOpen()
+                  logEvent(
+                    getSeven(slotsList.slot1.contentID).sitecoreSeven_Id,
+                    'CONTENT_VIEWED',
+                  )
+                  setModalData(getSeven(slotsList.slot1.contentID))
+                }}
               />
 
               <CardMedia
@@ -321,6 +329,11 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   slotsList.slot2.contentID,
                 ).sitecoreSeven_Title.replace(/&nbsp;/g, '')}
                 subheader="Trending"
+                onClick={() => {
+                  handleOpen()
+                  logEvent(slotsList.slot2.contentID, 'CONTENT_VIEWED')
+                  setModalData(getSeven(slotsList.slot2.contentID))
+                }}
               />
 
               <CardMedia
@@ -394,6 +407,14 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   slotsList.slot3.contentID,
                 ).sitecoreSeven_Title.replace(/&nbsp;/g, '')}
                 subheader="Boosted"
+                onClick={() => {
+                  handleOpen()
+                  logEvent(
+                    getSeven(slotsList.slot3.contentID).sitecoreSeven_Id,
+                    'CONTENT_VIEWED',
+                  )
+                  setModalData(getSeven(slotsList.slot3.contentID))
+                }}
               />
               <CardMedia
                 component="video"

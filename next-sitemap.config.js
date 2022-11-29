@@ -35,5 +35,10 @@ module.exports = {
           disallow: ['/sub-path-1', '/path-2'],
         },
       ],
+      additionalSitemaps: [
+        'https://sitecore7s.vercel.app/my-custom-sitemap-1.xml',
+        'https://sitecore7s.vercel.app/my-custom-sitemap-2.xml',
+        'https://sitecore7s.vercel.app/my-custom-sitemap-3.xml',
+      ],
     },
   }
