@@ -1,5 +1,4 @@
 import { GetStaticProps, NextPage } from 'next'
-import Link from 'next/link'
 import { IconButton, Switch, Snackbar, CardHeader } from '@mui/material'
 import { PreviewContext, PreviewProps } from '../components/previewContext'
 import Header from '../components/header'
@@ -69,7 +68,7 @@ export interface Slot {
 }
 
 //Get Homepage Content From Sevens - Everything without Null Title
-const GET_HP_CONTENT = gql`
+const GET_ALL_CONTENT = gql`
   {
     allM_Content_SitecoreSeven(where: { sitecoreSeven_Title_neq: null }) {
       total
@@ -555,7 +554,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
 
 export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
   const myclient = createApolloClient(false).getClient()
-  const { data } = await myclient.query({ query: GET_HP_CONTENT })
+  const { data } = await myclient.query({ query: GET_ALL_CONTENT })
   try {
     /**
      *  Get all content list from content Hub
