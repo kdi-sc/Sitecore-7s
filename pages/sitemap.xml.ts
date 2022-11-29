@@ -61,11 +61,9 @@ export async function getServerSideProps({ res }) {
   const myclient = createApolloClient(false).getClient()
   const { data } = await myclient.query({ query: GET_ALL_CONTENT })
   const theSevens = data?.allM_Content_SitecoreSeven.results
-  console.log(theSevens);
 
   // We generate the XML sitemap with the posts data
   const sitemap = generateSiteMap(theSevens);
-
 
   res.setHeader('Content-Type', 'text/xml');
   // we send the XML to the browser
