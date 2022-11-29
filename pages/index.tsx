@@ -1,4 +1,5 @@
 import { GetStaticProps, NextPage } from 'next'
+import Link from 'next/link'
 import { IconButton, Switch, Snackbar, CardHeader } from '@mui/material'
 import { PreviewContext, PreviewProps } from '../components/previewContext'
 import Header from '../components/header'
@@ -228,7 +229,11 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
             />
           </div>
           <div className={styles.grid}>
-            {/* *****Individual Content****** */}
+            {/* **
+            
+            ***Individual Content***
+            
+            *** */}
             <Fade in={checked || !checked} style={{ transitionDelay: '600ms'}}>  
             <Card
               key={getSeven(slotsList.slot1.contentID).sitecoreSeven_Id}
@@ -289,19 +294,16 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     )
                   }}
                 >
-                  <FavoriteIcon />
+                 
+                
+                
+                 <FavoriteIcon />
                 </IconButton>
                 <IconButton
                   aria-label="share"
                   onClick={() => {
                     handleShareClick()
-                    navigator.clipboard.writeText(
-                      FILE_DOMAIN_URL +
-                      '/' +
-                      getSeven(slotsList.slot1.contentID).relativeUrl +
-                      '?' +
-                      getSeven(slotsList.slot1.contentID).versionHash,
-                    )
+                    navigator.clipboard.writeText("https://sitecore7s.vercel.app/content/" + slotsList.slot1.contentID)
                   }}
                 >
                   <ShareIcon />
@@ -316,7 +318,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     }}
                   />
                 </IconButton>
+                {/* <Link href={"/content/" + slotsList.slot1.contentID}><small>Link</small></Link> */}
               </CardActions>
+              
             </Card>
             </Fade>
 
@@ -373,13 +377,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   aria-label="share"
                   onClick={() => {
                     handleShareClick()
-                    navigator.clipboard.writeText(
-                      FILE_DOMAIN_URL +
-                      '/' +
-                      getSeven(slotsList.slot2.contentID).relativeUrl +
-                      '?' +
-                      getSeven(slotsList.slot2.contentID).versionHash,
-                    )
+                    navigator.clipboard.writeText("https://sitecore7s.vercel.app/content/" + slotsList.slot2.contentID )
                   }}
                 >
                   <ShareIcon />
@@ -394,6 +392,8 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     }}
                   />
                 </IconButton>
+                {/* <Link href={"/content/" + slotsList.slot2.contentID}><small>Link</small></Link> */}
+
               </CardActions>
             </Card>
             </Fade>
@@ -456,13 +456,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   aria-label="share"
                   onClick={() => {
                     handleShareClick()
-                    navigator.clipboard.writeText(
-                      FILE_DOMAIN_URL +
-                      '/' +
-                      getSeven(slotsList.slot3.contentID).relativeUrl +
-                      '?' +
-                      getSeven(slotsList.slot3.contentID).versionHash,
-                    )
+                    navigator.clipboard.writeText("https://sitecore7s.vercel.app/content/" + slotsList.slot3.contentID )
                   }}
                 >
                   <ShareIcon />

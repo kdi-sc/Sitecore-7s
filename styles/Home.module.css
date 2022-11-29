@@ -12,6 +12,12 @@
   align-items: center;
 }
 
+.video {
+  margin-left: 50vw;
+  transform: translate(-50%);
+}
+
+
 .footer {
   display: flex;
   flex: 1;
