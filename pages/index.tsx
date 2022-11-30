@@ -291,7 +291,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 
                 </CardContent>
                 
-              <CardActions disableSpacing >
+              <CardActions style={{ width: '100%', justifyContent: 'flex-end' }} >
                 <IconButton
                   style={{ float: 'right' }}
                   aria-label="add to favorites"
@@ -376,7 +376,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 </CardContent>
                               
 
-              <CardActions disableSpacing>
+              <CardActions style={{ width: '100%', justifyContent: 'flex-end' }}>
                 <IconButton
                   aria-label="add to favorites"
                   onClick={() => {
@@ -457,7 +457,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
               <ArrowBackIosNewIcon/><ArrowForwardIosIcon style={{ float: 'right' }}/>
 
                 </CardContent>
-              <CardActions disableSpacing>
+              <CardActions style={{ width: '100%', justifyContent: 'flex-end' }}>
                 <IconButton
                   aria-label="add to favorites"
                   onClick={() => {
