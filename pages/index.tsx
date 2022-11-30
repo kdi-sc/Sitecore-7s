@@ -24,6 +24,8 @@ import { gql } from '@apollo/client'
 import { logViewEvent } from '../utility/CdpService'
 import styles from '../styles/Home.module.css'
 import Fade from '@mui/material/Fade'
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || ''
 
@@ -235,9 +237,11 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
             *** */}
             <Fade in={checked || !checked} style={{ transitionDelay: '600ms'}}>  
             <Card
-              key={getSeven(slotsList.slot1.contentID).sitecoreSeven_Id}
-              className={styles.card}
-            >
+              key={slotsList.slot1.contentID}
+              className={styles.card}>
+          
+           
+
               <CardHeader
                 avatar={<PersonIcon fontSize="large" />}
                 title={getSeven(
@@ -253,7 +257,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   setModalData(getSeven(slotsList.slot1.contentID))
                 }}
               />
-
               <CardMedia
                 component="video"
                 preload="metadata"
@@ -282,10 +285,15 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     'CONTENT_VIEWED',
                   )
                   setModalData(getSeven(slotsList.slot1.contentID))
-                }}
-              ></CardContent>
-              <CardActions disableSpacing>
+                }}>
+              
+                <ArrowBackIosNewIcon/><ArrowForwardIosIcon style={{ float: 'right' }}/>
+                
+                </CardContent>
+                
+              <CardActions disableSpacing >
                 <IconButton
+                  style={{ float: 'right' }}
                   aria-label="add to favorites"
                   onClick={() => {
                     handleHeartClick(
@@ -361,8 +369,13 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   handleOpen()
                   logEvent(slotsList.slot2.contentID, 'CONTENT_VIEWED')
                   setModalData(getSeven(slotsList.slot2.contentID))
-                }}
-              ></CardContent>
+                }}>
+            
+             <ArrowBackIosNewIcon/><ArrowForwardIosIcon style={{ float: 'right' }}/>
+
+                </CardContent>
+                              
+
               <CardActions disableSpacing>
                 <IconButton
                   aria-label="add to favorites"
@@ -440,8 +453,10 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   handleOpen()
                   logEvent(slotsList.slot3.contentID, 'CONTENT_VIEWED')
                   setModalData(getSeven(slotsList.slot3.contentID))
-                }}
-              ></CardContent>
+                }}>
+              <ArrowBackIosNewIcon/><ArrowForwardIosIcon style={{ float: 'right' }}/>
+
+                </CardContent>
               <CardActions disableSpacing>
                 <IconButton
                   aria-label="add to favorites"

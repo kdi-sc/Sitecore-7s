@@ -57,7 +57,7 @@ function SiteMap() {
 }
 
 export async function getServerSideProps({ res }) {
-  // We make an API call to gather the URLs for our site
+  // make an API call to gather the URLs for our site
   const myclient = createApolloClient(false).getClient()
   const { data } = await myclient.query({ query: GET_ALL_CONTENT })
   const theSevens = data?.allM_Content_SitecoreSeven.results
@@ -66,7 +66,7 @@ export async function getServerSideProps({ res }) {
   const sitemap = generateSiteMap(theSevens);
 
   res.setHeader('Content-Type', 'text/xml');
-  // we send the XML to the browser
+  // send the XML to the browser
   res.write(sitemap);
   res.end();
 
