@@ -100,6 +100,7 @@ const GET_ALL_CONTENT = gql`
     }
   }
 `
+//new comment
 
 const logEvent = (id, eventType) => {
   logViewEvent({ type: eventType, ext: { contentHubID: id } })
@@ -153,6 +154,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       //Get Content from Sitecore Personalize
       callFlows({ friendlyId: 'my_three_7s' })
         .then((response) => {
+          console.log(response)
           var slots = response as SlotsList
           console.log(slots)
           setSlotsList({
@@ -161,15 +163,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
             slot2: slots.slot2,
             slot3: slots.slot3,
           })
-
-          // var sortOrder = [slots.slot1.contentID, slots.slot2.contentID, slots.slot3.contentID];
-          // let sortedSevens = [...sevensList];
-          // setSevensList(sevensList.sort(function (a, b) {
-          //   return (
-          //     sortOrder.indexOf(b.sitecoreSeven_Id) -
-          //     sortOrder.indexOf(a.sitecoreSeven_Id)
-          //   );
-          // }));
         })
         .catch((e) => {
           console.log(e)
@@ -178,7 +171,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       // Back to defaults
       console.log('Sitecore Personlize Disabled! Sorted by created date')
       // Sort in Ascending order based on the created date.
-
       // sevensList.sort((a: SevensItem, b: SevensItem) => {
       //   return b.sitecoreSeven_CreatedOn > a.sitecoreSeven_CreatedOn ? 1 : -1;
       //  });
@@ -235,6 +227,8 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
             ***Individual Content***
             
             *** */}
+
+
             <Fade in={checked || !checked} style={{ transitionDelay: '600ms'}}>  
             <Card
               key={slotsList.slot1.contentID}
