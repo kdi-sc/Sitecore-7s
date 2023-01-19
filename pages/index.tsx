@@ -128,7 +128,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     if (slot.contentIDsList?.length) {
     var index = slot.contentIDsList.indexOf(slot.contentID)
     if(index == 0){{index = slot.contentIDsList.length}}
-    console.log(index)
     var slots = slotsList
     slots[number] = {contentID: slot.contentIDsList[index-1], contentIDsList:slot.contentIDsList, name:slot.name}
     setSlotsList({...slots});
@@ -139,7 +138,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     if (slot.contentIDsList?.length) {
     var index = slot.contentIDsList.indexOf(slot.contentID)
     if(index == slot.contentIDsList.length - 1){{index = -1}}
-    console.log(index)
     var slots = slotsList
     slots[number] = {contentID: slot.contentIDsList[index+1], contentIDsList:slot.contentIDsList, name:slot.name}
     setSlotsList({...slots});
@@ -267,6 +265,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
               <CardMedia
                 component="video"
                 preload="metadata"
+                poster="/loading.gif"
                 src={
                   FILE_DOMAIN_URL +
                   '/' +
@@ -402,6 +401,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     </PreviewContext.Provider>
   )
 }
+
 
 export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
   const myclient = createApolloClient(false).getClient()

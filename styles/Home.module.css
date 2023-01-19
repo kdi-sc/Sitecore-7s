@@ -81,7 +81,6 @@
 .card {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   margin: 1rem;
   text-align: left;
   color: inherit;
