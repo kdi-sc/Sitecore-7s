@@ -65,8 +65,10 @@ export interface SlotsList {
 
 export interface Slot {
   contentID: string
+  contentIDsList: string[]
   decisionName: string
   decisionDescription: string
+  name: string
 }
 
 //Get Homepage Content From Sevens - Everything without Null Title
@@ -100,7 +102,6 @@ const GET_ALL_CONTENT = gql`
     }
   }
 `
-//new comment
 
 const logEvent = (id, eventType) => {
   logViewEvent({ type: eventType, ext: { contentHubID: id } })
@@ -110,9 +111,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   logViewEvent({ page: 'homepage' })
   const [sevensList, setSevensList] = useState(props.sevensList)
   const [slotsList, setSlotsList] = useState({
-    slot1: { contentID: props.sevensList[0].sitecoreSeven_Id },
-    slot2: { contentID: props.sevensList[1].sitecoreSeven_Id },
-    slot3: { contentID: props.sevensList[2].sitecoreSeven_Id },
+    slot1: { contentID: props.sevensList[0].sitecoreSeven_Id, name:" "},
+    slot2: { contentID: props.sevensList[1].sitecoreSeven_Id , name:" "},
+    slot3: { contentID: props.sevensList[2].sitecoreSeven_Id, name:" " },
   })
 
   const [openShare, setOpenShare] = useState(false)
@@ -170,15 +171,11 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     } else {
       // Back to defaults
       console.log('Sitecore Personlize Disabled! Sorted by created date')
-      // Sort in Ascending order based on the created date.
-      // sevensList.sort((a: SevensItem, b: SevensItem) => {
-      //   return b.sitecoreSeven_CreatedOn > a.sitecoreSeven_CreatedOn ? 1 : -1;
-      //  });
       setSlotsList({
         ...slotsList,
-        slot1: { contentID: sevensList[0].sitecoreSeven_Id },
-        slot2: { contentID: sevensList[1].sitecoreSeven_Id },
-        slot3: { contentID: sevensList[2].sitecoreSeven_Id },
+        slot1: { contentID: sevensList[0].sitecoreSeven_Id, name:" " },
+        slot2: { contentID: sevensList[1].sitecoreSeven_Id, name:" " },
+        slot3: { contentID: sevensList[2].sitecoreSeven_Id, name:" " },
       })
     }
   }
@@ -228,27 +225,25 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
             
             *** */}
 
-
-            <Fade in={checked || !checked} style={{ transitionDelay: '600ms'}}>  
+        {Object.keys(slotsList).map((item, i) => (
+            <Fade key={i} in={checked || !checked} style={{ transitionDelay: '600ms'}}>  
             <Card
-              key={slotsList.slot1.contentID}
+              key={i}
               className={styles.card}>
           
-           
-
               <CardHeader
                 avatar={<PersonIcon fontSize="large" />}
                 title={getSeven(
-                  slotsList.slot1.contentID,
+                  slotsList[item].contentID,
                 ).sitecoreSeven_Title.replace(/&nbsp;/g, '')}
-                subheader="For You"
+                subheader={slotsList[item].name}
                 onClick={() => {
                   handleOpen()
                   logEvent(
-                    getSeven(slotsList.slot1.contentID).sitecoreSeven_Id,
+                    getSeven(slotsList[item].contentID).sitecoreSeven_Id,
                     'CONTENT_VIEWED',
                   )
-                  setModalData(getSeven(slotsList.slot1.contentID))
+                  setModalData(getSeven(slotsList[item].contentID))
                 }}
               />
               <CardMedia
@@ -257,28 +252,28 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 src={
                   FILE_DOMAIN_URL +
                   '/' +
-                  getSeven(slotsList.slot1.contentID).relativeUrl +
+                  getSeven(slotsList[item].contentID).relativeUrl +
                   '?' +
-                  getSeven(slotsList.slot1.contentID).versionHash +
+                  getSeven(slotsList[item].contentID).versionHash +
                   '#t=42'
                 }
                 onClick={() => {
                   handleOpen()
                   logEvent(
-                    getSeven(slotsList.slot1.contentID).sitecoreSeven_Id,
+                    getSeven(slotsList[item].contentID).sitecoreSeven_Id,
                     'CONTENT_VIEWED',
                   )
-                  setModalData(getSeven(slotsList.slot1.contentID))
+                  setModalData(getSeven(slotsList[item].contentID))
                 }}
               ></CardMedia>
               <CardContent
                 onClick={() => {
                   handleOpen()
                   logEvent(
-                    getSeven(slotsList.slot1.contentID).sitecoreSeven_Id,
+                    getSeven(slotsList[item].contentID).sitecoreSeven_Id,
                     'CONTENT_VIEWED',
                   )
-                  setModalData(getSeven(slotsList.slot1.contentID))
+                  setModalData(getSeven(slotsList[item].contentID))
                 }}>
               
                 <ArrowBackIosNewIcon/><ArrowForwardIosIcon style={{ float: 'right' }}/>
@@ -291,20 +286,17 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   aria-label="add to favorites"
                   onClick={() => {
                     handleHeartClick(
-                      getSeven(slotsList.slot1.contentID).sitecoreSeven_Id,
+                      getSeven(slotsList[item].contentID).sitecoreSeven_Id,
                     )
                   }}
-                >
-                 
-                
-                
+                >         
                  <FavoriteIcon />
                 </IconButton>
                 <IconButton
                   aria-label="share"
                   onClick={() => {
                     handleShareClick()
-                    navigator.clipboard.writeText("https://sitecore7s.vercel.app/content/" + slotsList.slot1.contentID)
+                    navigator.clipboard.writeText("https://sitecore7s.vercel.app/content/" + slotsList[item].contentID)
                   }}
                 >
                   <ShareIcon />
@@ -319,169 +311,11 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     }}
                   />
                 </IconButton>
-                {/* <Link href={"/content/" + slotsList.slot1.contentID}><small>Link</small></Link> */}
               </CardActions>
               
             </Card>
             </Fade>
-
-            {/* *****Trending Content****** */}
-            <Fade in={checked || !checked} style={{ transitionDelay: '600ms'}}>  
-            <Card key={slotsList.slot2.contentID} className={styles.card}>
-              <CardHeader
-                avatar={<GroupsIcon fontSize="large" />}
-                title={getSeven(
-                  slotsList.slot2.contentID,
-                ).sitecoreSeven_Title.replace(/&nbsp;/g, '')}
-                subheader="Trending"
-                onClick={() => {
-                  handleOpen()
-                  logEvent(slotsList.slot2.contentID, 'CONTENT_VIEWED')
-                  setModalData(getSeven(slotsList.slot2.contentID))
-                }}
-              />
-
-              <CardMedia
-                component="video"
-                preload="metadata"
-                src={
-                  FILE_DOMAIN_URL +
-                  '/' +
-                  getSeven(slotsList.slot2.contentID).relativeUrl +
-                  '?' +
-                  getSeven(slotsList.slot2.contentID).versionHash +
-                  '#t=42'
-                }
-                onClick={() => {
-                  handleOpen()
-                  logEvent(slotsList.slot2.contentID, 'CONTENT_VIEWED')
-                  setModalData(getSeven(slotsList.slot2.contentID))
-                }}
-              ></CardMedia>
-              <CardContent
-                onClick={() => {
-                  handleOpen()
-                  logEvent(slotsList.slot2.contentID, 'CONTENT_VIEWED')
-                  setModalData(getSeven(slotsList.slot2.contentID))
-                }}>
-            
-             <ArrowBackIosNewIcon/><ArrowForwardIosIcon style={{ float: 'right' }}/>
-
-                </CardContent>
-                              
-
-              <CardActions style={{ width: '100%', justifyContent: 'flex-end' }}>
-                <IconButton
-                  aria-label="add to favorites"
-                  onClick={() => {
-                    handleHeartClick(slotsList.slot2.contentID)
-                  }}
-                >
-                  <FavoriteIcon />
-                </IconButton>
-                <IconButton
-                  aria-label="share"
-                  onClick={() => {
-                    handleShareClick()
-                    navigator.clipboard.writeText("https://sitecore7s.vercel.app/content/" + slotsList.slot2.contentID )
-                  }}
-                >
-                  <ShareIcon />
-                  <Snackbar
-                    open={openShare}
-                    onClose={() => setOpenShare(false)}
-                    autoHideDuration={2000}
-                    message="Share link copied to clipboard"
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'center',
-                    }}
-                  />
-                </IconButton>
-                {/* <Link href={"/content/" + slotsList.slot2.contentID}><small>Link</small></Link> */}
-
-              </CardActions>
-            </Card>
-            </Fade>
-
-            {/* *****Brand Boosted Content****** */}
-            <Fade in={checked || !checked} style={{ transitionDelay: '600ms'}}>  
-            <Card key={slotsList.slot3.contentID} className={styles.card}>
-              <CardHeader
-                avatar={<ElectricBoltIcon fontSize="large" />}
-                title={getSeven(
-                  slotsList.slot3.contentID,
-                ).sitecoreSeven_Title.replace(/&nbsp;/g, '')}
-                subheader="Boosted"
-                onClick={() => {
-                  handleOpen()
-                  logEvent(
-                    getSeven(slotsList.slot3.contentID).sitecoreSeven_Id,
-                    'CONTENT_VIEWED',
-                  )
-                  setModalData(getSeven(slotsList.slot3.contentID))
-                }}
-              />
-              <CardMedia
-                component="video"
-                preload="metadata"
-                src={
-                  FILE_DOMAIN_URL +
-                  '/' +
-                  getSeven(slotsList.slot3.contentID).relativeUrl +
-                  '?' +
-                  getSeven(slotsList.slot3.contentID).versionHash +
-                  '#t=42'
-                }
-                onClick={() => {
-                  handleOpen()
-                  logEvent(
-                    getSeven(slotsList.slot3.contentID).sitecoreSeven_Id,
-                    'CONTENT_VIEWED',
-                  )
-                  setModalData(getSeven(slotsList.slot3.contentID))
-                }}
-              ></CardMedia>
-              <CardContent
-                onClick={() => {
-                  handleOpen()
-                  logEvent(slotsList.slot3.contentID, 'CONTENT_VIEWED')
-                  setModalData(getSeven(slotsList.slot3.contentID))
-                }}>
-              <ArrowBackIosNewIcon/><ArrowForwardIosIcon style={{ float: 'right' }}/>
-
-                </CardContent>
-              <CardActions style={{ width: '100%', justifyContent: 'flex-end' }}>
-                <IconButton
-                  aria-label="add to favorites"
-                  onClick={() => {
-                    handleHeartClick(slotsList.slot3.contentID)
-                  }}
-                >
-                  <FavoriteIcon />
-                </IconButton>
-                <IconButton
-                  aria-label="share"
-                  onClick={() => {
-                    handleShareClick()
-                    navigator.clipboard.writeText("https://sitecore7s.vercel.app/content/" + slotsList.slot3.contentID )
-                  }}
-                >
-                  <ShareIcon />
-                  <Snackbar
-                    open={openShare}
-                    onClose={() => setOpenShare(false)}
-                    autoHideDuration={2000}
-                    message="Share link copied to clipboard"
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'center',
-                    }}
-                  />
-                </IconButton>
-              </CardActions>
-            </Card>
-            </Fade>
+      ))}     
             <Modal
               open={open}
               onClose={handleClose}
@@ -518,20 +352,14 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     <FavoriteIcon />
                   </IconButton>
                   <IconButton
-                    aria-label="share"
-                    onClick={() => {
-                      handleShareClick()
-                      navigator.clipboard.writeText(
-                        FILE_DOMAIN_URL +
-                        '/' +
-                        modalData.relativeUrl +
-                        '?' +
-                        modalData.versionHash,
-                      )
-                    }}
-                  >
-                    <ShareIcon />
-                  </IconButton>
+                  aria-label="share"
+                  onClick={() => {
+                    handleShareClick()
+                    navigator.clipboard.writeText("https://sitecore7s.vercel.app/content/" + modalData.sitecoreSeven_Id)
+                  }}
+                >
+                  <ShareIcon />
+                </IconButton>
                   <br /> {modalData.sitecoreSeven_Summary}
                 </Typography>
               </Box>
