@@ -65,7 +65,7 @@ export interface SlotsList {
 
 export interface Slot {
   contentID: string
-  contentIDsList: string[]
+  contentIDsList: []
   decisionName: string
   decisionDescription: string
   name: string
@@ -110,10 +110,11 @@ const logEvent = (id, eventType) => {
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   logViewEvent({ page: 'homepage' })
   const [sevensList, setSevensList] = useState(props.sevensList)
+
   const [slotsList, setSlotsList] = useState({
-    slot1: { contentID: props.sevensList[0].sitecoreSeven_Id, name:" "},
-    slot2: { contentID: props.sevensList[1].sitecoreSeven_Id , name:" "},
-    slot3: { contentID: props.sevensList[2].sitecoreSeven_Id, name:" " },
+    slot1: { contentID: props.sevensList[0].sitecoreSeven_Id, contentIDsList:[], name:" "},
+    slot2: { contentID: props.sevensList[1].sitecoreSeven_Id , contentIDsList:[], name:" "},
+    slot3: { contentID: props.sevensList[2].sitecoreSeven_Id,  contentIDsList:[], name:" " },
   })
 
   const [openShare, setOpenShare] = useState(false)
@@ -123,6 +124,29 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   const handleHeartClick = (id) => {
     logEvent(id, 'CONTENT_HEARTED')
   }
+  const handlePreviousClick = (number, slot) => {
+    if (slot.contentIDsList?.length) {
+    var index = slot.contentIDsList.indexOf(slot.contentID)
+    if(index == 0){{index = slot.contentIDsList.length}}
+    console.log(index)
+    var slots = slotsList
+    slots[number] = {contentID: slot.contentIDsList[index-1], contentIDsList:slot.contentIDsList, name:slot.name}
+    setSlotsList({...slots});
+    }
+  }
+
+  const handleNextClick = (number, slot) => {
+    if (slot.contentIDsList?.length) {
+    var index = slot.contentIDsList.indexOf(slot.contentID)
+    if(index == slot.contentIDsList.length - 1){{index = -1}}
+    console.log(index)
+    var slots = slotsList
+    slots[number] = {contentID: slot.contentIDsList[index+1], contentIDsList:slot.contentIDsList, name:slot.name}
+    setSlotsList({...slots});
+    }
+  }
+
+
   const [openPersonalize, setOpenPersonalize] = useState(false)
   const [open, setOpen] = React.useState(false)
   const handleOpen = () => setOpen(true)
@@ -173,9 +197,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       console.log('Sitecore Personlize Disabled! Sorted by created date')
       setSlotsList({
         ...slotsList,
-        slot1: { contentID: sevensList[0].sitecoreSeven_Id, name:" " },
-        slot2: { contentID: sevensList[1].sitecoreSeven_Id, name:" " },
-        slot3: { contentID: sevensList[2].sitecoreSeven_Id, name:" " },
+        slot1: { contentID: sevensList[0].sitecoreSeven_Id, contentIDsList:[], name:" " },
+        slot2: { contentID: sevensList[1].sitecoreSeven_Id, contentIDsList:[], name:" " },
+        slot3: { contentID: sevensList[2].sitecoreSeven_Id, contentIDsList:[], name:" " },
       })
     }
   }
@@ -211,7 +235,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
               open={openPersonalize}
               onClose={() => setOpenPersonalize(false)}
               autoHideDuration={4200}
-              message="Content is being personalized based on what you have viewed"
+              message="Sitecore Personalize is now suggesting content"
               anchorOrigin={{
                 vertical: 'top',
                 horizontal: 'center',
@@ -219,18 +243,12 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
             />
           </div>
           <div className={styles.grid}>
-            {/* **
-            
-            ***Individual Content***
-            
-            *** */}
 
         {Object.keys(slotsList).map((item, i) => (
             <Fade key={i} in={checked || !checked} style={{ transitionDelay: '600ms'}}>  
             <Card
               key={i}
               className={styles.card}>
-          
               <CardHeader
                 avatar={<PersonIcon fontSize="large" />}
                 title={getSeven(
@@ -266,17 +284,13 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   setModalData(getSeven(slotsList[item].contentID))
                 }}
               ></CardMedia>
-              <CardContent
-                onClick={() => {
-                  handleOpen()
-                  logEvent(
-                    getSeven(slotsList[item].contentID).sitecoreSeven_Id,
-                    'CONTENT_VIEWED',
-                  )
-                  setModalData(getSeven(slotsList[item].contentID))
-                }}>
+              <CardContent>
               
-                <ArrowBackIosNewIcon/><ArrowForwardIosIcon style={{ float: 'right' }}/>
+                <ArrowBackIosNewIcon onClick={() => {
+                    handlePreviousClick(item, slotsList[item])}}/>
+                <ArrowForwardIosIcon onClick={() => {
+                    handleNextClick(item, slotsList[item])}}
+                     style={{ float: 'right' }}/>
                 
                 </CardContent>
                 
