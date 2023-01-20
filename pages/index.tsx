@@ -263,6 +263,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 }}
               />
               <CardMedia
+                className={styles.media}
                 component="video"
                 preload="metadata"
                 poster="/loading.gif"
@@ -290,7 +291,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 <ArrowForwardIosIcon onClick={() => {
                     handleNextClick(item, slotsList[item])}}
                      style={{ float: 'right' }}/>
-                
                 </CardContent>
                 
               <CardActions style={{ width: '100%', justifyContent: 'flex-end' }} >
@@ -325,9 +325,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   />
                 </IconButton>
               </CardActions>
-              
             </Card>
             </Fade>
+
       ))}     
             <Modal
               open={open}
