@@ -26,6 +26,10 @@ import styles from '../styles/Home.module.css'
 import Fade from '@mui/material/Fade'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import InfoIcon from '@mui/icons-material/Info';
 
 const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || ''
 
@@ -117,6 +121,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     slot3: { contentID: props.sevensList[2].sitecoreSeven_Id,  contentIDsList:[], name:" " },
   })
 
+
   const [openShare, setOpenShare] = useState(false)
   const handleShareClick = () => {
     setOpenShare(true)
@@ -129,9 +134,8 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     var index = slot.contentIDsList.indexOf(slot.contentID)
     if(index == 0){{index = slot.contentIDsList.length}}
     var slots = slotsList
-    slots[number] = {contentID: slot.contentIDsList[index-1], contentIDsList:slot.contentIDsList, name:slot.name}
-    setSlotsList({...slots});
-    }
+    slots[number] = {contentID: slot.contentIDsList[index-1], contentIDsList:slot.contentIDsList, decisionDescription: slot.decisionDescription, name:slot.name}
+    setSlotsList({...slots});    }
   }
 
   const handleNextClick = (number, slot) => {
@@ -139,7 +143,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     var index = slot.contentIDsList.indexOf(slot.contentID)
     if(index == slot.contentIDsList.length - 1){{index = -1}}
     var slots = slotsList
-    slots[number] = {contentID: slot.contentIDsList[index+1], contentIDsList:slot.contentIDsList, name:slot.name}
+    slots[number] = {contentID: slot.contentIDsList[index+1], contentIDsList:slot.contentIDsList, decisionDescription: slot.decisionDescription, name:slot.name}
     setSlotsList({...slots});
     }
   }
@@ -241,9 +245,8 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
             />
           </div>
           <div className={styles.grid}>
-
         {Object.keys(slotsList).map((item, i) => (
-            <Fade key={i} in={checked || !checked} style={{ transitionDelay: '600ms'}}>  
+          
             <Card
               key={i}
               className={styles.card}>
@@ -262,6 +265,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   setModalData(getSeven(slotsList[item].contentID))
                 }}
               />
+             
               <CardMedia
                 className={styles.media}
                 component="video"
@@ -278,7 +282,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                 onClick={() => {
                   handleOpen()
                   logEvent(
-                    getSeven(slotsList[item].contentID).sitecoreSeven_Id,
+                    slotsList[item].contentID,
                     'CONTENT_VIEWED',
                   )
                   setModalData(getSeven(slotsList[item].contentID))
@@ -292,8 +296,8 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     handleNextClick(item, slotsList[item])}}
                      style={{ float: 'right' }}/>
                 </CardContent>
-                
-              <CardActions style={{ width: '100%', justifyContent: 'flex-end' }} >
+    
+          <CardActions style={{ width: '100%'}} >
                 <IconButton
                   style={{ float: 'right' }}
                   aria-label="add to favorites"
@@ -324,11 +328,30 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     }}
                   />
                 </IconButton>
+                
+           {slotsList[item].decisionDescription ? <Accordion>
+              <AccordionSummary
+                expandIcon={<InfoIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+              </AccordionSummary>
+              <AccordionDetails>
+                <small><i>{slotsList[item].decisionDescription}</i></small>
+              </AccordionDetails>
+            </Accordion> : null}
+             
+              
               </CardActions>
-            </Card>
-            </Fade>
-
+              <div>
+  
+          </div>
+        </Card>
       ))}     
+
+
+
+   
             <Modal
               open={open}
               onClose={handleClose}
@@ -378,7 +401,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
               </Box>
             </Modal>
           </div>
+
         </main>
+
 
         <footer className={styles.footer}>
           <a
