@@ -184,7 +184,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     return sevensList[0]
   }
 
-  const icon = [<PersonIcon fontSize="large"/>, <GroupsIcon fontSize="large"/>,<ElectricBoltIcon fontSize="large"/> ]
+  const icon = [<PersonIcon key="person" fontSize="large"/>, <GroupsIcon key="group" fontSize="large"/>,<ElectricBoltIcon key="bolt" fontSize="large"/> ]
 
   const [checked, setChecked] = React.useState(false)
   const handlePersonalize = (event: React.ChangeEvent<HTMLInputElement>) => {
