@@ -159,10 +159,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       border: '1px solid #dadde9',
     },
   }));
-  const [openTool, setOpenTool] = React.useState(false);
-  const handleTooltipOpen = () => {
-    setOpenTool(true);
-  };
 
 
 
@@ -356,8 +352,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                       </React.Fragment>
                       }
                     >
-                      <IconButton onClick={handleTooltipOpen}><InfoIcon /></IconButton>
-                    </HtmlTooltip> : null}
+                      <IconButton><InfoIcon /></IconButton>
+                    </HtmlTooltip>: null}
+             
                 </CardActions>
                 <div>
                 </div>
