@@ -343,7 +343,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   />
                 </IconButton>
                 {slotsList[item].decisionDescription ?  
-                <HtmlTooltip disableFocusListener
+                <HtmlTooltip
               title={ <React.Fragment>
               <Typography color="inherit">{slotsList[item].name}</Typography>
               <em>{slotsList[item].decisionDescription}</em>
