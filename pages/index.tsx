@@ -184,6 +184,8 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     return sevensList[0]
   }
 
+  const icon = [<PersonIcon fontSize="large"/>, <GroupsIcon fontSize="large"/>,<ElectricBoltIcon fontSize="large"/> ]
+
   const [checked, setChecked] = React.useState(false)
   const handlePersonalize = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked)
@@ -264,7 +266,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
               key={i}
               className={styles.card}>
               <CardHeader
-                avatar={<PersonIcon fontSize="large" />}
+                avatar={icon[i]}
                 title={getSeven(
                   slotsList[item].contentID,
                 ).sitecoreSeven_Title.replace(/&nbsp;/g, '')}
