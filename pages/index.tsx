@@ -23,12 +23,10 @@ import { callFlows } from '../utility/BoxeverService'
 import { gql } from '@apollo/client'
 import { logViewEvent } from '../utility/CdpService'
 import styles from '../styles/Home.module.css'
-import Fade from '@mui/material/Fade'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import InfoIcon from '@mui/icons-material/Info';
 import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 
 
@@ -117,9 +115,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   const [sevensList, setSevensList] = useState(props.sevensList)
 
   const [slotsList, setSlotsList] = useState({
-    slot1: { contentID: props.sevensList[0].sitecoreSeven_Id, contentIDsList:[], name:" "},
-    slot2: { contentID: props.sevensList[1].sitecoreSeven_Id , contentIDsList:[], name:" "},
-    slot3: { contentID: props.sevensList[2].sitecoreSeven_Id,  contentIDsList:[], name:" " },
+    slot1: { contentID: props.sevensList[0].sitecoreSeven_Id, contentIDsList: [], name: " " },
+    slot2: { contentID: props.sevensList[1].sitecoreSeven_Id, contentIDsList: [], name: " " },
+    slot3: { contentID: props.sevensList[2].sitecoreSeven_Id, contentIDsList: [], name: " " },
   })
 
 
@@ -132,20 +130,21 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
   }
   const handlePreviousClick = (number, slot) => {
     if (slot.contentIDsList?.length) {
-    var index = slot.contentIDsList.indexOf(slot.contentID)
-    if(index == 0){{index = slot.contentIDsList.length}}
-    var slots = slotsList
-    slots[number] = {contentID: slot.contentIDsList[index-1], contentIDsList:slot.contentIDsList, decisionDescription: slot.decisionDescription, name:slot.name}
-    setSlotsList({...slots});    }
+      var index = slot.contentIDsList.indexOf(slot.contentID)
+      if (index == 0) { { index = slot.contentIDsList.length } }
+      var slots = slotsList
+      slots[number] = { contentID: slot.contentIDsList[index - 1], contentIDsList: slot.contentIDsList, decisionDescription: slot.decisionDescription, name: slot.name }
+      setSlotsList({ ...slots });
+    }
   }
 
   const handleNextClick = (number, slot) => {
     if (slot.contentIDsList?.length) {
-    var index = slot.contentIDsList.indexOf(slot.contentID)
-    if(index == slot.contentIDsList.length - 1){{index = -1}}
-    var slots = slotsList
-    slots[number] = {contentID: slot.contentIDsList[index+1], contentIDsList:slot.contentIDsList, decisionDescription: slot.decisionDescription, name:slot.name}
-    setSlotsList({...slots});
+      var index = slot.contentIDsList.indexOf(slot.contentID)
+      if (index == slot.contentIDsList.length - 1) { { index = -1 } }
+      var slots = slotsList
+      slots[number] = { contentID: slot.contentIDsList[index + 1], contentIDsList: slot.contentIDsList, decisionDescription: slot.decisionDescription, name: slot.name }
+      setSlotsList({ ...slots });
     }
   }
 
@@ -160,6 +159,11 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       border: '1px solid #dadde9',
     },
   }));
+  const [openTool, setOpenTool] = React.useState(false);
+  const handleTooltipOpen = () => {
+    setOpenTool(true);
+  };
+
 
 
   const [openPersonalize, setOpenPersonalize] = useState(false)
@@ -184,7 +188,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     return sevensList[0]
   }
 
-  const icon = [<PersonIcon key="person" fontSize="large"/>, <GroupsIcon key="group" fontSize="large"/>,<ElectricBoltIcon key="bolt" fontSize="large"/> ]
+  const icon = [<PersonIcon key="person" fontSize="large" />, <GroupsIcon key="group" fontSize="large" />, <ElectricBoltIcon key="bolt" fontSize="large" />]
 
   const [checked, setChecked] = React.useState(false)
   const handlePersonalize = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -214,9 +218,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       console.log('Sitecore Personlize Disabled! Sorted by created date')
       setSlotsList({
         ...slotsList,
-        slot1: { contentID: sevensList[0].sitecoreSeven_Id, contentIDsList:[], name:" " },
-        slot2: { contentID: sevensList[1].sitecoreSeven_Id, contentIDsList:[], name:" " },
-        slot3: { contentID: sevensList[2].sitecoreSeven_Id, contentIDsList:[], name:" " },
+        slot1: { contentID: sevensList[0].sitecoreSeven_Id, contentIDsList: [], name: " " },
+        slot2: { contentID: sevensList[1].sitecoreSeven_Id, contentIDsList: [], name: " " },
+        slot3: { contentID: sevensList[2].sitecoreSeven_Id, contentIDsList: [], name: " " },
       })
     }
   }
@@ -260,107 +264,109 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
             />
           </div>
           <div className={styles.grid}>
-        {Object.keys(slotsList).map((item, i) => (
-     
-            <Card
-              key={i}
-              className={styles.card}>
-              <CardHeader
-                avatar={icon[i]}
-                title={getSeven(
-                  slotsList[item].contentID,
-                ).sitecoreSeven_Title.replace(/&nbsp;/g, '')}
-                subheader={slotsList[item].name}
-                onClick={() => {
-                  handleOpen()
-                  logEvent(
-                    getSeven(slotsList[item].contentID).sitecoreSeven_Id,
-                    'CONTENT_VIEWED',
-                  )
-                  setModalData(getSeven(slotsList[item].contentID))
-                }}
-              />
-            
-              <CardMedia
-                className={styles.media}
-                component="video"
-                preload="metadata"
-                poster="/loading.gif"
-                src={
-                  FILE_DOMAIN_URL +
-                  '/' +
-                  getSeven(slotsList[item].contentID).relativeUrl +
-                  '?' +
-                  getSeven(slotsList[item].contentID).versionHash +
-                  '#t=42'
-                }
-                onClick={() => {
-                  handleOpen()
-                  logEvent(
+            {Object.keys(slotsList).map((item, i) => (
+
+              <Card
+                key={i}
+                className={styles.card}>
+                <CardHeader
+                  avatar={icon[i]}
+                  title={getSeven(
                     slotsList[item].contentID,
-                    'CONTENT_VIEWED',
-                  )
-                  setModalData(getSeven(slotsList[item].contentID))
-                }}
-              >
-              </CardMedia>
-              <CardContent>   
-                <ArrowBackIosNewIcon onClick={() => {
-                    handlePreviousClick(item, slotsList[item])}}/>
-                <ArrowForwardIosIcon onClick={() => {
-                    handleNextClick(item, slotsList[item])}}
-                     style={{ float: 'right' }}/>
-                </CardContent>
-          <CardActions style={{ width: '100%'}} >
-                <IconButton
-                  style={{ float: 'right' }}
-                  aria-label="add to favorites"
+                  ).sitecoreSeven_Title.replace(/&nbsp;/g, '')}
+                  subheader={slotsList[item].name}
                   onClick={() => {
-                    handleHeartClick(
+                    handleOpen()
+                    logEvent(
                       getSeven(slotsList[item].contentID).sitecoreSeven_Id,
+                      'CONTENT_VIEWED',
                     )
+                    setModalData(getSeven(slotsList[item].contentID))
                   }}
-                >         
-                 <FavoriteIcon />
-                </IconButton>
-                <IconButton
-                  aria-label="share"
+                />
+
+                <CardMedia
+                  className={styles.media}
+                  component="video"
+                  preload="metadata"
+                  poster="/loading.gif"
+                  src={
+                    FILE_DOMAIN_URL +
+                    '/' +
+                    getSeven(slotsList[item].contentID).relativeUrl +
+                    '?' +
+                    getSeven(slotsList[item].contentID).versionHash +
+                    '#t=42'
+                  }
                   onClick={() => {
-                    handleShareClick()
-                    navigator.clipboard.writeText("https://sitecore7s.vercel.app/content/" + slotsList[item].contentID)
+                    handleOpen()
+                    logEvent(
+                      slotsList[item].contentID,
+                      'CONTENT_VIEWED',
+                    )
+                    setModalData(getSeven(slotsList[item].contentID))
                   }}
                 >
-                  <ShareIcon />
-                  <Snackbar
-                    open={openShare}
-                    onClose={() => setOpenShare(false)}
-                    autoHideDuration={2000}
-                    message="Share link copied to clipboard"
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'center',
+                </CardMedia>
+                <CardContent>
+                  <ArrowBackIosNewIcon onClick={() => {
+                    handlePreviousClick(item, slotsList[item])
+                  }} />
+                  <ArrowForwardIosIcon onClick={() => {
+                    handleNextClick(item, slotsList[item])
+                  }}
+                    style={{ float: 'right' }} />
+                </CardContent>
+                <CardActions style={{ width: '100%' }} >
+                  <IconButton
+                    style={{ float: 'right' }}
+                    aria-label="add to favorites"
+                    onClick={() => {
+                      handleHeartClick(
+                        getSeven(slotsList[item].contentID).sitecoreSeven_Id,
+                      )
                     }}
-                  />
-                </IconButton>
-                {slotsList[item].decisionDescription ?  
-                <HtmlTooltip
-              title={ <React.Fragment>
-              <Typography color="inherit">{slotsList[item].name}</Typography>
-              <em>{slotsList[item].decisionDescription}</em>
-               </React.Fragment>
-                }
-              >
-                <IconButton><InfoIcon/></IconButton>
-              </HtmlTooltip> : null}
-              </CardActions>
-              <div>
-          </div>
-        </Card>
-      ))}     
+                  >
+                    <FavoriteIcon />
+                  </IconButton>
+                  <IconButton
+                    aria-label="share"
+                    onClick={() => {
+                      handleShareClick()
+                      navigator.clipboard.writeText("https://sitecore7s.vercel.app/content/" + slotsList[item].contentID)
+                    }}
+                  >
+                    <ShareIcon />
+                    <Snackbar
+                      open={openShare}
+                      onClose={() => setOpenShare(false)}
+                      autoHideDuration={2000}
+                      message="Share link copied to clipboard"
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                      }}
+                    />
+                  </IconButton>
+                  {slotsList[item].decisionDescription ?
+                    <HtmlTooltip
+                      title={<React.Fragment>
+                        <Typography color="inherit">{slotsList[item].name}</Typography>
+                        <em>{slotsList[item].decisionDescription}</em>
+                      </React.Fragment>
+                      }
+                    >
+                      <IconButton onClick={handleTooltipOpen}><InfoIcon /></IconButton>
+                    </HtmlTooltip> : null}
+                </CardActions>
+                <div>
+                </div>
+              </Card>
+            ))}
 
 
 
-   
+
             <Modal
               open={open}
               onClose={handleClose}
@@ -397,14 +403,14 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     <FavoriteIcon />
                   </IconButton>
                   <IconButton
-                  aria-label="share"
-                  onClick={() => {
-                    handleShareClick()
-                    navigator.clipboard.writeText("https://sitecore7s.vercel.app/content/" + modalData.sitecoreSeven_Id)
-                  }}
-                >
-                  <ShareIcon />
-                </IconButton>
+                    aria-label="share"
+                    onClick={() => {
+                      handleShareClick()
+                      navigator.clipboard.writeText("https://sitecore7s.vercel.app/content/" + modalData.sitecoreSeven_Id)
+                    }}
+                  >
+                    <ShareIcon />
+                  </IconButton>
                   <br /> {modalData.sitecoreSeven_Summary}
                 </Typography>
               </Box>
