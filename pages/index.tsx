@@ -348,7 +348,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     <HtmlTooltip
                       title={<React.Fragment>
                         <Typography color="inherit">{slotsList[item].name}</Typography>
-                        <em>{slotsList[item].decisionDescription}</em>
+                       {slotsList[item].decisionDescription}
                       </React.Fragment>
                       }
                     >
