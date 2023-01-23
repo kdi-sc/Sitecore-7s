@@ -26,10 +26,11 @@ import styles from '../styles/Home.module.css'
 import Fade from '@mui/material/Fade'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
 import InfoIcon from '@mui/icons-material/Info';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+
 
 const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || ''
 
@@ -148,6 +149,18 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     }
   }
 
+  const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: '#f5f5f9',
+      color: 'rgba(0, 0, 0, 0.87)',
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(12),
+      border: '1px solid #dadde9',
+    },
+  }));
+
 
   const [openPersonalize, setOpenPersonalize] = useState(false)
   const [open, setOpen] = React.useState(false)
@@ -246,7 +259,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
           </div>
           <div className={styles.grid}>
         {Object.keys(slotsList).map((item, i) => (
-          
+     
             <Card
               key={i}
               className={styles.card}>
@@ -265,7 +278,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   setModalData(getSeven(slotsList[item].contentID))
                 }}
               />
-             
+            
               <CardMedia
                 className={styles.media}
                 component="video"
@@ -287,16 +300,15 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   )
                   setModalData(getSeven(slotsList[item].contentID))
                 }}
-              ></CardMedia>
-              <CardContent>
-              
+              >
+              </CardMedia>
+              <CardContent>   
                 <ArrowBackIosNewIcon onClick={() => {
                     handlePreviousClick(item, slotsList[item])}}/>
                 <ArrowForwardIosIcon onClick={() => {
                     handleNextClick(item, slotsList[item])}}
                      style={{ float: 'right' }}/>
                 </CardContent>
-    
           <CardActions style={{ width: '100%'}} >
                 <IconButton
                   style={{ float: 'right' }}
@@ -328,23 +340,18 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     }}
                   />
                 </IconButton>
-                
-           {slotsList[item].decisionDescription ? <Accordion>
-              <AccordionSummary
-                expandIcon={<InfoIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
+                {slotsList[item].decisionDescription ?  
+                <HtmlTooltip
+             title={ <React.Fragment>
+                 <Typography color="inherit">{slotsList[item].name}</Typography>
+              <em>{slotsList[item].decisionDescription}</em>
+               </React.Fragment>
+                }
               >
-              </AccordionSummary>
-              <AccordionDetails>
-                <small><i>{slotsList[item].decisionDescription}</i></small>
-              </AccordionDetails>
-            </Accordion> : null}
-             
-              
+                <IconButton><InfoIcon/></IconButton>
+              </HtmlTooltip> : null}
               </CardActions>
               <div>
-  
           </div>
         </Card>
       ))}     
