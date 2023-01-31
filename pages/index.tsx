@@ -28,6 +28,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import InfoIcon from '@mui/icons-material/Info';
 import { styled } from '@mui/material/styles';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import { useSession } from "next-auth/react";
 
 const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || ''
 
@@ -109,8 +110,17 @@ const logEvent = (id, eventType) => {
   logViewEvent({ type: eventType, ext: { contentHubID: id } })
 }
 
+
+
+
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
+
   logViewEvent({ page: 'homepage' })
+  const { data: session, status } = useSession()
+  console.log(session, status)
+
+  
+  
   const [sevensList, setSevensList] = useState(props.sevensList)
 
   const [slotsList, setSlotsList] = useState({
