@@ -117,9 +117,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
 
   logViewEvent({ page: 'homepage' })
   const { data: session, status } = useSession()
-  console.log(session, status)
-
-  
+  if (status === "authenticated" && session.user?.email) {
+    identifyVisitor(session.user.email)
+  }
   
   const [sevensList, setSevensList] = useState(props.sevensList)
 
