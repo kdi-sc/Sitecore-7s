@@ -21,13 +21,25 @@ import Typography from '@mui/material/Typography'
 import { createApolloClient } from '../utility/GraphQLApolloClient'
 import { callFlows } from '../utility/BoxeverService'
 import { gql } from '@apollo/client'
-import { logViewEvent } from '../utility/CdpService'
+import { logViewEvent, identifyVisitor } from '../utility/CdpService'
 import styles from '../styles/Home.module.css'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import InfoIcon from '@mui/icons-material/Info';
 import { styled } from '@mui/material/styles';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import { getToken } from "next-auth/jwt"
+
+const secret = process.env.NEXTAUTH_SECRET
+
+export async function handler(req, res) {
+  // if using `NEXTAUTH_SECRET` env variable, we detect it, and you won't actually need to `secret`
+  // const token = await getToken({ req })
+  const token = await getToken({ req, secret })
+  // identifyVisitor({email: token.email})
+  console.log("JSON Web Token", token)
+  res.end()
+}
 
 
 const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || ''
@@ -198,7 +210,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
         .then((response) => {
           console.log(response)
           var slots = response as SlotsList
-          console.log(slots)
           setSlotsList({
             ...slotsList,
             slot1: slots.slot1,
