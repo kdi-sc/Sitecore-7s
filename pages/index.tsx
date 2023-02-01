@@ -110,9 +110,6 @@ const logEvent = (id, eventType) => {
   logViewEvent({ type: eventType, ext: { contentHubID: id } })
 }
 
-
-
-
 const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
 
   logViewEvent({ page: 'homepage' })
@@ -128,7 +125,6 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     slot2: { contentID: props.sevensList[1].sitecoreSeven_Id, contentIDsList: [], name: " " },
     slot3: { contentID: props.sevensList[2].sitecoreSeven_Id, contentIDsList: [], name: " " },
   })
-
 
   const [openShare, setOpenShare] = useState(false)
   const handleShareClick = () => {
