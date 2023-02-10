@@ -8,7 +8,7 @@ export interface Seven {
 
   export interface AllSevensResponse {
     data: {
-      allSevens: {
+      allSitecoreseven: {
         results: Partial<Seven>[];
       };
     };

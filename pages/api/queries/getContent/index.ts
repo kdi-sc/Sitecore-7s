@@ -19,10 +19,10 @@ const contentQuery = gql`
 export const getAllSevens = async (): Promise<Partial<Seven>[] | null> => {
   try {
   const myclient = createApolloClient(false).getClient()
-  const { data } = await myclient.query({ query: contentQuery }) 
+  const  results : AllSevensResponse = (await myclient.query({ query: contentQuery })) as AllSevensResponse
   
   const sevens: Partial<Seven>[] = [];
-    data.allSitecoreseven.results.forEach((seven: Partial<Seven>) => {
+    results.data.allSitecoreseven.results.forEach((seven: Partial<Seven>) => {
     sevens.push({
       id: seven.id,
       title: seven.title,
