@@ -1,8 +1,6 @@
-import { GetStaticProps, NextPage } from 'next'
 import { IconButton, Switch, Snackbar, CardHeader } from '@mui/material'
-import { PreviewContext, PreviewProps } from '../components/previewContext'
 import Header from '../components/header'
-import React, { ReactElement, useState } from 'react'
+import React, { useState } from 'react'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
@@ -18,9 +16,7 @@ import Image from 'next/image'
 import Modal from '@mui/material/Modal'
 import ReactPlayer from 'react-player'
 import Typography from '@mui/material/Typography'
-import { createApolloClient } from '../utility/GraphQLApolloClient'
 import { callFlows } from '../utility/BoxeverService'
-import { gql } from '@apollo/client'
 import { logViewEvent, identifyVisitor } from '../utility/CdpService'
 import styles from '../styles/Home.module.css'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -29,8 +25,9 @@ import InfoIcon from '@mui/icons-material/Info';
 import { styled } from '@mui/material/styles';
 import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
 import { useSession } from "next-auth/react";
-
-const FILE_DOMAIN_URL = process.env.FILE_DOMAIN_URL || ''
+import { Seven } from "../interfaces/seven";
+import { SlotsList } from "../interfaces/slot";
+import { getAllSevens } from './api/queries/getContent';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -44,73 +41,11 @@ const style = {
   p: 4,
 }
 
-export interface SevensItem {
-  sitecoreSeven_Id: string
-  sitecoreSeven_CreatedOn: Date
-  sitecoreSeven_Title: string
-  sitecoreSeven_Summary: string
-  sitecoreSeven_Image: string
-  assetFileName: string
-  assetId: string
-  relativeUrl: string
-  versionHash: string
-}
-
-export interface SevensProps extends PreviewProps {
-  sevensList: Array<SevensItem>
-}
-
-export interface SlotsList {
-  slot1: Slot
-  slot2: Slot
-  slot3: Slot
-}
-
-export interface Slot {
-  contentID: string
-  contentIDsList: []
-  decisionName: string
-  decisionDescription: string
-  name: string
-}
-
-//Get Homepage Content From Sevens - Everything without Null Title
-const GET_ALL_CONTENT = gql`
-  {
-    allM_Content_SitecoreSeven(where: { sitecoreSeven_Title_neq: null }) {
-      total
-      results {
-        id
-        createdOn
-        sitecoreSeven_Title
-        sitecoreSeven_Summary
-        sitecoreSeven_image
-        cmpContentToLinkedAsset {
-          total
-          results {
-            id
-            fileName
-            assetToPublicLink {
-              results {
-                resourceType
-                fileKey
-                relativeUrl
-                versionHash
-                resource
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
 const logEvent = (id, eventType) => {
   logViewEvent({ type: eventType, ext: { contentHubID: id } })
 }
 
-const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
+export default function Home({ sevens }: { sevens: Seven[] }) {
 
   logViewEvent({ page: 'homepage' })
   const { data: session, status } = useSession()
@@ -118,12 +53,10 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     identifyVisitor(session.user.email)
   }
   
-  const [sevensList, setSevensList] = useState(props.sevensList)
-
   const [slotsList, setSlotsList] = useState({
-    slot1: { contentID: props.sevensList[0].sitecoreSeven_Id, contentIDsList: [], name: " " },
-    slot2: { contentID: props.sevensList[1].sitecoreSeven_Id, contentIDsList: [], name: " " },
-    slot3: { contentID: props.sevensList[2].sitecoreSeven_Id, contentIDsList: [], name: " " },
+    slot1: { contentID: sevens[0].id, contentIDsList: [], name: " " },
+    slot2: { contentID: sevens[1].id, contentIDsList: [], name: " " },
+    slot3: { contentID: sevens[2].id, contentIDsList: [], name: " " },
   })
 
   const [openShare, setOpenShare] = useState(false)
@@ -165,28 +98,23 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
     },
   }));
 
-
-
   const [openPersonalize, setOpenPersonalize] = useState(false)
   const [open, setOpen] = React.useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const [modalData, setModalData] = useState({
-    sitecoreSeven_Id: '',
-    sitecoreSeven_CreatedOn: new Date(),
-    sitecoreSeven_Title: '',
-    sitecoreSeven_Summary: '',
-    sitecoreSeven_Image: '',
-    relativeUrl: '',
-    versionHash: '',
+    id: '',
+    title: '',
+    description: '',
+    media: ''
   })
 
-  const getSeven = (id): SevensItem => {
-    var seven = sevensList?.find((x) => x.sitecoreSeven_Id === id)
+  const getSeven = (id): Seven => {
+    var seven = sevens?.find((x) => x.id === id)
     if (seven) {
       return seven
     }
-    return sevensList[0]
+    return sevens[0]
   }
 
   const icon = [<PersonIcon key="person" fontSize="large" />, <GroupsIcon key="group" fontSize="large" />, <ElectricBoltIcon key="bolt" fontSize="large" />]
@@ -218,15 +146,14 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
       console.log('Sitecore Personlize Disabled! Sorted by created date')
       setSlotsList({
         ...slotsList,
-        slot1: { contentID: sevensList[0].sitecoreSeven_Id, contentIDsList: [], name: " " },
-        slot2: { contentID: sevensList[1].sitecoreSeven_Id, contentIDsList: [], name: " " },
-        slot3: { contentID: sevensList[2].sitecoreSeven_Id, contentIDsList: [], name: " " },
+        slot1: { contentID: sevens[0].id, contentIDsList: [], name: " " },
+        slot2: { contentID: sevens[1].id, contentIDsList: [], name: " " },
+        slot3: { contentID: sevens[2].id, contentIDsList: [], name: " " },
       })
     }
   }
-
   return (
-    <PreviewContext.Provider value={props}>
+    <>
       <Header />
       <div className={styles.container}>
         <Head>
@@ -263,9 +190,9 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
               }}
             />
           </div>
+
           <div className={styles.grid}>
             {Object.keys(slotsList).map((item, i) => (
-
               <Card
                 key={i}
                 className={styles.card}>
@@ -273,12 +200,12 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   avatar={icon[i]}
                   title={getSeven(
                     slotsList[item].contentID,
-                  ).sitecoreSeven_Title.replace(/&nbsp;/g, '')}
+                  ).title.replace(/&nbsp;/g, '')}
                   subheader={slotsList[item].name}
                   onClick={() => {
                     handleOpen()
                     logEvent(
-                      getSeven(slotsList[item].contentID).sitecoreSeven_Id,
+                      getSeven(slotsList[item].contentID).id,
                       'CONTENT_VIEWED',
                     )
                     setModalData(getSeven(slotsList[item].contentID))
@@ -290,14 +217,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                   component="video"
                   preload="metadata"
                   poster="/loading.gif"
-                  src={
-                    FILE_DOMAIN_URL +
-                    '/' +
-                    getSeven(slotsList[item].contentID).relativeUrl +
-                    '?' +
-                    getSeven(slotsList[item].contentID).versionHash +
-                    '#t=42'
-                  }
+                  src={getSeven(slotsList[item].contentID).media + '#t=12'}
                   onClick={() => {
                     handleOpen()
                     logEvent(
@@ -323,7 +243,7 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     aria-label="add to favorites"
                     onClick={() => {
                       handleHeartClick(
-                        getSeven(slotsList[item].contentID).sitecoreSeven_Id,
+                        getSeven(slotsList[item].contentID).id,
                       )
                     }}
                   >
@@ -365,35 +285,26 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
               </Card>
             ))}
 
-
-
-
             <Modal
               open={open}
               onClose={handleClose}
-              aria-labelledby={modalData.sitecoreSeven_Title}
-              aria-describedby={modalData.sitecoreSeven_Summary}
+              aria-labelledby={modalData.title}
+              aria-describedby={modalData.description}
             >
               <Box sx={style}>
                 <ReactPlayer
-                  url={
-                    FILE_DOMAIN_URL +
-                    '/' +
-                    modalData.relativeUrl +
-                    '?' +
-                    modalData.versionHash
-                  }
+                  url={modalData.media}
                   onStart={() =>
-                    logEvent(modalData.sitecoreSeven_Id, 'VIDEO_STARTED')
+                    logEvent(modalData.id, 'VIDEO_STARTED')
                   }
                   onPlay={() =>
-                    logEvent(modalData.sitecoreSeven_Id, 'VIDEO_PLAYED')
+                    logEvent(modalData.id, 'VIDEO_PLAYED')
                   }
                   onPause={() =>
-                    logEvent(modalData.sitecoreSeven_Id, 'VIDEO_PAUSED')
+                    logEvent(modalData.id, 'VIDEO_PAUSED')
                   }
                   onEnded={() =>
-                    logEvent(modalData.sitecoreSeven_Id, 'VIDEO_ENDED')
+                    logEvent(modalData.id, 'VIDEO_ENDED')
                   }
                   controls
                   width={'100%'}
@@ -407,18 +318,18 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
                     aria-label="share"
                     onClick={() => {
                       handleShareClick()
-                      navigator.clipboard.writeText("https://sitecore7s.vercel.app/content/" + modalData.sitecoreSeven_Id)
+                      navigator.clipboard.writeText("https://sitecore7s.vercel.app/content/" + modalData.id)
                     }}
                   >
                     <ShareIcon />
                   </IconButton>
-                  <br /> {modalData.sitecoreSeven_Summary}
+                  <br /> {modalData.description}
                 </Typography>
               </Box>
             </Modal>
           </div>
 
-        </main>
+         </main>
 
 
         <footer className={styles.footer}>
@@ -439,56 +350,26 @@ const Home: NextPage<SevensProps> = (props): ReactElement<any> => {
           </a>
         </footer>
       </div>
-    </PreviewContext.Provider>
+    </>
   )
 }
 
 
-export const getStaticProps: GetStaticProps<SevensProps> = async (context) => {
-  const myclient = createApolloClient(false).getClient()
-  const { data } = await myclient.query({ query: GET_ALL_CONTENT })
-  try {
-    /**
-     *  Get all content list from content Hub
-     */
-    const theSevens = data?.allM_Content_SitecoreSeven.results
-    const theSevensProps = theSevens.map((SevensItem) => {
-      return {
-        sitecoreSeven_Title: SevensItem.sitecoreSeven_Title,
-        sitecoreSeven_Summary: SevensItem.sitecoreSeven_Summary,
-        sitecoreSeven_Image: SevensItem.sitecoreSeven_Image
-          ? SevensItem.sitecoreSeven_Image
-          : '',
-        sitecoreSeven_Id: SevensItem.id,
-        sitecoreSeven_CreatedOn: SevensItem.createdOn,
-        relativeUrl: SevensItem.cmpContentToLinkedAsset.results[0]
-          .assetToPublicLink.results[0]
-          ? SevensItem.cmpContentToLinkedAsset.results[0].assetToPublicLink
-            .results[0].relativeUrl
-          : '',
-        versionHash: SevensItem.cmpContentToLinkedAsset.results[0]
-          .assetToPublicLink.results[0]
-          ? SevensItem.cmpContentToLinkedAsset.results[0].assetToPublicLink
-            .results[0].versionHash
-          : '',
-      }
-    })
-    return {
-      props: {
-        sevensList: [...theSevensProps],
-        preview: context.preview ?? false,
-      },
-      revalidate: 5,
-    }
-  } catch (error) {
-    console.log(error)
-    return {
-      props: {
-        sevensList: [],
-        preview: context.preview ?? false,
-      },
-    }
-  }
-}
+export const getStaticProps = async () => {
+  const sevens = await getAllSevens();
 
-export default Home
+  if (!sevens) {
+    return {
+      notFound: true,
+      revalidate: 5,
+    };
+  }
+
+  return {
+    props: {
+      sevens,
+    },
+    revalidate: 5,
+  };
+};
+

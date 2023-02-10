@@ -118,6 +118,11 @@
   margin-left: 0.5rem;
 }
 
+.loading{
+  width: 6%;
+  height: 6%;
+}
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;

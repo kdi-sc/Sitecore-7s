@@ -620,7 +620,7 @@ export function getDynamicWelcomeMessage(
 export interface ContentItem {
   id: string;
   title: string;
-  summary: string;
+  description: string;
   relativeUrl: string;
   versionHash: string;
 }

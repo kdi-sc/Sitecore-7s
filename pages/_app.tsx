@@ -4,7 +4,6 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import '../styles/globals.css'
 
-import * as React from 'react'
 import { initializeApp } from 'firebase/app';
 import { CacheProvider, EmotionCache } from '@emotion/react'
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
@@ -32,15 +31,13 @@ const firebaseConfig = {
 
 };
 
-const app = initializeApp(firebaseConfig);
-
+initializeApp(firebaseConfig);
 
 const clientSideEmotionCache = createEmotionCache()
 
 const lightTheme = createTheme(lightThemeOptions)
 
-const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
-  const { Component, emotionCache = clientSideEmotionCache, session, pageProps } = props
+export default function App({ Component, emotionCache = clientSideEmotionCache, session, pageProps }: MyAppProps) {
 
   return (
     <SessionProvider session={session}>
@@ -54,5 +51,3 @@ const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
     </SessionProvider>
   )
 }
-
-export default MyApp
