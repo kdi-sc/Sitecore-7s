@@ -229,13 +229,13 @@ export default function Home({ sevens }: { sevens: Seven[] }) {
                 >
                 </CardMedia>
                 <CardContent>
-                  <ArrowBackIosNewIcon onClick={() => {
+                  {Object.keys(slotsList[item].contentIDsList).length > 0 ? <ArrowBackIosNewIcon onClick={() => {
                     handlePreviousClick(item, slotsList[item])
-                  }} />
-                  <ArrowForwardIosIcon onClick={() => {
+                  }} />: null}
+                  {Object.keys(slotsList[item].contentIDsList).length > 0 ?<ArrowForwardIosIcon onClick={() => {
                     handleNextClick(item, slotsList[item])
                   }}
-                    style={{ float: 'right' }} />
+                    style={{ float: 'right' }} />:null}
                 </CardContent>
                 <CardActions style={{ width: '100%' }} >
                   <IconButton
